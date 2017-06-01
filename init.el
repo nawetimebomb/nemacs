@@ -33,6 +33,7 @@
 (require 'modes)
 (require 'shortcuts)
 (require 'themes)
+(require 'editor)
 
 ;; on finish
 (run-with-idle-timer 5 nil (lambda () (setq gc-cons-threshold gc-cons-threshold--original))) ; reset garbage collection limit

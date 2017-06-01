@@ -5,7 +5,7 @@
 ;; |==============================================|
 
 ; revert buffer
-(global-set-key (kbd "C-x M-r") 'revert-buffer)
+(global-set-key (kbd "C-x M-r") 'vc-revert)
 
 ; toggle Neotree sidebar
 (global-set-key [f8] 'neotree-toggle)
