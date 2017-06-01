@@ -3,3 +3,7 @@ backups
 auto-save-list
 elpa
 saves
+.emacs.desktop
+.emacs.desktop.lock
+ac-comphist.dat
+projectile-bookmarks.eld
