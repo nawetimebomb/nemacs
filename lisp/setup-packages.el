@@ -13,31 +13,32 @@
              '("melpa" . "http://melpa.org/packages/"))
 
 ;; define selected packages
-(defconst installed-package-list
+(defconst installed-packages-list
   '(
-    auto-complete
+    auto-complete ; auto-complete!
     better-defaults
-    company
+    company ; another auto-complete
     company-quickhelp
-    company-web
-    csharp-mode
-    disable-mouse
+    company-web ; complete my web stuff
+    csharp-mode ; for game programming
+    disable-mouse ; no mouse allowed!
     dumb-jump
-    egg
-    emmet-mode
+    egg ; git support
+    emmet-mode ; auto-complete my HTML tags!
     helm multi-line
     helm-projectile
+    monokai-theme ; best theme right now!
     multiple-cursors
     nav-flash
-    neotree
-    org
-    powerline
+    neotree ; file tree, looks good
+    org ; org-mode is awesome
+    powerline ; powerline rocks!
     project-explorer
-    projectile
-    rainbow-mode
+    projectile ; project management at its best
+    rainbow-mode ; color background for hex
     undo-tree
     web-beautify
-    web-mode
+    web-mode ; using with Javascript, JSX
     ztree
     )
   )
@@ -45,9 +46,11 @@
 ;; install selected package
 (unless package-archive-contents
   (package-refresh-contents))
-(dolist (package installed-package-list)
+(dolist (package installed-packages-list)
   (unless (package-installed-p package)
     (package-install package)))
 
-;; add plugin configurations to require list
-(add-to-list 'load-path (concat user-emacs-directory "plugins/"))
+;; done
+(message "Packages sync finished")
+
+(provide 'setup-packages)

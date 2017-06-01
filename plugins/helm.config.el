@@ -5,3 +5,5 @@
 
 (helm-mode t)
 (helm-projectile-on)
+
+(provide 'helm.config)

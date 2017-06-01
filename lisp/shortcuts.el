@@ -21,3 +21,5 @@
 
 ; open buffers list with Helm
 (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+
+(provide 'shortcuts)

@@ -25,4 +25,10 @@
 (setq auto-mode-alist '(
                         ("\\.cs\\'" . csharp-mode)
                         ("\\.js\\'" . web-mode)
-                        ("\\.jsx\\'" . web-mode)))
+                        ("\\.jsx\\'" . web-mode)
+                        ("\\.el\\'" . lisp-mode)
+                        ("\\.org\\'" . org-mode)
+                        ("\\.md\\'" . org-mode)
+                        ("\\.mkd\\'" . org-mode)))
+
+(provide 'modes)
