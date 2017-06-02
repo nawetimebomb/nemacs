@@ -1,9 +1,10 @@
 .DS_Store
-backups
-auto-save-list
-elpa
-saves
 .emacs.desktop
 .emacs.desktop.lock
+.mc-lists.el
 ac-comphist.dat
+auto-save-list
+backups
+elpa
 projectile-bookmarks.eld
+saves

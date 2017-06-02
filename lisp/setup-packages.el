@@ -15,8 +15,7 @@
 ;; define selected packages
 (defconst installed-packages-list
   '(
-    auto-complete ; auto-complete!
-    better-defaults
+    better-defaults ; remove menus
     company ; another auto-complete
     company-quickhelp
     company-web ; complete my web stuff
@@ -25,9 +24,12 @@
     dumb-jump
     egg ; git support
     emmet-mode ; auto-complete my HTML tags!
-    helm multi-line
-    helm-projectile
+    find-file-in-project ; very large projects
+    git-gutter ; mark the diff lines
+    helm ; better buffer, open file
+    helm-swoop ; search between buffers
     monokai-theme ; best theme right now!
+    multi-line
     multiple-cursors
     nav-flash
     neotree ; file tree, looks good

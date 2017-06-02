@@ -27,6 +27,9 @@
 ;; load plugin configurations
 (require 'helm.config)
 (require 'powerline.config)
+(require 'git-gutter.config)
+(require 'multiple-cursors.config)
+(require 'find-file-in-project.config)
 
 ;; load local configurations
 (require 'hooks)
