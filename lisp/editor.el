@@ -5,7 +5,7 @@
 ;; |==============================================|
 
 ;; variables
-(defvar user-saves-directory (concat user-emacs-directory "saves/"))
+(defvar saves-directory (concat user-emacs-directory "saves"))
 
 ;; editor variables
 (setq-default indent-tabs-mode nil)
@@ -13,7 +13,7 @@
 
 ;; backup variables
 (setq backup-by-copying t)
-(setq backup-directory-alist '((user-saves-directory))
+(setq backup-directory-alist '(("." . saves-directory))
       version-control 'numbered
       make-backup-files t
       delete-old-versions 'never)
