@@ -9,6 +9,6 @@
 (autoload 'ffip-save-ivy-last "find-file-in-project" nil t)
 (autoload 'ffip-ivy-resume "find-file-in-project" nil t)
 
-(global-set-key (kbd "C-c C-f") 'find-file-in-project)
+(global-set-key (kbd "C-c C-b") 'find-file-in-project)
 
 (provide 'find-file-in-project.config)

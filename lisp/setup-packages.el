@@ -28,6 +28,8 @@
     git-gutter ; mark the diff lines
     helm ; better buffer, open file
     helm-swoop ; search between buffers
+    js2-mode ; new Javascript mode
+    json-mode ; read json!
     monokai-theme ; best theme right now!
     multi-line
     multiple-cursors
@@ -38,6 +40,7 @@
     project-explorer
     projectile ; project management at its best
     rainbow-mode ; color background for hex
+    rjsx-mode ; jsx support
     undo-tree
     web-beautify
     web-mode ; using with Javascript, JSX
