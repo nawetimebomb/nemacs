@@ -5,7 +5,6 @@
 ;; |==============================================|
 
 ;; global modes
-(global-auto-complete-mode t)
 (global-auto-revert-mode t)
 (global-company-mode t)
 (global-disable-mouse-mode t)
