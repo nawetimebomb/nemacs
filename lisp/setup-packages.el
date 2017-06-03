@@ -14,13 +14,12 @@
 (defconst installed-packages-list
   '(
     better-defaults ; remove menus
-    company ; another auto-complete
+    company ; auto-complete
     company-quickhelp
     company-web ; complete my web stuff
     csharp-mode ; for game programming
     disable-mouse ; no mouse allowed!
-    dumb-jump
-    egg ; git support
+    dumb-jump ; go to definition
     emmet-mode ; auto-complete my HTML tags!
     find-file-in-project ; very large projects
     git-gutter ; mark the diff lines
@@ -28,6 +27,7 @@
     helm-swoop ; search between buffers
     js2-mode ; new Javascript mode
     json-mode ; read json!
+    magit ; git support
     monokai-theme ; best theme right now!
     multi-line
     multiple-cursors
@@ -38,6 +38,7 @@
     projectile ; project management at its best
     rainbow-mode ; color background for hex
     rjsx-mode ; jsx support
+    smartparens ; parenthesis!
     spaceline ; better than powerline
     undo-tree
     use-package ; best thing in life!

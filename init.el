@@ -28,13 +28,14 @@
 (require 'setup-packages)
 
 ;; load plugin configurations
-(require 'use-package.config)
-(require 'helm.config)
-(require 'spaceline.config)
-(require 'git-gutter.config)
-(require 'multiple-cursors.config)
-(require 'find-file-in-project.config)
 (require 'dumb-jump.config)
+(require 'find-file-in-project.config)
+(require 'git-gutter.config)
+(require 'helm.config)
+(require 'multiple-cursors.config)
+(require 'smartparens.config)
+(require 'spaceline.config)
+(require 'use-package.config)
 
 ;; load local configurations
 (require 'hooks)

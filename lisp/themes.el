@@ -7,6 +7,6 @@
 (use-package monokai
   :ensure t
   :init
-  (load-theme 'monokai))
+  (load-theme 'monokai t))
 
 (provide 'themes)
