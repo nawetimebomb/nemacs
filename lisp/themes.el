@@ -4,6 +4,9 @@
 ;; |  copyright: elnawe.com (c) 2017              |
 ;; |==============================================|
 
-(load-theme 'monokai t)
+(use-package monokai
+  :ensure t
+  :init
+  (load-theme 'monokai))
 
 (provide 'themes)

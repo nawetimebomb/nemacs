@@ -5,12 +5,10 @@
 ;;|==============================================|
 
 ;; initialize packages
-(package-initialize)
 (require 'package)
-
-;; add package repositories
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/"))
+(package-initialize)
 
 ;; define selected packages
 (defconst installed-packages-list
@@ -36,26 +34,24 @@
     nav-flash
     neotree ; file tree, looks good
     org ; org-mode is awesome
-    powerline ; powerline rocks!
     project-explorer
     projectile ; project management at its best
     rainbow-mode ; color background for hex
     rjsx-mode ; jsx support
+    spaceline ; better than powerline
     undo-tree
+    use-package ; best thing in life!
     web-beautify
     web-mode ; using with Javascript, JSX
     ztree
     )
   )
 
-;; install selected package
+;; install packages from list
 (unless package-archive-contents
   (package-refresh-contents))
 (dolist (package installed-packages-list)
   (unless (package-installed-p package)
     (package-install package)))
-
-;; done
-(message "Packages sync finished")
 
 (provide 'setup-packages)
