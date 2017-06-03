@@ -34,6 +34,7 @@
     nav-flash
     neotree ; file tree, looks good
     org ; org-mode is awesome
+    powerline ; needed for spaceline
     project-explorer
     projectile ; project management at its best
     rainbow-mode ; color background for hex
@@ -49,10 +50,10 @@
   )
 
 ;; install packages from list
-(unless package-archive-contents
-  (package-refresh-contents))
 (dolist (package installed-packages-list)
   (unless (package-installed-p package)
+    (unless package-archive-contents
+      (package-refresh-contents))
     (package-install package)))
 
 (provide 'setup-packages)

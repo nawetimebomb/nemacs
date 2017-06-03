@@ -5,7 +5,6 @@
 ;; |==============================================|
 
 (use-package monokai
-  :ensure t
   :init
   (load-theme 'monokai t))
 

@@ -5,9 +5,8 @@
 ;; |==============================================|
 
 ;; ignite!
-;;(package-initialize)
-
 (setq package-enable-at-startup nil)
+;;(package-initialize)
 
 ;; global variables
 (defvar user-home-directory (concat (getenv "HOME") "/"))
@@ -26,16 +25,17 @@
 (setq gc-const-threshold (* 100 1024 1024)) ; limit garbage collection before init (100 MB)
 (setq custom-file (concat user-emacs-directory "custom-set-variables.el"))
 (require 'setup-packages)
+(require 'use-package.config)
 
 ;; load plugin configurations
 (require 'dumb-jump.config)
 (require 'find-file-in-project.config)
 (require 'git-gutter.config)
 (require 'helm.config)
+(require 'linum-mode.config)
 (require 'multiple-cursors.config)
 (require 'smartparens.config)
 (require 'spaceline.config)
-(require 'use-package.config)
 
 ;; load local configurations
 (require 'hooks)

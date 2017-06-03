@@ -9,7 +9,6 @@
 (global-company-mode t)
 (global-disable-mouse-mode t)
 (global-hl-line-mode t)
-(global-linum-mode t)
 
 ;; buffer modes
 (column-number-mode t)
