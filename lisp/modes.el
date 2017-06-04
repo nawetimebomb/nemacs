@@ -17,16 +17,4 @@
 (projectile-mode t)
 (rainbow-mode t)
 
-;; autoload extensions modes
-(autoload 'csharp-mode "csharp-mode" t)
-(autoload 'web-mode "web-mode" t)
-(setq auto-mode-alist '(
-                        ("\\.cs\\'" . csharp-mode)
-                        ("\\.js\\'" . web-mode)
-                        ("\\.jsx\\'" . web-mode)
-                        ("\\.el\\'" . lisp-mode)
-                        ("\\.org\\'" . org-mode)
-                        ("\\.md\\'" . org-mode)
-                        ("\\.mkd\\'" . org-mode)))
-
 (provide 'modes)

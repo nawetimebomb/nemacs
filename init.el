@@ -33,6 +33,7 @@
 (require 'git-gutter.config)
 (require 'helm.config)
 (require 'linum-mode.config)
+(require 'major-modes.config)
 (require 'multiple-cursors.config)
 (require 'smartparens.config)
 (require 'spaceline.config)
