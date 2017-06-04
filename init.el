@@ -26,6 +26,7 @@
 (setq custom-file (concat user-emacs-directory "custom-set-variables.el"))
 (require 'setup-packages)
 (require 'use-package.config)
+(require 'color-configuration)
 
 ;; load plugin configurations
 (require 'dumb-jump.config)

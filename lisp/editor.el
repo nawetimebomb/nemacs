@@ -16,11 +16,13 @@
       delete-old-versions 'never)
 
 ;; visual variables
-(set-face-attribute 'default nil :height 160)
-(set-cursor-color "#ffb269")
+(set-face-attribute 'default nil :height 170)
+(set-cursor-color custom-editor-cursor-color)
 (set-face-attribute 'highlight nil
-                    :foreground "#151515")
+                    :background custom-background-editor-highlight-color
+                    :foreground custom-foreground-editor-highlight-color)
 (set-face-attribute 'region nil
-                    :background "#ffb269")
+                    :background custom-background-editor-region-color
+                    :foreground custom-foreground-editor-region-color)
 
 (provide 'editor)

@@ -4,8 +4,8 @@
 ;; |  copyright: elnawe.com (c) 2017              |
 ;; |==============================================|
 
-(use-package monokai
+(use-package color-theme-sanityinc-tomorrow
   :init
-  (load-theme 'monokai t))
+  (load-theme 'sanityinc-tomorrow-night t))
 
 (provide 'themes)

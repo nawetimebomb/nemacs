@@ -8,11 +8,12 @@
   (add-to-list 'helm-boring-buffer-regexp-list "\\*")
   (helm-autoresize-mode t)
   (set-face-attribute 'helm-selection nil
-                      :background "#ffb269"
-                      :foreground "#151515")
+                      :background custom-background-menu-selection-color
+                      :foreground custom-foreground-menu-selection-color
+                      :bold t)
   (set-face-attribute 'helm-source-header nil
-                      :background nil
-                      :foreground "#ffffff"
+                      :background custom-background-menu-header-color
+                      :foreground custom-foreground-menu-header-color
                       :height 1.8
                       :box nil)
   :bind
