@@ -29,6 +29,7 @@
 (require 'color-configuration)
 
 ;; load plugin configurations
+(require 'column-marker.config)
 (require 'dumb-jump.config)
 (require 'find-file-in-project.config)
 (require 'git-gutter.config)

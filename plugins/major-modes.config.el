@@ -24,4 +24,19 @@
   :mode "\\.el\\'"
   :interpreter "emacs-lisp")
 
+(use-package rjsx-mode
+  :mode "components\\/.*\\.js\\'"
+  :interpreter "jsx"
+  :config
+  (setq tab-width 4))
+
+;; Fix these two!
+(setq js2-mode-hook
+  '(lambda () (progn
+                (set-variable 'indent-tabs-mode nil)
+                (set-variable 'tab-width 4))))
+(setq rjsx-mode
+  '(lambda () (progn
+    (set-variable 'indent-tabs-mode nil))))
+
 (provide 'major-modes.config)

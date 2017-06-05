@@ -2,7 +2,6 @@
 
 (use-package git-gutter
   :config
-  (require 'git-gutter)
   (global-git-gutter-mode 1)
   (git-gutter:linum-setup)
   (custom-set-variables

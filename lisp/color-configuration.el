@@ -17,7 +17,7 @@
 (defconst custom-color-purple "#b294bb")
 
 ;; editor cursor
-(defconst custom-editor-cursor-color custom-color-green)
+(defconst custom-editor-cursor-color custom-color-blue)
 
 ;; menu selections
 (defconst custom-foreground-menu-selection-color custom-color-green)
@@ -32,7 +32,7 @@
 (defconst custom-foreground-editor-highlight-color nil)
 
 ;; editor region selection
-(defconst custom-background-editor-region-color custom-color-green)
+(defconst custom-background-editor-region-color custom-color-blue)
 (defconst custom-foreground-editor-region-color custom-color-background)
 
 (provide 'color-configuration)
