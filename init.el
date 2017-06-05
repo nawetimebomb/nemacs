@@ -29,6 +29,7 @@
 (require 'color-configuration)
 
 ;; load plugin configurations
+(require 'auto-compile.config)
 (require 'column-marker.config)
 (require 'dumb-jump.config)
 (require 'find-file-in-project.config)

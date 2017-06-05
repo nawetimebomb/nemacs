@@ -14,7 +14,7 @@
     'main
     '((buffer-modified :face spaceline-read-only)
       (projectile-root :face powerline-active2)
-      ((buffer-id which-function) :separator " > " :face powerline-active1)
+      ((buffer-id which-function) :separator " @ " :face powerline-active1)
       (anzu :when active :face spaceline-modified))
     '((selection-info :face spaceline-modified :when mark-active)
       (version-control)
