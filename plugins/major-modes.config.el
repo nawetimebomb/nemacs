@@ -2,7 +2,6 @@
 
 (use-package js2-mode
   :mode "\\.js\\'"
-  :delight js2-mode "Javascript"
   :interpreter "javascript")
 
 (use-package json-mode
@@ -22,13 +21,12 @@
   :interpreter "csharp")
 
 (use-package emacs-lisp-mode
-  :delight emacs-lisp-mode "Emacs"
   :mode "\\.el\\'"
   :interpreter "emacs-lisp")
 
 (use-package rjsx-mode
   :mode "components\\/.*\\.js\\'"
-  :interpreter "jsx"
+  :interpreter "rjsx"
   :config
   (setq tab-width 4))
 

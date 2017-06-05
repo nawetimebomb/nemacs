@@ -23,10 +23,15 @@
       (major-mode :face spaceline-read-only))))
 
 (setq-default
- powerline-height 30
+ powerline-height 24
  powerline-default-separator 'slant
- spaceline-flycheck-bullet "❖ %s"
  spaceline-separator-dir-left '(right . right)
  spaceline-separator-dir-right '(left . left))
+
+;; fix this. Somehow it's not working for Mac.
+(when (eq system-type 'darwin)
+  (setq
+   powerline-height 32
+   powerline-default-separator 'alternate))
 
 (provide 'spaceline.config)

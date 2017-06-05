@@ -10,6 +10,15 @@
              '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
 
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
+
 ;; define selected packages
 (defconst installed-packages-list
   '(
@@ -51,12 +60,5 @@
     ztree
     )
   )
-
-;; install packages from list
-(dolist (package installed-packages-list)
-  (unless (package-installed-p package)
-    (unless package-archive-contents
-      (package-refresh-contents))
-    (package-install package)))
 
 (provide 'setup-packages)

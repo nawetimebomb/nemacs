@@ -24,8 +24,10 @@
 (defvar gc-cons-threshold--original gc-cons-threshold)
 (setq gc-const-threshold (* 100 1024 1024)) ; limit garbage collection before init (100 MB)
 (setq custom-file (concat user-emacs-directory "custom-set-variables.el"))
+
+;; install use-package
 (require 'setup-packages)
-(require 'use-package.config)
+
 (require 'color-configuration)
 
 ;; load plugin configurations
