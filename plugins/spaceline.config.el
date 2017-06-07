@@ -10,9 +10,14 @@
   :config
   (spaceline-helm-mode 1)
   (spaceline-emacs-theme)
+  (setq-default
+   powerline-height 24
+   powerline-default-separator 'slant
+   spaceline-separator-dir-left '(right . right)
+   spaceline-separator-dir-right '(left . left))
   (spaceline-install
     'main
-    '((buffer-modified :face spaceline-read-only)
+    '((buffer-modified :face region)
       (projectile-root :face powerline-active2)
       ((buffer-id which-function) :separator " @ " :face powerline-active1)
       (anzu :when active :face spaceline-modified))
@@ -20,18 +25,12 @@
       (version-control)
       (global :when active)
       (line-column)
-      (major-mode :face spaceline-read-only))))
+      (major-mode :face region)))
 
-(setq-default
- powerline-height 24
- powerline-default-separator 'slant
- spaceline-separator-dir-left '(right . right)
- spaceline-separator-dir-right '(left . left))
-
-;; fix this. Somehow it's not working for Mac.
-(when (eq system-type 'darwin)
-  (setq
-   powerline-height 32
-   powerline-default-separator 'alternate))
+  ;; Mac config
+  (when (eq system-type 'darwin)
+    (setq
+     powerline-height 32
+     powerline-default-separator 'alternate)))
 
 (provide 'spaceline.config)

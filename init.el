@@ -17,8 +17,9 @@
                                     emacs-major-version emacs-minor-version))
 
 ;; add paths to load
-(add-to-list 'load-path global-setup-directory)
-(add-to-list 'load-path plugin-setup-directory)
+(add-to-list 'load-path
+             '(global-setup-directory
+               plugin-setup-directory))
 
 ;; On startup
 (defvar gc-cons-threshold--original gc-cons-threshold)
@@ -31,19 +32,19 @@
 (require 'color-configuration)
 
 ;; load plugin configurations
-(require 'auto-compile.config)
-(require 'column-marker.config)
+(require 'anzu.config)
 (require 'dumb-jump.config)
-(require 'find-file-in-project.config)
 (require 'git-gutter.config)
 (require 'helm.config)
 (require 'linum-mode.config)
-(require 'major-modes.config)
 (require 'multiple-cursors.config)
-(require 'smartparens.config)
+(require 'projectile.config)
 (require 'spaceline.config)
+(require 'smartparens.config)
 
-;; load local configurations
+(require 'major-modes.config)
+
+;; load local configurations // refactor these to create single plugins for each.
 (require 'hooks)
 (require 'modes) ; refactor this to plugin configuration
 (require 'shortcuts)

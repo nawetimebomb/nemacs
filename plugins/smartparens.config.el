@@ -1,9 +1,9 @@
 ;; smartparens configuration file
 
-(use-package smartparens
-  :ensure t
+(use-package smartparens-config
+  :ensure smartparens
   :config
-  (require 'smartparens-config)
-  (smartparens-mode))
+  (smartparens-global-mode)
+  (smartparens-strict-mode))
 
 (provide 'smartparens.config)

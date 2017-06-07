@@ -2,6 +2,7 @@
 
 (use-package dumb-jump
   :ensure t
+  :after helm
   :config
   (dumb-jump-mode 1)
   (setq dumb-jump-selector 'helm)

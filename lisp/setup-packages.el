@@ -19,13 +19,12 @@
 (require 'diminish)
 (require 'bind-key)
 
-;; define selected packages
+;; define selected packages - KILL THIS MOFO!
 (defconst installed-packages-list
   '(
     anzu ; display search results
     better-defaults ; remove menus
     color-theme-sanityinc-tomorrow ; tomorrow theme
-    column-marker ; mark column width
     company ; auto-complete
     company-quickhelp
     company-web ; complete my web stuff

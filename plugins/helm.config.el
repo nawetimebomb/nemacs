@@ -1,15 +1,14 @@
 ;; Helm configuration file
 
-(use-package helm
-  :ensure t
+(use-package helm-config
+  :ensure helm
   :config
-  (require 'helm-config)
-  (helm-mode 1)
+  (helm-mode t)
+  (add-to-list 'helm-boring-buffer-regexp-list "\\*")
+  (helm-autoresize-mode t)
   (setq-default
    helm-always-two-windows t
    helm-display-header-line nil)
-  (add-to-list 'helm-boring-buffer-regexp-list "\\*")
-  (helm-autoresize-mode t)
   (set-face-attribute 'helm-selection nil
                       :background custom-background-menu-selection-color
                       :foreground custom-foreground-menu-selection-color
@@ -17,10 +16,12 @@
   (set-face-attribute 'helm-source-header nil
                       :background custom-background-menu-header-color
                       :foreground custom-foreground-menu-header-color
-                      :height 1.8
+                      :height 1.5
                       :box nil)
-  (set-face-attribute 'helm-action nil :underline nil)
-  (set-face-attribute 'helm-match nil :background nil)
+  (set-face-attribute 'helm-action nil
+                      :underline nil)
+  (set-face-attribute 'helm-match nil
+                      :background nil)
   :bind
   ("M-x" . helm-M-x)
   ("C-x C-f" . helm-find-files)
@@ -39,6 +40,6 @@
 (use-package helm-projectile
   :ensure t
   :after helm
-  :config (helm-projectile-toggle 1))
+  :config (helm-projectile-toggle t))
 
 (provide 'helm.config)

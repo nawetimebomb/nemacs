@@ -19,12 +19,17 @@
 ;; editor cursor
 (defconst custom-editor-cursor-color custom-color-blue)
 
+;; git gutter
+(defconst custom-git-modified-color custom-color-yellow)
+(defconst custom-git-added-color custom-color-green)
+(defconst custom-git-deleted-color custom-color-red)
+
 ;; menu selections
-(defconst custom-foreground-menu-selection-color custom-color-green)
+(defconst custom-foreground-menu-selection-color custom-color-blue)
 (defconst custom-background-menu-selection-color custom-color-selection)
 
 ;; menu headers
-(defconst custom-foreground-menu-header-color custom-color-green)
+(defconst custom-foreground-menu-header-color custom-color-blue)
 (defconst custom-background-menu-header-color nil)
 
 ;; editor line highlight

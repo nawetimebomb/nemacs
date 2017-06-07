@@ -2,7 +2,7 @@
 
 (use-package multiple-cursors
   :config
-  (require 'multiple-cursors)
+  (multiple-cursors-mode t)
   :bind
   ("C-S-l" . mc/mark-all-like-this))
 
