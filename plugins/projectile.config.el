@@ -7,6 +7,7 @@
   :config
   (projectile-global-mode)
   (setq projectile-indexing-method 'alien)
+  (setq projectile-completion-system 'helm)
   (setq projectile-enable-caching t)
   :bind
   ("C-p" . projectile-command-map))

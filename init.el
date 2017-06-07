@@ -17,9 +17,8 @@
                                     emacs-major-version emacs-minor-version))
 
 ;; add paths to load
-(add-to-list 'load-path
-             '(global-setup-directory
-               plugin-setup-directory))
+(add-to-list 'load-path global-setup-directory)
+(add-to-list 'load-path plugin-setup-directory)
 
 ;; On startup
 (defvar gc-cons-threshold--original gc-cons-threshold)
