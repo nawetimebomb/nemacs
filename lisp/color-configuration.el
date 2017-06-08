@@ -17,17 +17,20 @@
 (defconst custom-color-blue "#81a2be")
 (defconst custom-color-purple "#b294bb")
 
-(defun face (face &rest spec) ; convenience fn
+(defun face (face &rest spec)
   (face-spec-set face (list (cons t spec))))
 
 ;; spaceline
-(face 'spaceline/read-only nil
+(face 'spaceline/read-only t
       :background custom-color-blue)
 (face 'spaceline/modified nil
-      :background custom-color-red)
-(face 'spaceline/normal nil
+      :background custom-color-red
+      :foreground "black")
+(face 'spaceline/normal t
       :background custom-color-green
       :foreground custom-color-background)
+
+;; helm
 (face 'helm/selection nil
       :background custom-color-gray
       :foreground custom-color-blue

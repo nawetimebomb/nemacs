@@ -11,8 +11,12 @@
   (spaceline-helm-mode 1)
   (spaceline-emacs-theme)
 
-  (defun get-major-mode ()
-    '(s-trim major-mode))
+  (defface spaceline/status
+    '((t :background "#0000ff"
+         :foreground "black"
+         ))
+    "Status-driven face color"
+    :group 'spaceline-config)
 
   (if (eq system-type 'darwin)
       (setq-default
@@ -29,14 +33,14 @@
   (spaceline-install
     'main
     '((buffer-modified :face region)
+      (major-mode :face spaceline/status)
       (projectile-root :face powerline-active2)
       ((buffer-id which-function) :separator " @ " :face powerline-active1)
       (anzu :when active :face spaceline-modified))
-    '((selection-info :face spaceline-modified :when mark-active)
+    '((selection-info :face region :when mark-active)
       (version-control)
       (global :when active)
       (line-column)
-      (major-mode :face region)
       (buffer-position))))
 
 (provide 'spaceline.config)
