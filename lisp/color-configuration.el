@@ -16,6 +16,14 @@
 (defconst custom-color-blue "#81a2be")
 (defconst custom-color-purple "#b294bb")
 
+(defun face (face &rest spec) ; convenience fn
+  (face-spec-set face (list (cons t spec))))
+
+;; spaceline
+(face 'spaceline/read-only :background custom-color-blue)
+(face 'spaceline/modified :background custom-color-red)
+(face 'spaceline/normal :background custom-color-green :foreground custom-color-background)
+
 ;; editor cursor
 (defconst custom-editor-cursor-color custom-color-blue)
 

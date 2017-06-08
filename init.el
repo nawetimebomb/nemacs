@@ -49,7 +49,7 @@
 (require 'dumb-jump.config)
 (require 'git-gutter.config)
 (require 'helm.config)
-(require 'linum-mode.config)
+(require 'linum.config)
 (require 'magit.config)
 (require 'multiple-cursors.config)
 (require 'neotree.config)

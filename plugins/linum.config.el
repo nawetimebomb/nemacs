@@ -1,6 +1,7 @@
 ;; linum-mode configuration file
 
-(use-package linum-mode
+(use-package linum
+  :ensure nil
   :config
   (global-linum-mode 1)
   (unless window-system
@@ -8,7 +9,7 @@
               (lambda ()
                 (setq-local linum-format-fmt
                             (let ((w (length (number-to-string
-                                (count-lines (point-min) (point-max))))))
+                                 (count-lines (point-min) (point-max))))))
                               (concat "%" (number-to-string w) "d"))))))
   (defun linum-format-func (line)
     (concat
@@ -17,4 +18,4 @@
   (unless window-system
     (setq linum-format 'linum-format-func)))
 
-(provide 'linum-mode.config)
+(provide 'linum.config)

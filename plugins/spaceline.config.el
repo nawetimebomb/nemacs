@@ -11,6 +11,9 @@
   (spaceline-helm-mode 1)
   (spaceline-emacs-theme)
 
+  (defun get-major-mode ()
+    '(s-trim major-mode))
+
   (if (eq system-type 'darwin)
       (setq-default
        powerline-height 32
@@ -33,6 +36,7 @@
       (version-control)
       (global :when active)
       (line-column)
-      (major-mode :face region))))
+      (major-mode :face region)
+      (buffer-position))))
 
 (provide 'spaceline.config)
