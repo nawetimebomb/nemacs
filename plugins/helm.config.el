@@ -1,5 +1,13 @@
 ;; Helm configuration file
 
+(use-package helm
+  :ensure t
+  :config
+  (set-face-attribute 'helm-selection 'helm/selection)
+  (set-face-attribute 'helm-source-header 'helm/source-header)
+  (set-face-attribute 'helm-action 'helm/action)
+  (set-face-attribute 'helm-match 'helm/match))
+
 (use-package helm-config
   :ensure helm
   :config
@@ -8,19 +16,6 @@
   (setq-default
    helm-always-two-windows t
    helm-display-header-line nil)
-  (set-face-attribute 'helm-selection nil
-                      :background custom-background-menu-selection-color
-                      :foreground custom-foreground-menu-selection-color
-                      :bold t)
-  (set-face-attribute 'helm-source-header nil
-                      :background custom-background-menu-header-color
-                      :foreground custom-foreground-menu-header-color
-                      :height 1.5
-                      :box nil)
-  (set-face-attribute 'helm-action nil
-                      :underline nil)
-  (set-face-attribute 'helm-match nil
-                      :background nil)
   :bind
   ("M-x" . helm-M-x)
   ("C-x C-f" . helm-find-files)

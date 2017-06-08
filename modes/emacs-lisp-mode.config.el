@@ -4,6 +4,8 @@
 (use-package emacs-lisp-mode
   :ensure nil
   :mode "\\.el\\'"
-  :interpreter "emacs-lisp")
+  :interpreter "emacs-lisp"
+  :bind
+  ("C-c m e" . emacs-lisp-mode))
 
 (provide 'emacs-lisp-mode.config)

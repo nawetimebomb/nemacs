@@ -7,6 +7,8 @@
   :mode "components/.*\\.js\\'"
   :interpreter "jsx"
   :config
-  (set-variable tab-width 4))
+  (setq tab-width 4)
+  :bind
+  ("C-c m r" . rjsx-mode))
 
 (provide 'rjsx-mode.config)

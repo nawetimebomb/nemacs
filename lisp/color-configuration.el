@@ -5,7 +5,8 @@
 ;; |==============================================|
 
 ;; color list
-(defconst custom-color-selection "#373b41")
+(defconst custom-color-selection "#373b41") ;; remove this, use gray
+(defconst custom-color-gray "#373b41")
 (defconst custom-color-background "#1d1f21")
 (defconst custom-color-current "#282a2e")
 (defconst custom-color-red "#cc66666")
@@ -20,9 +21,26 @@
   (face-spec-set face (list (cons t spec))))
 
 ;; spaceline
-(face 'spaceline/read-only :background custom-color-blue)
-(face 'spaceline/modified :background custom-color-red)
-(face 'spaceline/normal :background custom-color-green :foreground custom-color-background)
+(face 'spaceline/read-only nil
+      :background custom-color-blue)
+(face 'spaceline/modified nil
+      :background custom-color-red)
+(face 'spaceline/normal nil
+      :background custom-color-green
+      :foreground custom-color-background)
+(face 'helm/selection nil
+      :background custom-color-gray
+      :foreground custom-color-blue
+      :bold t)
+(face 'helm/source-header nil
+      :background nil
+      :foreground custom-color-blue
+      :height 1.5
+      :box nil)
+(face 'helm/action nil
+      :underline nil)
+(face 'helm/action nil
+      :background nil)
 
 ;; editor cursor
 (defconst custom-editor-cursor-color custom-color-blue)

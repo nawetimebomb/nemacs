@@ -8,6 +8,8 @@
   :interpreter "javascript"
   :config
   (setq indent-tabs-mode nil)
-  (setq tab-width 4))
+  (setq tab-width 4)
+  :bind
+  ("C-c m j" . js2-mode))
 
 (provide 'js2-mode.config)
