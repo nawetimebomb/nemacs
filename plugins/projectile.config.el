@@ -1,4 +1,4 @@
-;; Projectile: is a project interaction library for Emacs by @bbatsov.
+;; Projectile is a project interaction library for Emacs by @bbatsov.
 ;; https://github.com/bbatsov/projectile
 ;; configuration file by @elnawe.
 

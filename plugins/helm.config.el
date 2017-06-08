@@ -4,7 +4,6 @@
   :ensure helm
   :config
   (helm-mode t)
-  (add-to-list 'helm-boring-buffer-regexp-list "\\*")
   (helm-autoresize-mode t)
   (setq-default
    helm-always-two-windows t
@@ -31,6 +30,7 @@
   :ensure nil
   :after helm
   :config
+  (add-to-list 'helm-boring-buffer-regexp-list "\\*")
   (setq-default
    helm-buffers-fuzzy-matching t
    helm-buffer-max-length nil)
@@ -40,6 +40,7 @@
 (use-package helm-projectile
   :ensure t
   :after helm
-  :config (helm-projectile-toggle t))
+  :config
+  (helm-projectile-toggle 1))
 
 (provide 'helm.config)
