@@ -1,2 +1,47 @@
 #+TITLE: InitDotEl
-#+AUTHOR: Nahuel Jesús Sacchetti [[http://github.com/elnawe][[[@elnawe]]]]
+#+AUTHOR: Nahuel Jesús Sacchetti
+
+* Index table
+- [[#bootstrap][Bootstrap]]
+  - [[#my-better-defaults][My better-defaults]]
+- [[#theme][Theme]]
+
+* #bootstrap
+
+** #my-better-defaults
+
+Since I've been using Emacs I noticed some actual default variables are not the best fit for me. I managed to put together a list of my better defaults and they are here:
+
+#+BEGIN_SRC emacs-lisp
+(setq-default
+ confirm-kill-emacs 'yes-or-no-p ; Confirm before exit
+ cursor-in-non-selected-windows t ; Hide cursor in inactive windows
+ delete-by-moving-to-trash t ; Move file to trash instead of removing it
+ display-time-format "%H:%M" ; Format the time string
+ fill-column 120 ; Width before automatic line breaks
+ help-window-select t ; Focus help windows when opened
+ indent-tabs-mode nil ; Use spaces for indentation
+ inhibit-startup-screen t ; Disable the startup window
+ initial-scratch-message "" ; Empty *scratch* buffer
+ select-enable-clipboard t ; merge system's and Emacs' clipboard
+ sentence-end-double-space nil ; End the sentence when there is a dot and a space
+ show-trailing-whitespace nil ; Display trailing whitespaces
+ tab-width 4 ; Set indentation width
+ uniquify-buffer-name-style 'forward ; Make buffer names unique
+ )
+(delete-selection-mode) ; Replace region when inserting text
+(display-time-mode) ; Enable time-mode in mode-line
+(fset 'yes-or-no-p 'y-or-n-p) ; Alias y/n prompts to yes/no
+(global-hl-line-model) ; Highlight current line
+(global-subword-mode) ; Iterate through camelCase words
+(menu-bar-mode 0) ; Disable the menu bar
+(mouse-avoidance-mode 'banish) ; Avoid mouse colission with point
+#+END_SRC
+
+Collect the garbage when you focus out, this feels a little bit faster
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'focus-out-hook #'garbage-collect)
+#+END_SRC
+
+* Theme

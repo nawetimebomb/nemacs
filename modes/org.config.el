@@ -3,7 +3,8 @@
 ;; configuration file by @elnawe.
 
 (use-package org
-  :ensure t
-  :mode "\\.org\\'")
+  :ensure org-plus-contrib
+  :mode "\\.org\\'"
+  :interpreter "org")
 
 (provide 'org.config)
