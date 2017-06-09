@@ -8,7 +8,8 @@
 (setq-default indent-tabs-mode nil)
 (setq default-tab-width 4)
 (setq tab-width 4)
-(setq confirm-kill-emacs 'yes-or-no-p)
+(setq confirm-kill-emacs 'yes-or-no-p
+      visible-bell nil)
 
 ;; backup variables
 (setq backup-by-copying t)

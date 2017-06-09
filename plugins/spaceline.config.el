@@ -3,20 +3,22 @@
 (use-package spaceline
   :ensure t
   :config
-  (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))))
+
+  (spaceline-define-segment elnawe/version-control
+    "Show the current version control branch."
+    (when vc-mode
+      (substring vc-mode (+ 2 (length (symbol-name (vc-backend buffer-file-name))))))))
 
 (use-package spaceline-config
-  :ensure spaceline
+  :ensure nil
+  :after spaceline
   :config
-  (spaceline-helm-mode 1)
+  (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))
+                spaceline-separator-dir-left '(right . right)
+                spaceline-separator-dir-right '(left . left)
+                spaceline-highlight-face-func 'spaceline-highlight-face-modified)
   (spaceline-emacs-theme)
-
-  (defface spaceline/status
-    '((t :background "#0000ff"
-         :foreground "black"
-         ))
-    "Status-driven face color"
-    :group 'spaceline-config)
+  (spaceline-helm-mode 1)
 
   (if (eq system-type 'darwin)
       (setq-default
@@ -26,21 +28,34 @@
      powerline-height 24
      powerline-default-separator 'slant))
 
-  (setq-default
-   spaceline-separator-dir-left '(right . right)
-   spaceline-separator-dir-right '(left . left))
-
   (spaceline-install
-    'main
-    '((buffer-modified :face region)
-      (major-mode :face spaceline/status)
+    '((major-mode :face highlight-face)
       (projectile-root :face powerline-active2)
       ((buffer-id which-function) :separator " @ " :face powerline-active1)
       (anzu :when active :face spaceline-modified))
     '((selection-info :face region :when mark-active)
-      (version-control)
+      (elnawe/version-control)
       (global :when active)
       (line-column)
-      (buffer-position))))
+      (buffer-position :face highlight-face)))
+
+  (spaceline-install
+    'helm
+    '((helm-buffer-id :face spaceline-read-only)
+      (helm-number)
+      (helm-prefix-argument))
+    '((global :face region)))
+
+  (set-face-attribute 'spaceline-modified nil
+                      :background colors/red
+                      :foreground colors/black)
+
+  (set-face-attribute 'spaceline-unmodified nil
+                      :background colors/green
+                      :foreground colors/black)
+
+  (set-face-attribute 'spaceline-read-only nil
+                      :background colors/blue
+                      :foreground colors/black))
 
 (provide 'spaceline.config)

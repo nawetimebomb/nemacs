@@ -10,9 +10,13 @@
    '(git-gutter:added-sign " ")
    '(git-gutter:deleted-sign " ")
    '(git-gutter:modified-sign " ")
+   '(git-gutter:hide-gutter nil)
    '(git-gutter:update-interval 0))
-  (set-face-background 'git-gutter:modified custom-git-modified-color)
-  (set-face-background 'git-gutter:added custom-git-added-color)
-  (set-face-background 'git-gutter:deleted custom-git-deleted-color))
+  (set-face-attribute 'git-gutter:added nil
+                      :background git-gutter/added--background)
+  (set-face-attribute 'git-gutter:deleted nil
+                      :background git-gutter/deleted--background)
+  (set-face-attribute 'git-gutter:modified nil
+                      :background git-gutter/modified--background))
 
 (provide 'git-gutter.config)
