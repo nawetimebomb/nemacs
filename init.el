@@ -30,6 +30,7 @@
 ;; install use-package
 (require 'use-package.config)
 (require 'color-configuration)
+(require 'themes)
 
 ;; load major-mode configurations from /modes
 (require 'csharp-mode.config)
@@ -61,7 +62,6 @@
 (require 'hooks)
 (require 'modes) ; refactor this to plugin configuration
 (require 'shortcuts)
-(require 'themes)
 (require 'editor)
 
 ;; on finish

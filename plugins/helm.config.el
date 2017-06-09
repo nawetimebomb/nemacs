@@ -5,20 +5,7 @@
   :config
   (setq-default
    helm-always-two-windows t
-   helm-display-header-line nil)
-  (set-face-attribute 'helm-selection nil
-                      :background helm/selection--background
-                      :foreground helm/selection--foreground
-                      :bold t)
-  (set-face-attribute 'helm-source-header nil
-                      :background helm/source-header--background
-                      :box nil
-                      :foreground helm/source-header--foreground
-                      :height helm/source-header--height)
-  (set-face-attribute 'helm-action nil
-                      :underline nil)
-  (set-face-attribute 'helm-match nil
-                      :background nil))
+   helm-display-header-line nil))
 
 (use-package helm-config
   :ensure helm

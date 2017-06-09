@@ -9,6 +9,9 @@
 (global-hl-line-mode t)
 
 ;; buffer modes
+(display-time-mode)
+(setq display-time-format "%H:%M"
+      display-time-default-load-average nil)
 (which-function-mode t)
 (column-number-mode 1)
 (desktop-save-mode 1)

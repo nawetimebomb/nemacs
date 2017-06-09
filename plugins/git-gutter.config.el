@@ -12,11 +12,12 @@
    '(git-gutter:modified-sign " ")
    '(git-gutter:hide-gutter nil)
    '(git-gutter:update-interval 0))
-  (set-face-attribute 'git-gutter:added nil
-                      :background git-gutter/added--background)
-  (set-face-attribute 'git-gutter:deleted nil
-                      :background git-gutter/deleted--background)
-  (set-face-attribute 'git-gutter:modified nil
-                      :background git-gutter/modified--background))
+  (zenburn-with-color-variables
+    (set-face-attribute 'git-gutter:added nil
+                        :background zenburn-green)
+    (set-face-attribute 'git-gutter:deleted nil
+                        :background zenburn-red)
+    (set-face-attribute 'git-gutter:modified nil
+                        :background zenburn-blue)))
 
 (provide 'git-gutter.config)

@@ -6,9 +6,9 @@
   - [[#my-better-defaults][My better-defaults]]
 - [[#theme][Theme]]
 
-* #bootstrap
+* Bootstrap
 
-** #my-better-defaults
+** My better-defaults
 
 Since I've been using Emacs I noticed some actual default variables are not the best fit for me. I managed to put together a list of my better defaults and they are here:
 

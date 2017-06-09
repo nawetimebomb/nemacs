@@ -4,9 +4,11 @@
 ;; |  copyright: elnawe.com (c) 2017              |
 ;; |==============================================|
 
-(use-package color-theme-sanityinc-tomorrow
+(use-package zenburn-theme
   :ensure t
   :init
-  (load-theme 'sanityinc-tomorrow-night t))
-
+  (load-theme 'zenburn t)
+  (if (eq system-type 'darwin)
+      (setq ns-use-srgb-colorspace nil)
+    (setq ns-use-srgb-colorspace t)))
 (provide 'themes)
