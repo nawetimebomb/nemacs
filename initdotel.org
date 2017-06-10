@@ -1,10 +1,5 @@
-#+TITLE: InitDotEl
+#+TITLE: InitDotEl - Emacs configuration file
 #+AUTHOR: Nahuel Jesús Sacchetti
-
-* Index table
-- [[#bootstrap][Bootstrap]]
-  - [[#my-better-defaults][My better-defaults]]
-- [[#theme][Theme]]
 
 * Bootstrap
 
@@ -13,30 +8,44 @@
 Since I've been using Emacs I noticed some actual default variables are not the best fit for me. I managed to put together a list of my better defaults and they are here:
 
 #+BEGIN_SRC emacs-lisp
-(setq-default
- confirm-kill-emacs 'yes-or-no-p ; Confirm before exit
- cursor-in-non-selected-windows t ; Hide cursor in inactive windows
- delete-by-moving-to-trash t ; Move file to trash instead of removing it
- display-time-format "%H:%M" ; Format the time string
- fill-column 120 ; Width before automatic line breaks
- help-window-select t ; Focus help windows when opened
- indent-tabs-mode nil ; Use spaces for indentation
- inhibit-startup-screen t ; Disable the startup window
- initial-scratch-message "" ; Empty *scratch* buffer
- select-enable-clipboard t ; merge system's and Emacs' clipboard
- sentence-end-double-space nil ; End the sentence when there is a dot and a space
- show-trailing-whitespace nil ; Display trailing whitespaces
- tab-width 4 ; Set indentation width
- uniquify-buffer-name-style 'forward ; Make buffer names unique
- )
-(delete-selection-mode) ; Replace region when inserting text
-(display-time-mode) ; Enable time-mode in mode-line
-(fset 'yes-or-no-p 'y-or-n-p) ; Alias y/n prompts to yes/no
-(global-hl-line-model) ; Highlight current line
-(global-subword-mode) ; Iterate through camelCase words
-(menu-bar-mode 0) ; Disable the menu bar
-(mouse-avoidance-mode 'banish) ; Avoid mouse colission with point
+  (setq-default
+   confirm-kill-emacs 'yes-or-no-p ; Confirm before exit
+   cursor-in-non-selected-windows t ; Hide cursor in inactive windows
+   delete-by-moving-to-trash t ; Move file to trash instead of removing it
+   display-time-format "%H:%M" ; Format the time string
+   fill-column 120 ; Width before automatic line breaks
+   help-window-select t ; Focus help windows when opened
+   indent-tabs-mode nil ; Use spaces for indentation
+   inhibit-startup-screen t ; Disable the startup window
+   initial-scratch-message "" ; Empty *scratch* buffer
+   select-enable-clipboard t ; merge system's and Emacs' clipboard
+   sentence-end-double-space nil ; End the sentence when there is a dot and a space
+   show-trailing-whitespace nil ; Display trailing whitespaces
+   tab-width 4 ; Set indentation width
+   uniquify-buffer-name-style 'forward ; Make buffer names unique
+   )
+  (delete-selection-mode) ; Replace region when inserting text
+  (display-time-mode) ; Enable time-mode in mode-line
+  (fset 'yes-or-no-p 'y-or-n-p) ; Alias y/n prompts to yes/no
+  (global-hl-line-mode) ; Highlight current line
+  (global-subword-mode) ; Iterate through camelCase words
+  (menu-bar-mode 0) ; Disable the menu bar
+  (mouse-avoidance-mode 'banish) ; Avoid mouse colission with point
 #+END_SRC
+
+** My variables
+
+In order to maintain this configuration file I setted up some variables. These are carefully crafted and you should be aware that editting these may cause trouble!
+
+#+BEGIN_SRC emacs-lisp
+  (defvar elnawe/font-family "Monaco" "Font used for theming")
+  (defvar elnawe/font-size-default 120 "Font size for default text")
+  (defvar elnawe/font-size-header-line 120 "Font size used in header lines")
+  (defvar elnawe/font-size-mode-line 120 "Font size used in mode-line")
+  (defvar elnawe/font-size-title 150 "Font size used in titles")
+#+END_SRC
+
+** Garbage collection
 
 Collect the garbage when you focus out, this feels a little bit faster
 
@@ -44,4 +53,781 @@ Collect the garbage when you focus out, this feels a little bit faster
 (add-hook 'focus-out-hook #'garbage-collect)
 #+END_SRC
 
+** Load =.custom.el=
+
+You can use the customization interface that Emacs provide but when you edit something, =init.el= is overriden with the
+new configuration. To fix this, I move the Emacs customization changes to a new file and then I load it.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+#+END_SRC
+
 * Theme
+
+** Remove the underlines on non-italic fonts
+
+If font doesn't support italic text, by default Emacs tries to underline it and I don't like that.
+
+#+BEGIN_SRC emacs-lisp
+  (set-face-attribute 'italic nil :underline nil)
+#+END_SRC
+
+** Zenburn theme and faces
+
+Load zenburn theme and fix some faces with zenburn color variables
+
+#+BEGIN_SRC emacs-lisp
+(use-package zenburn-theme
+  :init
+  (load-theme 'zenburn t)
+  :config
+  (set-face-attribute 'font-lock-comment-face nil :italic t)
+  (set-face-attribute 'font-lock-doc-face nil :italic t)
+
+  (zenburn-with-color-variables
+    (set-face-attribute 'button nil :foreground zenburn-yellow-2)
+    (set-face-attribute 'default nil
+                        :background zenburn-bg-05
+                        :height elnawe/font-size-default
+                        :font elnawe/font-family)
+    (set-face-attribute 'help-argument-name nil :foreground zenburn-orange :italic nil)
+    (set-face-attribute 'hl-line nil :background zenburn-bg+1)
+    (set-face-attribute 'header-line nil
+                        :background zenburn-bg-1
+                        :box nil
+                        :height elnawe/font-size-header-line)
+    (set-face-attribute 'region nil
+                        :background zenburn-bg-1
+                        :distant-foreground 'unspecified)
+    (set-face-attribute 'vertical-border nil :foreground zenburn-bg))
+
+  (zenburn-with-color-variables
+    (mapc
+     (lambda (face)
+       (when (eq (face-attribute face :background) zenburn-bg)
+         (set-face-attribute face nil :background 'unspecified)))
+     (face-list))))
+#+END_SRC
+
+* Language support
+
+I use Emacs for almost everything, but mostly to code. These are my configurations.
+
+** C-Sharp
+
+This is probably one of my favorite languages right now I don't really know why though everyone seems to hate it.
+
+#+BEGIN_SRC emacs-lisp
+(use-package csharp-mode
+  :delight csharp-mode "C#")
+#+END_SRC
+
+** CSS
+
+#+BEGIN_SRC emacs-lisp
+  (use-package css-mode
+    :ensure nil
+    :config
+    (setq-default css-indent-offset 4))
+
+  (use-package scss-mode
+    :ensure nil
+    :delight scss-mode "SCSS"
+    :mode ("\\.sass\\'" "\\.scss\\'"))
+#+END_SRC
+
+** HTML
+
+Using HTML mode defined in =sgml-mode.el=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package sgml-mode
+    :ensure nil
+    :delight html-mode "HTML"
+    :init
+    (add-hook 'html-mode-hook #'sgml-electric-tag-pair-mode)
+    (add-hook 'html-mode-hook #'sgml-name-8bit-mode)
+    :config
+    (setq-default sgml-basic-offset 4))
+#+END_SRC
+
+** JavaScript
+
+I use =js2-mode= for my code since it looks and feels better.
+
+*** TODO Add =rjsx-mode= to support React.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package js2-mode
+    :delight js2-mode "JavaScript"
+    :config
+    (setq-default js-indent-level 4))
+
+  (use-package json-mode
+    :delight json-mode "JSON")
+#+END_SRC
+
+** Lisp
+
+Like I said: I use Emacs a lot... And I really mean a lot! Lisp isn't my favourite language, though I'm always using it.
+
+#+BEGIN_SRC emacs-lisp
+(use-package emacs-lisp-mode
+  :ensure nil
+  :delight emacs-lisp-mode "Emacs"
+  :config
+  (delight 'lisp-interaction-mode "Lisp Interaction"))
+
+(use-package lisp-mode
+  :ensure nil
+  :delight lisp-mode "Lisp")
+#+END_SRC
+
+** Markdown
+
+Mostly I use =org-mode=, but sometimes you need to write down your README files.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package markdown-mode
+    :delight markdown-mode "Markdown"
+    :mode ("INSTALL\\'" "LICENSE\\'" "README\\'" "\\.md\\'" "\\.markdown\\'")
+    :config
+    (setq-default
+     markdown-asymmetric-header t
+     markdown-split-window-direction 'right))
+#+END_SRC
+** Org
+
+My whole configuration is written in =org-mode=. I also write all my TODO lists in Org. This is a powerful tool and I'm not the best user. I'm learning though.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org
+  :ensure nil
+  :delight org-mode "Org"
+  :init
+  (add-hook 'org-mode-hook #'org-sticky-header-mode)
+  (add-hook 'org-mode-hook #'org-bullets-mode)
+  :config
+  (setq-default
+   org-descriptive-links nil
+   org-support-shift-select 'always
+   org-startup-folded nil
+   org-startup-truncated nil))
+
+(use-package org-src
+  :ensure nil
+  :after org
+  :config
+  (setq-default
+   org-edit-src-content-indentation 0
+   org-edit-src-persistent-message nil
+   org-src-window-setup 'current-window))
+#+END_SRC
+
+Display the Org header in the header-line
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-sticky-header
+  :config
+  (setq-default
+   org-sticky-header-full-path 'full
+   org-sticky-header-outline-path-separator " / "))
+#+END_SRC
+
+** Python
+
+I'm not using =python-mode= all the time but sometimes I create little scripts to help me with the dirty work.
+
+#+BEGIN_SRC emacs-lisp
+(use-package python
+  :ensure nil
+  :delight python-mode "Python")
+
+(use-package pip-requirements
+  :delight pip-requirements-mode "PyPA Requirements")
+#+END_SRC
+
+* Major features
+
+** Alert
+
+Alerts instead of messages. Very useful when debugging!
+
+#+BEGIN_SRC emacs-lisp
+(use-package alert
+  :config
+  (when (eq system-type 'darwin)
+    (setq-default alert-defaults-style 'osx-notifier)))
+#+END_SRC
+
+** Auto-completition
+
+I'm not a very big fan of auto-complete my words but sometimes it's a bit helpful.
+
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :config
+  (global-company-mode)
+  (setq-default
+   company-idle-delay 0.2
+   company-minimum-prefix-length 1
+   company-tooltip-align-annotations t))
+#+END_SRC
+
+** Emacs everyday
+
+Since I use Emacs all the time, everyday, almost for everything I need some neat configurations. They are all here.
+
+*** Auto-indent as you go
+
+Helps me to maintain my code aligned with aggresive indentation
+
+#+BEGIN_SRC emacs-lisp
+(use-package aggressive-indent
+  :config
+  (global-aggresive-indent-mode))
+#+END_SRC
+
+*** Backup copies
+
+Manage the backup copies. Always keeping them but save them inside Emacs directory.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default
+ backup-by-copying t
+ backup-directory-alist '(("." . "~/.emacs.d/saves"))
+ delete-old-versions 'never
+ make-backup-files t
+ version-control 'numbered)
+#+END_SRC
+
+*** Dim other buffers
+
+Automatically dim my other buffers
+
+#+BEGIN_SRC emacs-lisp
+(use-package auto-dim-other-buffers
+  :init
+  (auto-dim-other-buffers-mode)
+  :config
+  (zenburn-with-color-variables
+    (set-face-attribute 'auto-dim-other-buffers-face nil :background zenburn-bg-1)))
+#+END_SRC
+
+*** Disable documentation at point
+
+I don't want to see documentation in the echo area because it conflicts with =flycheck=
+
+#+BEGIN_SRC emacs-lisp
+(use-package eldoc
+  :ensure nil
+  :config
+  (global-eldoc-mode -1))
+#+END_SRC
+
+*** Fill paragraph automatically
+
+When I'm in =text-mode= I want my paragraph to be just the lenght of my ruler. Also, I don't want to use =M-q= to adjust
+it by myself, because Emacs allow me to do it automatically!
+
+#+BEGIN_SRC emacs-lisp
+(use-package simple
+  :ensure nil
+  :config
+  (add-hook 'text-mode-hook #'turn-on-auto-fill))
+#+END_SRC
+
+*** Kill unused buffers
+
+Clean my buffer list on delay with =midnight= beucase I leave Emacs always open. Keep this configuration always alive.
+
+#+BEGIN_SRC emacs-lisp
+(use-package midnight
+  :ensure nil
+  :config
+  (setq-default clean-buffers-list-delay-general 1)
+  (add-to-list 'clean-buffers-list-kill-never-buffer-names "initdotel.org"))
+#+END_SRC
+
+** Expanding code
+
+Using built-in =hippie-exp= package to manage expansions. This is a DWIM-like (Do What I Mean) expansion, trying to be smart depending on its context.
+Mostly you can use any kind of expansion with =<C-return>=
+
+#+BEGIN_SRC emacs-lisp
+(use-package emmet-mode
+  :bind
+  (:map emmet-mode-keymap
+        ("<C-return>" . nil)
+        ("C-M-<left>" . nil)
+        ("C-M-<right>" . nil)
+        ("C-c w" . nil))
+  :init
+  (add-hook 'css-mode-hook #'emmet-mode)
+  (add-hook 'html-mode-hook #'emmet-mode)
+  :config
+  (setq-default emmet-move-cursor-between-quote t))
+
+(use-package hippie-exp
+  :ensure nil
+  :preface
+  (defun elnawe/emmet-try-expand-line (args)
+    "Try `emmet-expand-line' if `emmet-mode' is active. Else, does nothing."
+     (interactive "P")
+     (when emmet-mode (emmet-expand-line args)))
+  :bind
+  ("<C-return>" . hippie-expand)
+  :config
+  (setq-default
+   hippie-expand-try-functions-list '(yas-hippie-try-expand elnawe/emmet-try-expand-line)
+   hippie-expand-verbose nil))
+
+(use-package yasnippet
+  :init
+  (add-hook 'csharp-mode-hook #'yas-minor-code)
+  (add-hook 'emacs-lisp-mode-hook #'yas-minor-mode)
+  (add-hook 'html-mode-hook #'yas-minor-mode)
+  (add-hook 'js2-mode-hook #'yas-minor-mode)
+  (add-hook 'org-mode-hook #'yas-minor-mode)
+  (add-hook 'python-mode-hook #'yas-minor-mode)
+  :config
+  (setq-default yas-snippet-dirs '("~/.emacs.d/snippets"))
+  (yas-reload-all)
+  (unbind-key "TAB" yas-minor-mode-map)
+  (unbind-key "<tab>" yas-minor-mode-map))
+#+END_SRC
+
+** Help
+
+One great feature of Emacs is the self-documentation. This little configuration makes navigating through it a little bit easier.
+
+#+BEGIN_SRC emacs-lisp
+(use-package help-mode
+  :ensure nil
+  :bind
+  (:map help-mode-map
+        ("<" . help-go-back)
+        (">" . help-go-forward)))
+#+END_SRC
+
+** Linting
+
+I write a big amount of code everyday and sometimes I'm really inspired so I don't stop writing and coding. When I finish I've to double-check my code to see if I miss something and that's when my linting configuration kicks in.
+This configuration need some binaries so don't forget to read my [[file+emacs:README.org][README.org]] to learn about this.
+
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'flycheck-mode)
+  (add-hook 'js-mode-hook #'flycheck-mode)
+  :config
+  (setq-default
+   flycheck-check-syntax-automatically '(save mode-enabled)
+   flycheck-disabled-checkers '(emacs-lisp-checkdoc)
+   flycheck-display-errors-delay .3)
+  (zenburn-with-color-variables
+    (set-face-attribute 'flycheck-error nil :underline zenburn-red)
+    (set-face-attribute 'flycheck-info nil :underline zenburn-blue+1)
+    (set-face-attribute 'flycheck-warning nil :underline zenburn-orange)
+    (set-face-attribute 'flycheck-fringe-error nil :foreground zenburn-red)
+    (set-face-attribute 'flycheck-fringe-info nil :foreground zenburn-blue+1)
+    (set-face-attribute 'flycheck-fringe-warning nil :foreground zenburn-orange)))
+#+END_SRC
+
+** Mode-line
+
+This is where I spend most of the time. I love customization and Emacs bring me something like this to play. I use =spaceline= to customize my mode-line, but I'm positive that in some future I will move back to =powerline=.
+
+*** Delight
+
+This package allows me to rename the major/minor modes "lightes", so they look more like a compact and  descriptive string instead of the awful name that they already have (I'm looking at you =js2-mode=). *NOTE*: Since this package is installed as main dependency, this piece of coude is merely for configuration.
+
+#+BEGIN_SRC emacs-lisp
+(use-package delight
+  :ensure nil
+  :config
+  (defadvice powerline-major-mode (around delight-powerline-major-mode activate)
+    (let ((inhibit-mode-name-delight nil)) ad-do-it))
+  (defadvice powerline-minor-modes (around delight-powerline-minor-modes activate)
+    (let ((inhibit-mode-name-delight nil)) ad-do-it)))
+#+END_SRC
+
+*** Spaceline
+
+#+BEGIN_SRC emacs-lisp
+(use-package spaceline
+  :config
+  (spaceline-define-segment elnawe/major-mode
+                            "Shows the current major-mode, but removes the mouseover"
+                            (propertize (powerline-major-mode)
+                                        'mouse-face nil))
+
+  (spaceline-define-segment elnawe/buffer-id
+                            "Shows the name of the buffer, but removes the mouseover."
+                            (propertize (s-trim (powerline-buffer-id 'mode-line-buffer-id))
+                                        'mouse-face nil))
+
+  (spaceline-define-segment elnawe/version-control
+                            "Because I don't like how default version-control"
+                            (propertize (when vc-mode
+                                          (defvar current-branch (substring vc-mode (+ 2 (length (symbol-name (vc-backend buffer-file-name))))))
+                                          (powerline-raw
+                                           (s-trim (concat current-branch
+                                                           (when (buffer-file-name)
+                                                             (pcase (vc-state (buffer-file-name))
+                                                               (`up-to-date "")
+                                                               (`edited " *")))))))
+                                        'mouse-face nil)))
+
+(use-package spaceline-config
+  :ensure nil
+  :after spaceline
+  :config
+  (setq-default
+   mode-line-format '("%e" (:eval (spaceline-ml-main)))
+   spaceline-separator-dir-left '(left . left)
+   spaceline-separator-dir-right '(right . right)
+   spaceline-highlight-face-func 'spaceline-highlight-face-modified
+   powerline-default-separator 'slant)
+  (spaceline-emacs-theme)
+
+  (spaceline-install
+   '((elnawe/major-mode :face highlight-face)
+     (projectile-root)
+     (elnawe/buffer-id)
+     (elnawe/which-function :when active)
+     (anzu))
+   '((selection-info)
+     (elnawe/version-control)
+     (line-column)
+     (buffer-position)
+     (global :face highlight-face)))
+  (zenburn-with-color-variables
+    (set-face-attribute 'powerline-active1 nil
+                        :background zenburn-bg-1)
+    (set-face-attribute 'powerline-active2 nil
+                        :background zenburn-bg-1)
+    (set-face-attribute 'mode-line-inactive nil
+                        :background zenburn-bg)
+    (set-face-attribute 'powerline-inactive1 nil
+                        :background zenburn-bg)
+    (set-face-attribute 'powerline-inactive2 nil
+                        :background zenburn-bg)
+    (set-face-attribute 'spaceline-modified nil
+                        :background zenburn-red
+                        :foreground zenburn-red-4)
+    (set-face-attribute 'spaceline-unmodified nil
+                        :background zenburn-green-1
+                        :foreground zenburn-green+4)
+    (set-face-attribute 'spaceline-read-only nil
+                        :background zenburn-blue+1
+                        :foreground zenburn-blue-5)))
+#+END_SRC
+
+** Navigation
+
+Some helpers to navigate through and inside files
+
+Smarter =C-a=. Props to: [[http://github.com/angrybacon][angrybacon]]
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key [remap move-beginning-of-line] 'angrybacon/beginning-of-line-dwim)
+
+(defun angrybacon/beginning-of-line-dwim ()
+  "Move point to first non-whitespace character, or beginning of line."
+  (interactive "^")
+  (let ((origin (point)))
+    (beginning-of-line)
+    (and (= origin (point))
+         (back-to-indentation))))
+#+END_SRC
+
+*** Mouse scrolling
+
+I barely use my mouse but when I do...
+
+#+BEGIN_SRC emacs-lisp
+(use-package mwheel
+  :ensure nil
+  :config
+  (setq-default
+   mouse-wheel-progressive-speed nil
+   mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control)))))
+#+END_SRC
+
+*** Search and replace
+
+Better search and replace with =anzu=. This is a known =vim= package that [[https://github.com/syohex/emacs-anzu][syohex]] ported to Emacs. Also, here I've some =isearch= configuration to work with better regexp searching mechanics.
+
+#+BEGIN_SRC emacs-lisp
+(use-package anzu
+  :bind ([remap query-replace] . anzu-query-replace-regexp)
+  :config
+  (global-anzu-mode)
+  (setq-default
+   anzu-cons-mode-line-p nil)
+  (zenburn-with-color-variables
+    (set-face-attribute 'anzu-replace-highlight nil
+                        :background zenburn-red-4
+                        :foreground zenburn-red+1)
+    (set-face-attribute 'anzu-replace-to nil
+                        :background zenburn-green-1
+                        :foreground zenburn-green+4)))
+
+(use-package isearch
+  :ensure nil
+  :bind
+  (("C-S-r" . isearch-backward-regexp)
+   ("C-S-s" . isearch-forward-regexp)
+   :map isearch-mode-map
+   ("<M-down>" . isearch-ring-advance)
+   ("<M-up>" . isearch-ring-retreat)
+   :map minibuffer-local-isearch-map
+   ("<M-down>" . next-history-element)
+   ("<M-up>" . previous-history-element))
+  :init
+  (setq-default
+   isearch-allow-scroll t
+   lazy-highlight-cleanup nil
+   lazy-highlight-initial-delay 0)
+  (zenburn-with-color-variables
+    (set-face-attribute 'isearch nil
+                        :background zenburn-blue
+                        :foreground zenburn-blue-5)
+    (set-face-attribute 'isearch-lazy-highlight-face nil
+                        :background zenburn-blue-5
+                        :foreground zenburn-blue)))
+#+END_SRC
+
+** OS specific configurations
+
+Because I use Emacs everywhere, I need some extra configurations.
+
+*** MacOS
+
+#+BEGIN_SRC emacs-lisp
+(when (eq system-type 'darwin)
+  (setq-default
+   exec-path (append exec-path '("/usr/local/bin"))  ; Add Homebrew path
+   ns-command-modifier 'meta                         ; Meta key is Command
+   ns-option-modifier nil                            ; I use Alt/Option to expand my keyboard layout
+   ns-right-option-modifier 'super))                 ; Never use right Alt key so I can use it as Super key
+
+#+END_SRC
+
+Intializing env inside Emacs
+
+#+BEGIN_SRC emacs-lisp
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns))
+  :config (exec-path-from-shell-initialize))
+#+END_SRC
+
+** Parentheses
+
+When programming, I use different kind of wrapper. Lisp knows it well.
+
+This one highlight my delimiters in a rainbow. Super easy to read, right?
+
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-delimiters
+  :init
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+  :config
+  (zenburn-with-color-variables
+    (set-face-attribute 'rainbow-delimiters-mismatched-face nil
+                        :foreground zenburn-red-4)
+    (set-face-attribute 'rainbow-delimiters-unmatched-face nil
+                        :foreground zenburn-red-4)))
+#+END_SRC
+
+Also I use =smartparens= to be sure I don't forget to close 'em! It takes some time to be used to it though.
+
+#+BEGIN_SRC emacs-lisp
+(use-package smartparens
+  :bind
+  (("M-<backspace>" . sp-unwrap-sexp)
+   ("M-<left>" . sp-forward-barf-sexp)
+   ("M-<right>" . sp-forward-slurp-sexp)
+   ("M-S-<left>" . sp-backward-slurp-sexp)
+   ("M-S-<right>" . sp-backward-barf-sexp)))
+
+(use-package smartparens-config
+  :after smartparens
+  :config
+  (smartparens-global-mode)
+  (sp-pair "{{" "}}")
+  (sp-pair "[[" "]]"))
+#+END_SRC
+
+** Project management
+
+I love =projectile= and I think its the best project management tool you'll ever need in Emacs.
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :defer 1
+  :init
+  (setq-default
+   projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
+   projectile-keymap-prefix (kbd "C-c C-p")
+   projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory))
+  :config
+  (projectile-global-mode)
+  (setq-default
+   ;;   projectile-completition-system 'ivy
+   projectile-enable-caching t
+   projectile-mode-line '(:eval (projectile-project-name)))
+  :bind
+  ("C-p" . projectile-find-file))
+#+END_SRC
+
+** Version Control
+
+Magit provides everything I need when working with Version Control, all within Emacs. Also, it merges very well with my
+=mode-line= configuration.
+
+#+BEGIN_SRC emacs-lisp
+(use-package git-commit
+  :preface
+  (defun elnawe/git-commit-auto-fill ()
+    (setq fill-column 120)
+    (setq-local comment-auto-fill-only-comments nil))
+  :init
+  (add-hook 'git-commit-mode-hook #'elnawe/git-commit-auto-fill)
+  :config
+  (setq-default git-commit-summary-max-length 50))
+
+(use-package magit
+  :preface
+  (defun elnawe/magit-display-buffer-same (buffer)
+    "Display most magit popups in the current buffer."
+    (display-buffer
+     buffer
+     (cond ((and (derived-mode-p 'magit-mode)
+                 (eq (with-current-buffer buffer major-mode) 'magit-status-mode))
+            nil)
+           ((memq (with-current-buffer buffer major-mode)
+                  '(magit-process-mode
+                    magit-revision-mode
+                    magit-diff-mode
+                    magit-stash-mode))
+            nil)
+           (t '(display-buffer-same-window)))))
+  :config
+  (setq-default
+   magit-display-buffer-function 'elnawe/magit-display-buffer-same
+   magit-diff-highlight-hunk-body nil
+   magit-diff-highlight-hunk-region-functions
+   '(magit-diff-highlight-hunk-region-dim-outside
+     magit-diff-highlight-hunk-region-using-face)
+   magit-popup-display-buffer-action '((display-buffer-same-window))
+   magit-refs-show-commit-count 'all
+   magit-section-show-child-count t)
+  (delight
+   '((magit-diff-mode "Magit Diff")
+     (magit-log-mode "Magit Log")
+     (magit-popup-mode "Magit Popup")
+     (magit-status-mode "Magit Status")))
+   (set-face-attribute 'magit-diff-file-heading-highlight nil :background nil)
+  (set-face-attribute 'magit-diff-hunk-region nil :inherit 'region)
+  (set-face-attribute 'magit-popup-heading nil :height elnawe/font-size-title)
+  (set-face-attribute 'magit-section-heading nil :height elnawe/font-size-title)
+  (set-face-attribute 'magit-section-highlight nil :background nil)
+  (zenburn-with-color-variables
+    (set-face-attribute 'magit-diff-added nil
+                        :background nil
+                        :foreground zenburn-green+3)
+    (set-face-attribute 'magit-diff-removed nil
+                        :background nil
+                        :foreground zenburn-red)))
+#+END_SRC
+
+** Whitespaces
+
+Highlight trailing whitespaces, tabs and empty lines.
+
+#+BEGIN_SRC emacs-lisp
+(use-package whitespace
+  :demand t
+  :ensure nil
+  :init
+  (add-hook 'prog-mode-hook #'whitespace-turn-on)
+  (add-hook 'text-mode-hook #'whitespace-turn-on)
+  :config
+  (setq-default whitespace-style '(face empty tab trailing)))
+#+END_SRC
+
+** Window management
+
+When using Emacs you want to customize how windows, buffers and modes are saved.
+
+This function allows repeated use of =←= and =→= when using =previous-buffer= and =next-buffer=. Again, props to
+[[http://github.com/angrybacon/][angrybacon]].
+
+#+BEGIN_SRC emacs-lisp
+(defun angrybacon/switch-to-buffer-continue ()
+  "Activate a sparse keymap:
+  <left>   `previous-buffer'
+  <right>  `next-buffer'"
+  (set-transient-map
+   (let ((map (make-sparse-keymap)))
+     (define-key map (kbd "<left>") #'previous-buffer)
+     (define-key map (kbd "<right>") #'next-buffer)
+     map)))
+(advice-add 'previous-buffer :after #'angrybacon/switch-to-buffer-continue)
+(advice-add 'next-buffer :after #'angrybacon/switch-to-buffer-continue)
+#+END_SRC
+
+Save and restore Emacs status
+
+#+BEGIN_SRC emacs-lisp
+(use-package desktop
+  :ensure nil
+  :demand t
+  :config
+  (desktop-save-mode)
+  (add-to-list 'desktop-globals-to-save 'golden-ratio-adjust-factor))
+#+END_SRC
+
+Adjust windows and focus the active one. Uses mathematical golden ration.
+
+#+BEGIN_SRC emacs-lisp
+(use-package golden-ratio
+  :disabled t
+  :demand t
+  :preface
+  (defconst elnawe/golden-ratio-adjust-factor-bi-split .805)
+  (defconst elnawe/golden-ratio-adjust-factor-tri-split .53)
+  (defun elnawe/ediff-comparison-buffer-p ()
+    (if (boundp 'ediff-this-buffer-ediff-sessions)
+        (progn (balance-windows) ediff-this-buffer-ediff-sessions)))
+  :config
+  (golden-ratio-mode)
+  (setq-default golden-ratio-adjust-factor elnawe/golden-ratio-adjust-factor-tri-split)
+  (add-to-list 'golden-ratio-exclude-modes "ediff-mode")
+  (add-to-list 'golden-ratio-inhibit-functions 'elnawe/ediff-comparison-buffer-p))
+#+END_SRC
+
+Move around windows with ease.
+
+#+BEGIN_SRC emacs-lisp
+(use-package windmove
+  :ensure nil
+  :bind
+  (("C-M-<left>". windmove-left)
+   ("C-M-<right>". windmove-right)
+   ("C-M-<up>". windmove-up)
+   ("C-M-<down>". windmove-down)))
+#+END_SRC
+
+Undo and redo with the window configuration using =C-c left= to undo and =C-c right= to redo.
+
+#+BEGIN_SRC emacs-lisp
+(use-package winner
+  :ensure nil
+  :defer 1
+  :config (winner-mode))
+#+END_SRC

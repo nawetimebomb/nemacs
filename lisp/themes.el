@@ -9,6 +9,7 @@
   :init
   (load-theme 'zenburn t)
   (if (eq system-type 'darwin)
-      (setq ns-use-srgb-colorspace nil)
+      (setq ns-use-srgb-colorspace t)
     (setq ns-use-srgb-colorspace t)))
+
 (provide 'themes)

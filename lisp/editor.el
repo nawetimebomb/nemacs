@@ -9,7 +9,9 @@
 (setq default-tab-width 4)
 (setq tab-width 4)
 (setq confirm-kill-emacs 'yes-or-no-p
-      visible-bell 'bottom)
+      visible-bell 'bottom
+      display-time-format "%H:%M")
+(display-time-mode)
 (setq ring-bell-function
       (lambda ()
         (unless (memq this-command
@@ -26,12 +28,5 @@
       version-control 'numbered
       make-backup-files t
       delete-old-versions 'never)
-
-;; visual variables
-(if (eq system-type 'darwin)
-    (set-face-attribute 'default nil :height 150)
-  (set-face-attribute 'default nil :height 120))
-(setq mac-allow-anti-aliasing t)
-(delete-selection-mode)
 
 (provide 'editor)

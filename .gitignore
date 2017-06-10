@@ -12,3 +12,7 @@ project-explorer-cache
 projectile.cache
 network-security.data
 url
+initdotel.el
+.projectile-bookmarks
+.projectile-cache
+.custom.el

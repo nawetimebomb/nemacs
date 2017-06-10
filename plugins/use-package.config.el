@@ -8,9 +8,14 @@
 
 (package-initialize)
 
-(unless (package-installed-p 'use-package)
+(unless (and (package-installed-p 'delight)
+             (package-installed-p 'use-package))
   (package-refresh-contents)
-  (package-install 'use-package))
+  (package-install 'delight t)
+  (package-install 'use-package t))
+(setq-default
+ use-package-always-defer t
+ use-package-always-ensure t)
 
 (eval-when-compile
   (require 'use-package))

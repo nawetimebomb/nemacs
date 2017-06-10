@@ -47,17 +47,10 @@
    mode-line-format '("%e" (:eval (spaceline-ml-main)))
    spaceline-separator-dir-left '(left . left)
    spaceline-separator-dir-right '(right . right)
-   spaceline-highlight-face-func 'spaceline-highlight-face-modified)
+   spaceline-highlight-face-func 'spaceline-highlight-face-modified
+   powerline-default-separator 'nil)
   (spaceline-emacs-theme)
   (spaceline-helm-mode 1)
-
-  (if (eq system-type 'darwin)
-      (setq-default
-       powerline-height 32
-       powerline-default-separator 'alternate)
-    (setq-default
-     powerline-height 28
-     powerline-default-separator 'slant))
 
   (spaceline-install
     '((elnawe/major-mode :face highlight-face)
