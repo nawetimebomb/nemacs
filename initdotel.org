@@ -8,29 +8,37 @@
 Since I've been using Emacs I noticed some actual default variables are not the best fit for me. I managed to put together a list of my better defaults and they are here:
 
 #+BEGIN_SRC emacs-lisp
-  (setq-default
-   confirm-kill-emacs 'yes-or-no-p ; Confirm before exit
-   cursor-in-non-selected-windows t ; Hide cursor in inactive windows
-   delete-by-moving-to-trash t ; Move file to trash instead of removing it
-   display-time-format "%H:%M" ; Format the time string
-   fill-column 120 ; Width before automatic line breaks
-   help-window-select t ; Focus help windows when opened
-   indent-tabs-mode nil ; Use spaces for indentation
-   inhibit-startup-screen t ; Disable the startup window
-   initial-scratch-message "" ; Empty *scratch* buffer
-   select-enable-clipboard t ; merge system's and Emacs' clipboard
-   sentence-end-double-space nil ; End the sentence when there is a dot and a space
-   show-trailing-whitespace nil ; Display trailing whitespaces
-   tab-width 4 ; Set indentation width
-   uniquify-buffer-name-style 'forward ; Make buffer names unique
-   )
-  (delete-selection-mode) ; Replace region when inserting text
-  (display-time-mode) ; Enable time-mode in mode-line
-  (fset 'yes-or-no-p 'y-or-n-p) ; Alias y/n prompts to yes/no
-  (global-hl-line-mode) ; Highlight current line
-  (global-subword-mode) ; Iterate through camelCase words
-  (menu-bar-mode 0) ; Disable the menu bar
-  (mouse-avoidance-mode 'banish) ; Avoid mouse colission with point
+(setq-default
+ confirm-kill-emacs 'yes-or-no-p                  ; Confirm before exit
+ cursor-in-non-selected-windows t                 ; Hide cursor in inactive windows
+ delete-by-moving-to-trash t                      ; Move file to trash instead of removing it
+ display-time-default-load-average nil            ; Don't display load avereage
+ display-time-format "%H:%M"                      ; Format the time string
+ fill-column 120                                  ; Width before automatic line breaks
+ help-window-select t                             ; Focus help windows when opened
+ indent-tabs-mode nil                             ; Use spaces for indentation
+ inhibit-startup-screen t                         ; Disable the startup window
+ initial-scratch-message ""                       ; Empty *scratch* buffer
+ left-margin-width 1 right-margin-width 1         ; Add left and right margins
+ scroll-conservatively most-positive-fixnum       ; Always scroll by one line
+ scroll-margin 10                                 ; Add a margin when scrolling vertically
+ select-enable-clipboard t                        ; merge system's and Emacs' clipboard
+ sentence-end-double-space nil                    ; End sentence when dot and space
+ show-trailing-whitespace nil                     ; Display trailing whitespaces
+ split-width-threshold nil                        ; Disable horizontal window splitting
+ tab-width 4                                      ; Set indentation width
+ uniquify-buffer-name-style 'forward              ; Make buffer names unique
+ visible-bell nil                                 ; Replace the alarm to an audible one
+ window-combination-resize t                      ; Resize window proportionally
+ x-stretch-cursor t)                              ; Give cursor glyph width
+(delete-selection-mode)                           ; Replace region when inserting text
+(display-time-mode)                               ; Enable time-mode in mode-line
+(fset 'yes-or-no-p 'y-or-n-p)                     ; Alias y/n prompts to yes/no
+(fringe-mode 0)                                   ; No fringe!
+(global-hl-line-mode)                             ; Highlight current line
+(global-subword-mode)                             ; Iterate through camelCase words
+(menu-bar-mode 0)                                 ; Disable the menu bar
+(mouse-avoidance-mode 'banish)                    ; Avoid mouse colission with point
 #+END_SRC
 
 ** My variables
@@ -38,11 +46,11 @@ Since I've been using Emacs I noticed some actual default variables are not the 
 In order to maintain this configuration file I setted up some variables. These are carefully crafted and you should be aware that editting these may cause trouble!
 
 #+BEGIN_SRC emacs-lisp
-  (defvar elnawe/font-family "Monaco" "Font used for theming")
-  (defvar elnawe/font-size-default 120 "Font size for default text")
-  (defvar elnawe/font-size-header-line 120 "Font size used in header lines")
-  (defvar elnawe/font-size-mode-line 120 "Font size used in mode-line")
-  (defvar elnawe/font-size-title 150 "Font size used in titles")
+(defvar elnawe/font-family "Inconsolata" "Font used for theming")
+(defvar elnawe/font-size-default 140 "Font size for default text")
+(defvar elnawe/font-size-header-line 140 "Font size used in header lines")
+(defvar elnawe/font-size-mode-line 140 "Font size used in mode-line")
+(defvar elnawe/font-size-title 160 "Font size used in titles")
 #+END_SRC
 
 ** Garbage collection
@@ -115,7 +123,7 @@ Load zenburn theme and fix some faces with zenburn color variables
 
 I use Emacs for almost everything, but mostly to code. These are my configurations.
 
-** C-Sharp
+** C#
 
 This is probably one of my favorite languages right now I don't really know why though everyone seems to hate it.
 
@@ -212,6 +220,7 @@ My whole configuration is written in =org-mode=. I also write all my TODO lists 
   :config
   (setq-default
    org-descriptive-links nil
+   org-ellipsis "↓"
    org-support-shift-select 'always
    org-startup-folded nil
    org-startup-truncated nil))
@@ -223,6 +232,8 @@ My whole configuration is written in =org-mode=. I also write all my TODO lists 
   (setq-default
    org-edit-src-content-indentation 0
    org-edit-src-persistent-message nil
+   org-src-fontify-natively t
+   org-src-tab-acts-natively t
    org-src-window-setup 'current-window))
 #+END_SRC
 
@@ -280,14 +291,14 @@ I'm not a very big fan of auto-complete my words but sometimes it's a bit helpfu
 
 Since I use Emacs all the time, everyday, almost for everything I need some neat configurations. They are all here.
 
-*** Auto-indent as you go
+*** Auto-indent as you write
 
 Helps me to maintain my code aligned with aggresive indentation
 
 #+BEGIN_SRC emacs-lisp
 (use-package aggressive-indent
   :config
-  (global-aggresive-indent-mode))
+  (aggressive-indent-global-mode))
 #+END_SRC
 
 *** Backup copies
@@ -301,6 +312,20 @@ Manage the backup copies. Always keeping them but save them inside Emacs directo
  delete-old-versions 'never
  make-backup-files t
  version-control 'numbered)
+#+END_SRC
+
+*** Bell notifications =C-g=
+
+Beucase Mac and Linux have different behavior when quitting/canceling actions, I manage to pull out a function that
+defines how the bell should work. *NOTE:* This only happens when canceling certain actions like "exit a minibuffer",
+"abort recursive edit" or "abort isearch".
+
+#+BEGIN_SRC emacs-lisp
+(setq ring-bell-function
+      (lambda ()
+        (unless (memq this-command
+                      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
+          (ding))))
 #+END_SRC
 
 *** Dim other buffers
@@ -458,72 +483,66 @@ This package allows me to rename the major/minor modes "lightes", so they look m
 
 #+BEGIN_SRC emacs-lisp
 (use-package spaceline
-  :config
-  (spaceline-define-segment elnawe/major-mode
-                            "Shows the current major-mode, but removes the mouseover"
-                            (propertize (powerline-major-mode)
-                                        'mouse-face nil))
-
-  (spaceline-define-segment elnawe/buffer-id
-                            "Shows the name of the buffer, but removes the mouseover."
-                            (propertize (s-trim (powerline-buffer-id 'mode-line-buffer-id))
-                                        'mouse-face nil))
-
-  (spaceline-define-segment elnawe/version-control
-                            "Because I don't like how default version-control"
-                            (propertize (when vc-mode
-                                          (defvar current-branch (substring vc-mode (+ 2 (length (symbol-name (vc-backend buffer-file-name))))))
-                                          (powerline-raw
-                                           (s-trim (concat current-branch
-                                                           (when (buffer-file-name)
-                                                             (pcase (vc-state (buffer-file-name))
-                                                               (`up-to-date "")
-                                                               (`edited " *")))))))
-                                        'mouse-face nil)))
-
-(use-package spaceline-config
-  :ensure nil
-  :after spaceline
+  :init
+  (require 'spaceline-config)
+  (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main))))
+  (spaceline-define-segment
+   elnawe/version-control
+   "Better version control information."
+   (when vc-mode
+     (defvar current-branch
+       (substring vc-mode (+ 2 (length (symbol-name (vc-backend buffer-file-name))))))
+     (powerline-raw
+      (s-trim (concat current-branch
+                      (when (buffer-file-name)
+                        (pcase (vc-state (buffer-file-name))
+                          (`up-to-date "")
+                          (`edited " *"))))))))
   :config
   (setq-default
-   mode-line-format '("%e" (:eval (spaceline-ml-main)))
-   spaceline-separator-dir-left '(left . left)
-   spaceline-separator-dir-right '(right . right)
+   powerline-default-separator 'slant
+   powerline-height 20
+   spaceline-flycheck-bullet (format "%s %s" "⚑" "%s")
    spaceline-highlight-face-func 'spaceline-highlight-face-modified
-   powerline-default-separator 'slant)
-  (spaceline-emacs-theme)
+   spaceline-separator-dir-left '(left . left)
+   spaceline-separator-dir-right '(right . right))
 
   (spaceline-install
-   '((elnawe/major-mode :face highlight-face)
+   '((major-mode :face highlight-face)
      (projectile-root)
-     (elnawe/buffer-id)
-     (elnawe/which-function :when active)
+     (buffer-id)
+     (elnawe/version-control)
      (anzu))
    '((selection-info)
-     (elnawe/version-control)
+     ((flycheck-error flycheck-warning flycheck-info))
      (line-column)
-     (buffer-position)
+     ((hud buffer-position))
      (global :face highlight-face)))
+
   (zenburn-with-color-variables
-    (set-face-attribute 'powerline-active1 nil
-                        :background zenburn-bg-1)
-    (set-face-attribute 'powerline-active2 nil
-                        :background zenburn-bg-1)
+    (set-face-attribute 'mode-line nil
+                        :box nil
+                        :foreground zenburn-bg+3
+                        :height elnawe/font-size-mode-line)
     (set-face-attribute 'mode-line-inactive nil
-                        :background zenburn-bg)
-    (set-face-attribute 'powerline-inactive1 nil
-                        :background zenburn-bg)
-    (set-face-attribute 'powerline-inactive2 nil
-                        :background zenburn-bg)
+                        :box nil
+                        :foreground zenburn-bg+3
+                        :height elnawe/font-size-mode-line)
+    (set-face-attribute 'spaceline-flycheck-error nil :foreground zenburn-red)
+    (set-face-attribute 'spaceline-flycheck-info nil :foreground zenburn-blue+1)
+    (set-face-attribute 'spaceline-flycheck-warning nil :foreground zenburn-orange)
+    (set-face-attribute 'spaceline-highlight-face nil
+                        :background zenburn-yellow
+                        :foreground zenburn-fg-1)
     (set-face-attribute 'spaceline-modified nil
                         :background zenburn-red
                         :foreground zenburn-red-4)
-    (set-face-attribute 'spaceline-unmodified nil
-                        :background zenburn-green-1
-                        :foreground zenburn-green+4)
     (set-face-attribute 'spaceline-read-only nil
                         :background zenburn-blue+1
-                        :foreground zenburn-blue-5)))
+                        :foreground zenburn-blue-5)
+    (set-face-attribute 'spaceline-unmodified nil
+                        :background zenburn-green-1
+                        :foreground zenburn-green+4)))
 #+END_SRC
 
 ** Navigation
@@ -613,8 +632,8 @@ Because I use Emacs everywhere, I need some extra configurations.
    exec-path (append exec-path '("/usr/local/bin"))  ; Add Homebrew path
    ns-command-modifier 'meta                         ; Meta key is Command
    ns-option-modifier nil                            ; I use Alt/Option to expand my keyboard layout
-   ns-right-option-modifier 'super))                 ; Never use right Alt key so I can use it as Super key
-
+   ns-right-option-modifier 'super                   ; Never use right Alt key so I can use it as Super key
+   ns-use-srgb-colorspace nil))                      ; Using different colorspace for Mac
 #+END_SRC
 
 Intializing env inside Emacs
@@ -747,13 +766,14 @@ Magit provides everything I need when working with Version Control, all within E
 
 ** Whitespaces
 
-Highlight trailing whitespaces, tabs and empty lines.
+Highlight trailing whitespaces, tabs and empty lines. Also remove them when saving the file.
 
 #+BEGIN_SRC emacs-lisp
 (use-package whitespace
   :demand t
   :ensure nil
   :init
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (add-hook 'prog-mode-hook #'whitespace-turn-on)
   (add-hook 'text-mode-hook #'whitespace-turn-on)
   :config

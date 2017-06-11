@@ -3,17 +3,18 @@
 (use-package spaceline
   :ensure t
   :config
-  (spaceline-define-segment elnawe/version-control
-    "Version control information."
-    (propertize (when vc-mode
-                  (defvar current-branch (substring vc-mode (+ 2 (length (symbol-name (vc-backend buffer-file-name))))))
-                  (powerline-raw
-                   (s-trim (concat current-branch
-                                   (when (buffer-file-name)
-                                     (pcase (vc-state (buffer-file-name))
-                                       (`up-to-date "")
-                                       (`edited " *")))))))
-                'mouse-face nil))
+  (spaceline-define-segment
+   elnawe/version-control
+   "Version control information."
+   (propertize (when vc-mode
+                 (defvar current-branch (substring vc-mode (+ 2 (length (symbol-name (vc-backend buffer-file-name))))))
+                 (powerline-raw
+                  (s-trim (concat current-branch
+                                  (when (buffer-file-name)
+                                    (pcase (vc-state (buffer-file-name))
+                                      (`up-to-date "")
+                                      (`edited " *")))))))
+               'mouse-face nil))
 
   (spaceline-define-segment elnawe/which-function
     "Show the current function if exists"
