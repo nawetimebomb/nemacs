@@ -364,6 +364,66 @@ it by myself, because Emacs allow me to do it automatically!
   (add-hook 'text-mode-hook #'turn-on-auto-fill))
 #+END_SRC
 
+*** Interactively doing things =ido=
+
+I use =ido-mode= because it feels super fast. I like what =helm= does but makes my editor look like any other modern
+editor. I use =ido-vertical-mode= to order my list with a neat look and also =flx-ido= to better matching.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ido
+  :init
+  (ido-mode 1)
+  :config
+  (setq-default
+   ido-create-new-buffer 'always
+   ido-enable-flex-matching t
+   ido-everywhere t
+   ido-file-extensions-order '(".js" ".org" ".el" ".json")
+   ido-ignore-buffers '("\\ " shakurov/ido-ignore)
+   ido-use-filename-at-point 'guess)
+
+  (defvar elnawe/ido-unignore '())
+
+  (defun shakurov/ido-ignore (name)
+    "Ignore all non-user (a.k.a. *starred*) buffers except those listed in `elnawe/ido-unignore'."
+    (and (string-match "\\*" name)
+         (not (member name elnawe/ido-unignore)))))
+
+(use-package ido-vertical-mode
+  :init
+  (ido-vertical-mode 1)
+  :config
+  (setq-default
+   ido-use-faces t
+   ido-vertical-define-keys 'C-n-C-p-up-and-down
+   ido-vertical-show-count t)
+
+  (zenburn-with-color-variables
+    (set-face-attribute 'ido-vertical-first-match-face nil
+                        :background zenburn-bg+1
+                        :bold t
+                        :foreground zenburn-yellow-1)
+    (set-face-attribute 'ido-vertical-only-match-face nil
+                        :background nil
+                        :foreground nil)
+    (set-face-attribute 'ido-vertical-match-face nil
+                        :foreground nil)))
+
+(use-package flx-ido
+  :init
+  (flx-ido-mode 1))
+#+END_SRC
+
+Also =smex= helps me go through =M-x= easily and with all the benefits of =ido-mode=
+
+#+BEGIN_SRC emacs-lisp
+(use-package smex
+  :init
+  (smex-initialize)
+  :bind
+  ("M-x" . smex))
+#+END_SRC
+
 *** Kill unused buffers
 
 Clean my buffer list on delay with =midnight= beucase I leave Emacs always open. Keep this configuration always alive.
