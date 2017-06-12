@@ -47,10 +47,10 @@ In order to maintain this configuration file I setted up some variables. These a
 
 #+BEGIN_SRC emacs-lisp
 (defvar elnawe/font-family "Inconsolata" "Font used for theming")
-(defvar elnawe/font-size-default 140 "Font size for default text")
-(defvar elnawe/font-size-header-line 140 "Font size used in header lines")
-(defvar elnawe/font-size-mode-line 140 "Font size used in mode-line")
-(defvar elnawe/font-size-title 160 "Font size used in titles")
+(defvar elnawe/font-size-default 120 "Font size for default text")
+(defvar elnawe/font-size-header-line 120 "Font size used in header lines")
+(defvar elnawe/font-size-mode-line 100 "Font size used in mode-line")
+(defvar elnawe/font-size-title 150 "Font size used in titles")
 #+END_SRC
 
 ** Garbage collection
@@ -165,7 +165,7 @@ Using HTML mode defined in =sgml-mode.el=
 
 I use =js2-mode= for my code since it looks and feels better.
 
-*** TODO Add =rjsx-mode= to support React.
+- TODO: Add =rjsx-mode= to support React.
 
 #+BEGIN_SRC emacs-lisp
   (use-package js2-mode
@@ -220,7 +220,7 @@ My whole configuration is written in =org-mode=. I also write all my TODO lists 
   :config
   (setq-default
    org-descriptive-links nil
-   org-ellipsis "↓"
+   org-ellipsis " ↓"
    org-support-shift-select 'always
    org-startup-folded nil
    org-startup-truncated nil))
@@ -547,17 +547,17 @@ This package allows me to rename the major/minor modes "lightes", so they look m
   (require 'spaceline-config)
   (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main))))
   (spaceline-define-segment
-   elnawe/version-control
-   "Better version control information."
-   (when vc-mode
-     (defvar current-branch
-       (substring vc-mode (+ 2 (length (symbol-name (vc-backend buffer-file-name))))))
-     (powerline-raw
-      (s-trim (concat current-branch
-                      (when (buffer-file-name)
-                        (pcase (vc-state (buffer-file-name))
-                          (`up-to-date "")
-                          (`edited " *"))))))))
+      elnawe/version-control
+    "Better version control information."
+    (when vc-mode
+      (defvar current-branch
+        (substring vc-mode (+ 2 (length (symbol-name (vc-backend buffer-file-name))))))
+      (powerline-raw
+       (s-trim (concat current-branch
+                       (when (buffer-file-name)
+                         (pcase (vc-state (buffer-file-name))
+                           (`up-to-date "")
+                           (`edited " *"))))))))
   :config
   (setq-default
    powerline-default-separator 'slant
@@ -568,16 +568,15 @@ This package allows me to rename the major/minor modes "lightes", so they look m
    spaceline-separator-dir-right '(right . right))
 
   (spaceline-install
-   '((major-mode :face highlight-face)
-     (projectile-root)
-     (buffer-id)
-     (elnawe/version-control)
-     (anzu))
-   '((selection-info)
-     ((flycheck-error flycheck-warning flycheck-info))
-     (line-column)
-     ((hud buffer-position))
-     (global :face highlight-face)))
+    '((major-mode :face highlight-face)
+      (projectile-root)
+      ((buffer-id line) :separator ":")
+      (anzu))
+    '((selection-info)
+      ((flycheck-error flycheck-warning flycheck-info))
+      (elnawe/version-control)
+      ((hud buffer-position))
+      (global :face highlight-face)))
 
   (zenburn-with-color-variables
     (set-face-attribute 'mode-line nil
@@ -621,6 +620,19 @@ Smarter =C-a=. Props to: [[http://github.com/angrybacon][angrybacon]]
     (beginning-of-line)
     (and (= origin (point))
          (back-to-indentation))))
+#+END_SRC
+
+*** Go to definition
+
+When working on big projects *go to definition* it's a must. =dumb-jump= helps me with that.
+
+#+BEGIN_SRC emacs-lisp
+(use-package dumb-jump
+  :bind
+  (([f12] . dumb-jump-go)
+   ("C-M-S-g" . dumb-jump-go-prefer-external-other-window))
+  :config
+  (dumb-jump-mode 1))
 #+END_SRC
 
 *** Mouse scrolling
@@ -772,7 +784,6 @@ Magit provides everything I need when working with Version Control, all within E
 (use-package git-commit
   :preface
   (defun elnawe/git-commit-auto-fill ()
-    (setq fill-column 120)
     (setq-local comment-auto-fill-only-comments nil))
   :init
   (add-hook 'git-commit-mode-hook #'elnawe/git-commit-auto-fill)
@@ -806,11 +817,11 @@ Magit provides everything I need when working with Version Control, all within E
    magit-refs-show-commit-count 'all
    magit-section-show-child-count t)
   (delight
-   '((magit-diff-mode "Magit Diff")
-     (magit-log-mode "Magit Log")
+   '((magit-diff-mode "Git Diff")
+     (magit-log-mode "Git Log")
      (magit-popup-mode "Magit Popup")
-     (magit-status-mode "Magit Status")))
-   (set-face-attribute 'magit-diff-file-heading-highlight nil :background nil)
+     (magit-status-mode "Git Status")))
+  (set-face-attribute 'magit-diff-file-heading-highlight nil :background nil)
   (set-face-attribute 'magit-diff-hunk-region nil :inherit 'region)
   (set-face-attribute 'magit-popup-heading nil :height elnawe/font-size-title)
   (set-face-attribute 'magit-section-heading nil :height elnawe/font-size-title)
@@ -901,6 +912,38 @@ Move around windows with ease.
    ("C-M-<right>". windmove-right)
    ("C-M-<up>". windmove-up)
    ("C-M-<down>". windmove-down)))
+#+END_SRC
+
+Window splitting. After create a new window, switch to the new one.
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe/create-bottom-and-switch ()
+  "Creates a new window to the bottom and then switch to it"
+  (interactive)
+  (split-window-below)
+  (balance-windows)
+  (other-window 1))
+
+(defun elnawe/create-right-and-switch ()
+  "Creates a new window to the right and then switch to it"
+  (interactive)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
+
+(global-set-key (kbd "C-x 2") 'elnawe/create-bottom-and-switch)
+(global-set-key (kbd "C-x 3") 'elnawe/create-right-and-switch)
+#+END_SRC
+
+Split horizontally for new temporary buffers. Props to: [[https://github.com/hrs][hrs]].
+
+#+BEGIN_SRC emacs-lisp
+(defun hrs/split-horizontally-for-temp-buffers ()
+  (when (one-window-p t)
+    (split-window-horizontally)))
+
+(add-hook 'temp-buffer-window-setup-hook
+          'hrs/split-horizontally-for-temp-buffers)
 #+END_SRC
 
 Undo and redo with the window configuration using =C-c left= to undo and =C-c right= to redo.

@@ -16,3 +16,4 @@ initdotel.el
 .projectile-bookmarks
 .projectile-cache
 .custom.el
+smex-items
