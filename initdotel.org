@@ -46,10 +46,8 @@ Since I've been using Emacs I noticed some actual default variables are not the 
 In order to maintain this configuration file I setted up some variables. These are carefully crafted and you should be aware that editting these may cause trouble!
 
 #+BEGIN_SRC emacs-lisp
-(defvar elnawe/font-family "Inconsolata" "Font used for theming")
-(defvar elnawe/font-size-default 120 "Font size for default text")
-(defvar elnawe/font-size-header-line 120 "Font size used in header lines")
-(defvar elnawe/font-size-mode-line 100 "Font size used in mode-line")
+(defvar elnawe/font-family "Monaco" "Font used for theming")
+(defvar elnawe/font-size 140 "Default font size")
 (defvar elnawe/font-size-title 150 "Font size used in titles")
 #+END_SRC
 
@@ -98,14 +96,13 @@ Load zenburn theme and fix some faces with zenburn color variables
     (set-face-attribute 'button nil :foreground zenburn-yellow-2)
     (set-face-attribute 'default nil
                         :background zenburn-bg-05
-                        :height elnawe/font-size-default
+                        :height elnawe/font-size
                         :font elnawe/font-family)
     (set-face-attribute 'help-argument-name nil :foreground zenburn-orange :italic nil)
     (set-face-attribute 'hl-line nil :background zenburn-bg+1)
     (set-face-attribute 'header-line nil
                         :background zenburn-bg-1
-                        :box nil
-                        :height elnawe/font-size-header-line)
+                        :box nil)
     (set-face-attribute 'region nil
                         :background zenburn-bg-1
                         :distant-foreground 'unspecified)
@@ -566,6 +563,7 @@ This package allows me to rename the major/minor modes "lightes", so they look m
    spaceline-highlight-face-func 'spaceline-highlight-face-modified
    spaceline-separator-dir-left '(left . left)
    spaceline-separator-dir-right '(right . right))
+  (spaceline-emacs-theme)
 
   (spaceline-install
     '((major-mode :face highlight-face)
@@ -582,11 +580,11 @@ This package allows me to rename the major/minor modes "lightes", so they look m
     (set-face-attribute 'mode-line nil
                         :box nil
                         :foreground zenburn-bg+3
-                        :height elnawe/font-size-mode-line)
+                        :height elnawe/font-size)
     (set-face-attribute 'mode-line-inactive nil
                         :box nil
                         :foreground zenburn-bg+3
-                        :height elnawe/font-size-mode-line)
+                        :height elnawe/font-size)
     (set-face-attribute 'spaceline-flycheck-error nil :foreground zenburn-red)
     (set-face-attribute 'spaceline-flycheck-info nil :foreground zenburn-blue+1)
     (set-face-attribute 'spaceline-flycheck-warning nil :foreground zenburn-orange)
@@ -701,6 +699,7 @@ Because I use Emacs everywhere, I need some extra configurations.
 #+BEGIN_SRC emacs-lisp
 (when (eq system-type 'darwin)
   (setq-default
+   elnawe/font-size 160                              ; Resize font for Mac
    exec-path (append exec-path '("/usr/local/bin"))  ; Add Homebrew path
    ns-command-modifier 'meta                         ; Meta key is Command
    ns-option-modifier nil                            ; I use Alt/Option to expand my keyboard layout
