@@ -5,7 +5,8 @@
 
 ** My better-defaults
 
-Since I've been using Emacs I noticed some actual default variables are not the best fit for me. I managed to put together a list of my better defaults and they are here:
+Since I've been using Emacs I noticed some actual default variables are not the best fit for me. I managed to put
+together a list of my better defaults and they are here:
 
 #+BEGIN_SRC emacs-lisp
 (setq-default
@@ -43,11 +44,13 @@ Since I've been using Emacs I noticed some actual default variables are not the 
 
 ** My variables
 
-In order to maintain this configuration file I setted up some variables. These are carefully crafted and you should be aware that editting these may cause trouble!
+In order to maintain this configuration file I setted up some variables. These are carefully crafted and you should be
+aware that editting these may cause trouble!
 
 #+BEGIN_SRC emacs-lisp
-(defvar elnawe/font-family "Monaco" "Font used for theming")
+(defvar elnawe/font-family "DejaVu Sans Mono" "Font used for theming")
 (defvar elnawe/font-size 140 "Default font size")
+(defvar elnawe/font-size-mode-line 120 "Font size used in mode-line")
 (defvar elnawe/font-size-title 150 "Font size used in titles")
 #+END_SRC
 
@@ -218,9 +221,14 @@ My whole configuration is written in =org-mode=. I also write all my TODO lists 
   (setq-default
    org-descriptive-links nil
    org-ellipsis " ↓"
+   org-log-done t
    org-support-shift-select 'always
    org-startup-folded nil
-   org-startup-truncated nil))
+   org-startup-truncated nil
+   org-todo-keywords '((sequence "TODO" "INPROGRESS" "DONE")))
+
+  (zenburn-with-color-variables
+    (setq-default org-todo-keyword-faces '(("INPROGRESS" . (:foreground zenburn-blue :weight bold))))))
 
 (use-package org-src
   :ensure nil
@@ -370,6 +378,8 @@ editor. I use =ido-vertical-mode= to order my list with a neat look and also =fl
 (use-package ido
   :init
   (ido-mode 1)
+  :bind
+  (("C-x C-b" . ido-switch-buffer))
   :config
   (setq-default
    ido-create-new-buffer 'always
@@ -467,6 +477,7 @@ Mostly you can use any kind of expansion with =<C-return>=
    hippie-expand-verbose nil))
 
 (use-package yasnippet
+  :disabled t
   :init
   (add-hook 'csharp-mode-hook #'yas-minor-code)
   (add-hook 'emacs-lisp-mode-hook #'yas-minor-mode)
@@ -531,8 +542,6 @@ This package allows me to rename the major/minor modes "lightes", so they look m
   :ensure nil
   :config
   (defadvice powerline-major-mode (around delight-powerline-major-mode activate)
-    (let ((inhibit-mode-name-delight nil)) ad-do-it))
-  (defadvice powerline-minor-modes (around delight-powerline-minor-modes activate)
     (let ((inhibit-mode-name-delight nil)) ad-do-it)))
 #+END_SRC
 
@@ -542,7 +551,12 @@ This package allows me to rename the major/minor modes "lightes", so they look m
 (use-package spaceline
   :init
   (require 'spaceline-config)
+  (spaceline-spacemacs-theme)
   (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main))))
+  (spaceline-define-segment
+      elnawe/date-time
+    "Better date time, remove global"
+    (shell-command-to-string "echo -n \"$(date '+%a %d %b %H:%M')\""))
   (spaceline-define-segment
       elnawe/version-control
     "Better version control information."
@@ -563,28 +577,25 @@ This package allows me to rename the major/minor modes "lightes", so they look m
    spaceline-highlight-face-func 'spaceline-highlight-face-modified
    spaceline-separator-dir-left '(left . left)
    spaceline-separator-dir-right '(right . right))
-  (spaceline-emacs-theme)
 
   (spaceline-install
     '((major-mode :face highlight-face)
       (projectile-root)
       ((buffer-id line) :separator ":")
-      (anzu))
-    '((selection-info)
-      ((flycheck-error flycheck-warning flycheck-info))
       (elnawe/version-control)
-      ((hud buffer-position))
-      (global :face highlight-face)))
+      (anzu :when active))
+    '(((hud buffer-position))
+      (elnawe/date-time :face highlight-face)))
 
   (zenburn-with-color-variables
     (set-face-attribute 'mode-line nil
                         :box nil
                         :foreground zenburn-bg+3
-                        :height elnawe/font-size)
+                        :height elnawe/font-size-mode-line)
     (set-face-attribute 'mode-line-inactive nil
                         :box nil
                         :foreground zenburn-bg+3
-                        :height elnawe/font-size)
+                        :height elnawe/font-size-mode-line)
     (set-face-attribute 'spaceline-flycheck-error nil :foreground zenburn-red)
     (set-face-attribute 'spaceline-flycheck-info nil :foreground zenburn-blue+1)
     (set-face-attribute 'spaceline-flycheck-warning nil :foreground zenburn-orange)
@@ -718,6 +729,15 @@ Intializing env inside Emacs
 ** Parentheses
 
 When programming, I use different kind of wrapper. Lisp knows it well.
+
+Some useful and native configuration first
+
+#+BEGIN_SRC emacs-lisp
+(use-package show-paren-mode
+  :ensure nil
+  :init
+  (show-paren-mode t))
+#+END_SRC
 
 This one highlight my delimiters in a rainbow. Super easy to read, right?
 
