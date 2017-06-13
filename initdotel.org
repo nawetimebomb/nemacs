@@ -765,6 +765,7 @@ Also I use =smartparens= to be sure I don't forget to close 'em! It takes some t
    ("M-S-<right>" . sp-backward-barf-sexp)))
 
 (use-package smartparens-config
+  :ensure nil
   :after smartparens
   :config
   (smartparens-global-mode)
@@ -863,7 +864,7 @@ Highlight trailing whitespaces, tabs and empty lines. Also remove them when savi
   :demand t
   :ensure nil
   :init
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  (add-hook 'before-save-hook #'delete-trailing-whitespace)
   (add-hook 'prog-mode-hook #'whitespace-turn-on)
   (add-hook 'text-mode-hook #'whitespace-turn-on)
   :config
@@ -873,6 +874,45 @@ Highlight trailing whitespaces, tabs and empty lines. Also remove them when savi
 ** Window management
 
 When using Emacs you want to customize how windows, buffers and modes are saved.
+
+List all buffers and group them by type.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ibuffer
+  :ensure nil
+  :delight ibuffer-mode "Buffers"
+  :bind
+  (("C-x c b" . ibuffer))
+  :init
+  (add-hook 'ibuffer-mode-hook (lambda ()
+                                 (setq ibuffer-filter-groups
+                                       '(("Directories" (mode . dired-mode))
+                                         ("Lisp" (or (mode . lisp-mode)
+                                                     (mode . emacs-lisp-mode)))
+                                         ("Org" (mode . org-mode))
+                                         ("system" (or (name . "^\\*scratch\\*$")
+                                                       (name . "^\\*Messages\\*$")
+                                                       (name . "^\\*Warnings\\*$")))))))
+  :config
+  (setq-default
+   ibuffer-default-sorting-mode 'major-mode
+   ibuffer-formats '((mark modified read-only " "
+                           (name 18 18 :left :elide)
+                           " "
+                           (mode 16 16 :left :elide)
+                           " "
+                           filename-and-process))
+   ibuffer-use-other-window t))
+
+(use-package ibuffer-projectile
+  :init
+  (defun elnawe/ibuffer-sorting ()
+    "Sort buffers with projectile, alphabetic and major mode"
+    (ibuffer-do-sort-by-alphabetic)
+    (ibuffer-do-sort-by-major-mode))
+
+  (add-hook 'ibuffer-hook #'elnawe/ibuffer-sorting))
+#+END_SRC
 
 This function allows repeated use of =←= and =→= when using =previous-buffer= and =next-buffer=. Again, props to
 [[http://github.com/angrybacon/][angrybacon]].
