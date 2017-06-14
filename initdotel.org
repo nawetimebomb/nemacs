@@ -39,6 +39,8 @@ together a list of my better defaults and they are here:
 (global-hl-line-mode)                             ; Highlight current line
 (global-subword-mode)                             ; Iterate through camelCase words
 (menu-bar-mode 0)                                 ; Disable the menu bar
+(scroll-bar-mode 0)                               ; Disable the scroll-bar
+(tool-bar-mode 0)                                 ; Disable the tool-bar
 (mouse-avoidance-mode 'banish)                    ; Avoid mouse colission with point
 #+END_SRC
 
@@ -48,9 +50,8 @@ In order to maintain this configuration file I setted up some variables. These a
 aware that editting these may cause trouble!
 
 #+BEGIN_SRC emacs-lisp
-(defvar elnawe/font-family "DejaVu Sans Mono" "Font used for theming")
+(defvar elnawe/font-family "DejaVu Sans Mono-12" "Font used for theming")
 (defvar elnawe/font-size 140 "Default font size")
-(defvar elnawe/font-size-mode-line 120 "Font size used in mode-line")
 (defvar elnawe/font-size-title 150 "Font size used in titles")
 #+END_SRC
 
@@ -107,7 +108,7 @@ Load zenburn theme and fix some faces with zenburn color variables
                         :background zenburn-bg-1
                         :box nil)
     (set-face-attribute 'region nil
-                        :background zenburn-bg-1
+                        :background zenburn-blue-3
                         :distant-foreground 'unspecified)
     (set-face-attribute 'vertical-border nil :foreground zenburn-bg))
 
@@ -551,7 +552,6 @@ This package allows me to rename the major/minor modes "lightes", so they look m
 (use-package spaceline
   :init
   (require 'spaceline-config)
-  (spaceline-spacemacs-theme)
   (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main))))
   (spaceline-define-segment
       elnawe/date-time
@@ -582,20 +582,19 @@ This package allows me to rename the major/minor modes "lightes", so they look m
     '((major-mode :face highlight-face)
       (projectile-root)
       ((buffer-id line) :separator ":")
-      (elnawe/version-control)
-      (anzu :when active))
-    '(((hud buffer-position))
+      (elnawe/version-control))
+    '((anzu :when active)
+      (selection-info :when mark-active)
+      ((hud buffer-position))
       (elnawe/date-time :face highlight-face)))
 
   (zenburn-with-color-variables
     (set-face-attribute 'mode-line nil
                         :box nil
-                        :foreground zenburn-bg+3
-                        :height elnawe/font-size-mode-line)
+                        :foreground zenburn-bg+3)
     (set-face-attribute 'mode-line-inactive nil
                         :box nil
-                        :foreground zenburn-bg+3
-                        :height elnawe/font-size-mode-line)
+                        :foreground zenburn-bg+3)
     (set-face-attribute 'spaceline-flycheck-error nil :foreground zenburn-red)
     (set-face-attribute 'spaceline-flycheck-info nil :foreground zenburn-blue+1)
     (set-face-attribute 'spaceline-flycheck-warning nil :foreground zenburn-orange)
