@@ -20,7 +20,7 @@ together a list of my better defaults and they are here:
  indent-tabs-mode nil                             ; Use spaces for indentation
  inhibit-startup-screen t                         ; Disable the startup window
  initial-scratch-message ""                       ; Empty *scratch* buffer
- left-margin-width 1 right-margin-width 1         ; Add left and right margins
+ left-margin-width 1 right-margin-width 0         ; Add left and right margins
  scroll-conservatively most-positive-fixnum       ; Always scroll by one line
  scroll-margin 10                                 ; Add a margin when scrolling vertically
  select-enable-clipboard t                        ; merge system's and Emacs' clipboard
@@ -37,7 +37,7 @@ together a list of my better defaults and they are here:
 (fset 'yes-or-no-p 'y-or-n-p)                     ; Alias y/n prompts to yes/no
 (fringe-mode 0)                                   ; No fringe!
 (global-hl-line-mode)                             ; Highlight current line
-(global-subword-mode)                             ; Iterate through camelCase words
+(global-subword-mode 0)                           ; Iterate through camelCase words
 (menu-bar-mode 0)                                 ; Disable the menu bar
 (scroll-bar-mode 0)                               ; Disable the scroll-bar
 (tool-bar-mode 0)                                 ; Disable the tool-bar
@@ -181,8 +181,13 @@ I use =js2-mode= for my code since it looks and feels better.
 - TODO: Add =rjsx-mode= to support React.
 
 #+BEGIN_SRC emacs-lisp
+(use-package js
+  :init
+  (add-hook 'js-mode #'js2-mode))
+
 (use-package js2-mode
   :delight js2-mode "JavaScript"
+  :mode ("\\.js\\'")
   :config
   (setq-default js-indent-level 4))
 
