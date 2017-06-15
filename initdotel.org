@@ -162,6 +162,18 @@ Using HTML mode defined in =sgml-mode.el=
     (setq-default sgml-basic-offset 4))
 #+END_SRC
 
+** Java
+
+- TODO: Add =jdee= configuration.
+
+#+BEGIN_SRC emacs-lisp
+(use-package java-mode
+  :ensure nil
+  :delight java-mode "Java")
+
+;;(use-package jdee)
+#+END_SRC
+
 ** JavaScript
 
 I use =js2-mode= for my code since it looks and feels better.
@@ -169,13 +181,13 @@ I use =js2-mode= for my code since it looks and feels better.
 - TODO: Add =rjsx-mode= to support React.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package js2-mode
-    :delight js2-mode "JavaScript"
-    :config
-    (setq-default js-indent-level 4))
+(use-package js2-mode
+  :delight js2-mode "JavaScript"
+  :config
+  (setq-default js-indent-level 4))
 
-  (use-package json-mode
-    :delight json-mode "JSON")
+(use-package json-mode
+  :delight json-mode "JSON")
 #+END_SRC
 
 ** Lisp
@@ -209,7 +221,8 @@ Mostly I use =org-mode=, but sometimes you need to write down your README files.
 #+END_SRC
 ** Org
 
-My whole configuration is written in =org-mode=. I also write all my TODO lists in Org. This is a powerful tool and I'm not the best user. I'm learning though.
+My whole configuration is written in =org-mode=. I also write all my TODO lists in Org. This is a powerful tool and I'm
+not the best user. I'm learning though.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org
@@ -226,10 +239,10 @@ My whole configuration is written in =org-mode=. I also write all my TODO lists 
    org-support-shift-select 'always
    org-startup-folded nil
    org-startup-truncated nil
-   org-todo-keywords '((sequence "TODO" "INPROGRESS" "DONE")))
+   org-todo-keywords '((sequence "TODO" "IN PROGRESS" "DONE")))
 
   (zenburn-with-color-variables
-    (setq-default org-todo-keyword-faces '(("INPROGRESS" . (:foreground zenburn-blue :weight bold))))))
+    (setq-default org-todo-keyword-faces '(("IN PROGRESS" . (:foreground zenburn-blue :weight bold))))))
 
 (use-package org-src
   :ensure nil
@@ -266,6 +279,25 @@ I'm not using =python-mode= all the time but sometimes I create little scripts t
   :delight pip-requirements-mode "PyPA Requirements")
 #+END_SRC
 
+** Scala
+
+I don't like IntelliJ and Emacs provides me with a mode to work with Scala as I want. I need =scala-mode= and =ensime=
+to make it work but worth the try.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ensime)
+
+(use-package scala-mode
+  :after ensime
+  :init
+  (add-hook 'scala-mode-hook #'ensime-mode)
+  :interpreter
+  ("scala" . scala-mode))
+
+(use-package sbt-mode
+  :commands sbt-start sbt-command)
+#+END_SRC
+
 * Major features
 
 ** Alert
@@ -288,7 +320,7 @@ I'm not a very big fan of auto-complete my words but sometimes it's a bit helpfu
   :config
   (global-company-mode)
   (setq-default
-   company-idle-delay 0.2
+   company-idle-delay 0.5
    company-minimum-prefix-length 1
    company-tooltip-align-annotations t))
 #+END_SRC
