@@ -37,7 +37,7 @@ together a list of my better defaults and they are here:
 (fset 'yes-or-no-p 'y-or-n-p)                     ; Alias y/n prompts to yes/no
 (fringe-mode 0)                                   ; No fringe!
 (global-hl-line-mode)                             ; Highlight current line
-(global-subword-mode 0)                           ; Iterate through camelCase words
+(global-subword-mode)                             ; Iterate through camelCase words
 (menu-bar-mode 0)                                 ; Disable the menu bar
 (scroll-bar-mode 0)                               ; Disable the scroll-bar
 (tool-bar-mode 0)                                 ; Disable the tool-bar
@@ -73,6 +73,32 @@ new configuration. To fix this, I move the Emacs customization changes to a new 
 (when (file-exists-p custom-file)
   (load custom-file))
 #+END_SRC
+
+** OS specific configurations
+
+Because I use Emacs everywhere, I need some extra configurations.
+
+*** MacOS
+
+#+BEGIN_SRC emacs-lisp
+(when (eq system-type 'darwin)
+  (setq-default
+   elnawe/font-family "DejaVu Sans Mono-14"          ; Change font-family
+   exec-path (append exec-path '("/usr/local/bin"))  ; Add Homebrew path
+   ns-command-modifier 'meta                         ; Meta key is Command
+   ns-option-modifier nil                            ; I use Alt/Option to expand my keyboard layout
+   ns-right-option-modifier 'super                   ; Never use right Alt key so I can use it as Super key
+   ns-use-srgb-colorspace nil))                      ; Using different colorspace for Mac
+#+END_SRC
+
+Intializing env inside Emacs
+
+#+BEGIN_SRC emacs-lisp
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns))
+  :config (exec-path-from-shell-initialize))
+#+END_SRC
+
 
 * Theme
 
@@ -735,31 +761,6 @@ Better search and replace with =anzu=. This is a known =vim= package that [[http
     (set-face-attribute 'isearch-lazy-highlight-face nil
                         :background zenburn-blue-5
                         :foreground zenburn-blue)))
-#+END_SRC
-
-** OS specific configurations
-
-Because I use Emacs everywhere, I need some extra configurations.
-
-*** MacOS
-
-#+BEGIN_SRC emacs-lisp
-(when (eq system-type 'darwin)
-  (setq-default
-   elnawe/font-size 160                              ; Resize font for Mac
-   exec-path (append exec-path '("/usr/local/bin"))  ; Add Homebrew path
-   ns-command-modifier 'meta                         ; Meta key is Command
-   ns-option-modifier nil                            ; I use Alt/Option to expand my keyboard layout
-   ns-right-option-modifier 'super                   ; Never use right Alt key so I can use it as Super key
-   ns-use-srgb-colorspace nil))                      ; Using different colorspace for Mac
-#+END_SRC
-
-Intializing env inside Emacs
-
-#+BEGIN_SRC emacs-lisp
-(use-package exec-path-from-shell
-  :if (memq window-system '(mac ns))
-  :config (exec-path-from-shell-initialize))
 #+END_SRC
 
 ** Parentheses
