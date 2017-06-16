@@ -21,6 +21,7 @@ together a list of my better defaults and they are here:
  inhibit-startup-screen t                         ; Disable the startup window
  initial-scratch-message ""                       ; Empty *scratch* buffer
  left-margin-width 1 right-margin-width 0         ; Add left and right margins
+ ring-bell-function 'ignore                       ; Ignore any kind of bell notifications
  scroll-conservatively most-positive-fixnum       ; Always scroll by one line
  scroll-margin 10                                 ; Add a margin when scrolling vertically
  select-enable-clipboard t                        ; merge system's and Emacs' clipboard
@@ -354,157 +355,6 @@ I'm not a very big fan of auto-complete my words but sometimes it's a bit helpfu
    company-idle-delay 0.5
    company-minimum-prefix-length 1
    company-tooltip-align-annotations t))
-#+END_SRC
-
-** Emacs everyday
-
-Since I use Emacs all the time, everyday, almost for everything I need some neat configurations. They are all here.
-
-*** Auto-indent as you write
-
-Helps me to maintain my code aligned with aggresive indentation
-
-#+BEGIN_SRC emacs-lisp
-(use-package aggressive-indent
-  :config
-  (aggressive-indent-global-mode))
-#+END_SRC
-
-*** Backup copies
-
-Manage the backup copies. Always keeping them but save them inside Emacs directory.
-
-#+BEGIN_SRC emacs-lisp
-(setq-default
- backup-by-copying t
- backup-directory-alist '(("." . "~/.emacs.d/saves"))
- delete-old-versions 'never
- make-backup-files t
- version-control 'numbered)
-#+END_SRC
-
-*** Bell notifications =C-g=
-
-Beucase Mac and Linux have different behavior when quitting/canceling actions, I manage to pull out a function that
-defines how the bell should work. *NOTE:* This only happens when canceling certain actions like "exit a minibuffer",
-"abort recursive edit" or "abort isearch".
-
-#+BEGIN_SRC emacs-lisp
-(setq ring-bell-function
-      (lambda ()
-        (unless (memq this-command
-                      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
-          (ding))))
-#+END_SRC
-
-*** Dim other buffers
-
-Automatically dim my other buffers
-
-#+BEGIN_SRC emacs-lisp
-(use-package auto-dim-other-buffers
-  :init
-  (auto-dim-other-buffers-mode)
-  :config
-  (zenburn-with-color-variables
-    (set-face-attribute 'auto-dim-other-buffers-face nil :background zenburn-bg-1)))
-#+END_SRC
-
-*** Disable documentation at point
-
-I don't want to see documentation in the echo area because it conflicts with =flycheck=
-
-#+BEGIN_SRC emacs-lisp
-(use-package eldoc
-  :ensure nil
-  :config
-  (global-eldoc-mode -1))
-#+END_SRC
-
-*** Fill paragraph automatically
-
-When I'm in =text-mode= I want my paragraph to be just the lenght of my ruler. Also, I don't want to use =M-q= to adjust
-it by myself, because Emacs allow me to do it automatically!
-
-#+BEGIN_SRC emacs-lisp
-(use-package simple
-  :ensure nil
-  :config
-  (add-hook 'text-mode-hook #'turn-on-auto-fill))
-#+END_SRC
-
-*** Interactively doing things =ido=
-
-I use =ido-mode= because it feels super fast. I like what =helm= does but makes my editor look like any other modern
-editor. I use =ido-vertical-mode= to order my list with a neat look and also =flx-ido= to better matching.
-
-#+BEGIN_SRC emacs-lisp
-(use-package ido
-  :init
-  (ido-mode 1)
-  :bind
-  (("C-x C-b" . ido-switch-buffer))
-  :config
-  (setq-default
-   ido-create-new-buffer 'always
-   ido-enable-flex-matching t
-   ido-everywhere t
-   ido-file-extensions-order '(".js" ".org" ".el" ".json")
-   ido-ignore-buffers '("\\ " shakurov/ido-ignore)
-   ido-use-filename-at-point 'guess)
-
-  (defvar elnawe/ido-unignore '())
-
-  (defun shakurov/ido-ignore (name)
-    "Ignore all non-user (a.k.a. *starred*) buffers except those listed in `elnawe/ido-unignore'."
-    (and (string-match "\\*" name)
-         (not (member name elnawe/ido-unignore)))))
-
-(use-package ido-vertical-mode
-  :init
-  (ido-vertical-mode 1)
-  :config
-  (setq-default
-   ido-use-faces t
-   ido-vertical-define-keys 'C-n-C-p-up-and-down
-   ido-vertical-show-count t)
-
-  (zenburn-with-color-variables
-    (set-face-attribute 'ido-vertical-first-match-face nil
-                        :background zenburn-bg+1
-                        :bold t
-                        :foreground zenburn-yellow-1)
-    (set-face-attribute 'ido-vertical-only-match-face nil
-                        :background nil
-                        :foreground nil)
-    (set-face-attribute 'ido-vertical-match-face nil
-                        :foreground nil)))
-
-(use-package flx-ido
-  :init
-  (flx-ido-mode 1))
-#+END_SRC
-
-Also =smex= helps me go through =M-x= easily and with all the benefits of =ido-mode=
-
-#+BEGIN_SRC emacs-lisp
-(use-package smex
-  :init
-  (smex-initialize)
-  :bind
-  ("M-x" . smex))
-#+END_SRC
-
-*** Kill unused buffers
-
-Clean my buffer list on delay with =midnight= beucase I leave Emacs always open. Keep this configuration always alive.
-
-#+BEGIN_SRC emacs-lisp
-(use-package midnight
-  :ensure nil
-  :config
-  (setq-default clean-buffers-list-delay-general 1)
-  (add-to-list 'clean-buffers-list-kill-never-buffer-names "initdotel.org"))
 #+END_SRC
 
 ** Expanding code
@@ -1044,4 +894,143 @@ Undo and redo with the window configuration using =C-c left= to undo and =C-c ri
   :ensure nil
   :defer 1
   :config (winner-mode))
+#+END_SRC
+
+* Emacs everyday
+
+Since I use Emacs all the time, everyday, almost for everything I need some neat configurations. They are all here.
+
+** Agenda administration
+
+** Auto-indent as you write
+
+Helps me to maintain my code aligned with aggresive indentation
+
+#+BEGIN_SRC emacs-lisp
+(use-package aggressive-indent
+  :config
+  (aggressive-indent-global-mode))
+#+END_SRC
+
+** Backup copies
+
+Manage the backup copies. Always keeping them but save them inside Emacs directory.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default
+ backup-by-copying t
+ backup-directory-alist '(("." . "~/.emacs.d/saves"))
+ delete-old-versions 'never
+ make-backup-files t
+ version-control 'numbered)
+#+END_SRC
+
+** Dim other buffers
+
+Automatically dim my other buffers
+
+#+BEGIN_SRC emacs-lisp
+(use-package auto-dim-other-buffers
+  :init
+  (auto-dim-other-buffers-mode)
+  :config
+  (zenburn-with-color-variables
+    (set-face-attribute 'auto-dim-other-buffers-face nil :background zenburn-bg-1)))
+#+END_SRC
+
+** Disable documentation at point
+
+I don't want to see documentation in the echo area because it conflicts with =flycheck=
+
+#+BEGIN_SRC emacs-lisp
+(use-package eldoc
+  :ensure nil
+  :config
+  (global-eldoc-mode -1))
+#+END_SRC
+
+** Fill paragraph automatically
+
+When I'm in =text-mode= I want my paragraph to be just the lenght of my ruler. Also, I don't want to use =M-q= to adjust
+it by myself, because Emacs allow me to do it automatically!
+
+#+BEGIN_SRC emacs-lisp
+(use-package simple
+  :ensure nil
+  :config
+  (add-hook 'text-mode-hook #'turn-on-auto-fill))
+#+END_SRC
+
+** Interactively doing things =ido=
+
+I use =ido-mode= because it feels super fast. I like what =helm= does but makes my editor look like any other modern
+editor. I use =ido-vertical-mode= to order my list with a neat look and also =flx-ido= to better matching.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ido
+  :init
+  (ido-mode 1)
+  :bind
+  (("C-x C-b" . ido-switch-buffer))
+  :config
+  (setq-default
+   ido-create-new-buffer 'always
+   ido-enable-flex-matching t
+   ido-everywhere t
+   ido-file-extensions-order '(".js" ".org" ".el" ".json")
+   ido-ignore-buffers '("\\ " shakurov/ido-ignore)
+   ido-use-filename-at-point 'guess)
+
+  (defvar elnawe/ido-unignore '())
+
+  (defun shakurov/ido-ignore (name)
+    "Ignore all non-user (a.k.a. *starred*) buffers except those listed in `elnawe/ido-unignore'."
+    (and (string-match "\\*" name)
+         (not (member name elnawe/ido-unignore)))))
+
+(use-package ido-vertical-mode
+  :init
+  (ido-vertical-mode 1)
+  :config
+  (setq-default
+   ido-use-faces t
+   ido-vertical-define-keys 'C-n-C-p-up-and-down
+   ido-vertical-show-count t)
+
+  (zenburn-with-color-variables
+    (set-face-attribute 'ido-vertical-first-match-face nil
+                        :background zenburn-bg+1
+                        :bold t
+                        :foreground zenburn-yellow-1)
+    (set-face-attribute 'ido-vertical-only-match-face nil
+                        :background nil
+                        :foreground nil)
+    (set-face-attribute 'ido-vertical-match-face nil
+                        :foreground nil)))
+
+(use-package flx-ido
+  :init
+  (flx-ido-mode 1))
+#+END_SRC
+
+Also =smex= helps me go through =M-x= easily and with all the benefits of =ido-mode=
+
+#+BEGIN_SRC emacs-lisp
+(use-package smex
+  :init
+  (smex-initialize)
+  :bind
+  ("M-x" . smex))
+#+END_SRC
+
+** Kill unused buffers
+
+Clean my buffer list on delay with =midnight= beucase I leave Emacs always open. Keep this configuration always alive.
+
+#+BEGIN_SRC emacs-lisp
+(use-package midnight
+  :ensure nil
+  :config
+  (setq-default clean-buffers-list-delay-general 1)
+  (add-to-list 'clean-buffers-list-kill-never-buffer-names "initdotel.org"))
 #+END_SRC
