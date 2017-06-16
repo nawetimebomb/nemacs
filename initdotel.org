@@ -251,10 +251,11 @@ Mostly I use =org-mode=, but sometimes you need to write down your README files.
      markdown-asymmetric-header t
      markdown-split-window-direction 'right))
 #+END_SRC
+
 ** Org
 
 My whole configuration is written in =org-mode=. I also write all my TODO lists in Org. This is a powerful tool and I'm
-not the best user. I'm learning though.
+not the best user. I'm learning though. Also, I'm working with [[Agenda administration][=org-agenda=]]
 
 #+BEGIN_SRC emacs-lisp
 (use-package org
@@ -267,7 +268,6 @@ not the best user. I'm learning though.
   (setq-default
    org-descriptive-links nil
    org-ellipsis " ↓"
-   org-log-done t
    org-support-shift-select 'always
    org-startup-folded nil
    org-startup-truncated nil
