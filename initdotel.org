@@ -494,7 +494,7 @@ This package allows me to rename the major/minor modes "lightes", so they look m
   (spaceline-install
     '((major-mode :face highlight-face)
       (projectile-root)
-      ((buffer-id line) :separator ":")
+      ((buffer-id line column) :separator ":")
       (elnawe/version-control))
     '((anzu :when active)
       (selection-info :when mark-active)
@@ -755,7 +755,7 @@ Highlight trailing whitespaces, tabs and empty lines. Also remove them when savi
   (add-hook 'prog-mode-hook #'whitespace-turn-on)
   (add-hook 'text-mode-hook #'whitespace-turn-on)
   :config
-  (setq-default whitespace-style '(face empty tab trailing)))
+  (setq-default whitespace-style '(face tab trailing)))
 #+END_SRC
 
 ** Window management
