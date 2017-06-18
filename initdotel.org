@@ -84,7 +84,7 @@ Because I use Emacs everywhere, I need some extra configurations.
 #+BEGIN_SRC emacs-lisp
 (when (eq system-type 'darwin)
   (setq-default
-   elnawe/font-family "DejaVu Sans Mono-14"          ; Change font-family
+   elnawe/font-family "DejaVu Sans Mono-15"          ; Change font-family
    exec-path (append exec-path '("/usr/local/bin"))  ; Add Homebrew path
    ns-command-modifier 'meta                         ; Meta key is Command
    ns-option-modifier nil                            ; I use Alt/Option to expand my keyboard layout
@@ -100,6 +100,19 @@ Intializing env inside Emacs
   :config (exec-path-from-shell-initialize))
 #+END_SRC
 
+** Helper functions
+
+This is a set of helper functions that are used in this configuration. Most of them are just a way to /standarize/ the
+code.
+
+- TODO: =elnawe/concat-dropbox= is not being used right now. Replace hardcoded Dropbox dir to this method.
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe/concat-dropbox (dirname)
+  "Concats a directory name with an environment variable"
+  (interactive)
+  (concat (getenv "DROPBOX_HOME") dirname))
+#+END_SRC
 
 * Theme
 
@@ -208,18 +221,34 @@ I use =js2-mode= for my code since it looks and feels better.
 - TODO: Add =rjsx-mode= to support React.
 
 #+BEGIN_SRC emacs-lisp
-(use-package js
-  :init
-  (add-hook 'js-mode #'js2-mode))
+  (use-package js
+    :init
+    (add-hook 'js-mode #'js2-mode))
 
-(use-package js2-mode
-  :delight js2-mode "JavaScript"
-  :mode ("\\.js\\'")
-  :config
-  (setq-default js-indent-level 4))
+  (use-package js2-mode
+    :delight js2-mode "JavaScript"
+    :mode ("\\.js\\'")
+    :config
+    (setq-default js-indent-level 4))
 
-(use-package json-mode
-  :delight json-mode "JSON")
+  (use-package json-mode
+    :delight json-mode "JSON")
+
+  (use-package tide)
+
+  (use-package typescript-mode
+    :delight typescript-mode "TypeScript"
+    :init
+    (defun setup-tide-mode ()
+      (interactive)
+      (tide-setup)
+      (setq flycheck-check-syntax-automatically '(save mode-enabled))
+      (eldoc-mode 1)
+      (tide-hl-identifier-mode))
+    (add-hook 'before-save-hook #'tide-format-before-save)
+    (add-hook 'typescript-mode-hook #'setup-tide-mode)
+    :config
+    (setq company-tooltip-align-annotations t))
 #+END_SRC
 
 ** Lisp
@@ -901,6 +930,80 @@ Undo and redo with the window configuration using =C-c left= to undo and =C-c ri
 Since I use Emacs all the time, everyday, almost for everything I need some neat configurations. They are all here.
 
 ** Agenda administration
+
+*** Setup directories and configuration
+
+Setup directory for org files, save my =TODOs= to a index file and maintain an inbox in Dropbox. Also, archive all
+=DONE= tasks to =~/orgs/archive.org=.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-directory "~/Dropbox/orgs")
+
+(defun org-file-path (filename)
+  "Return the absolute address of an org file, given its relative name."
+  (concat (file-name-as-directory org-directory) filename))
+
+(setq
+ org-index-file (org-file-path "index.org")
+ org-archive-location (concat (org-file-path "archive.org") ":: From %s"))
+#+END_SRC
+
+All my =TODOs= are in the =index.org= so I'll load my agenda from there.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-files (list org-index-file))
+#+END_SRC
+
+Record the time when =TODO= was archived.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-log-done 'time)
+#+END_SRC
+
+*** Capturing new tasks
+
+Defining templates for capturing new tasks. Also, quickly capture =TODO=.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-capture-templates
+      '(("t" "Todo"
+         entry
+         (file+headline org-index-file "Inbox")
+         "* TODO %?\n")
+        ("i" "Ideas"
+         entry
+         (file (org-file-path "ideas.org"))
+         "* TODO %?\n")))
+
+(defun org-capture-todo ()
+  (interactive)
+  (org-capture :keys "t"))
+
+(global-set-key (kbd "M-n") 'org-capture-todo)
+#+END_SRC
+
+*** Keybindings
+
+#+BEGIN_SRC emacs-lisp
+(define-key global-map "\C-ca" 'org-agenda)
+(define-key global-map "\C-cc" 'org-capture)
+
+(defun elnawe/mark-done-and-archive ()
+  "Mark the state of an org-mode item as DONE and archive it."
+  (interactive)
+  (org-todo 'done)
+  (org-archive-subtree))
+
+(defun open-index-file ()
+  "Open the master org TODO list."
+  (interactive)
+  (find-file org-index-file)
+  (flycheck-mode -1)
+  (end-of-buffer))
+
+(global-set-key (kbd "C-c i") 'open-index-file)
+(define-key org-mode-map (kbd "C-c C-x C-s") 'elnawe/mark-done-and-archive)
+#+END_SRC
 
 ** Auto-indent as you write
 
