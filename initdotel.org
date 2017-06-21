@@ -5,44 +5,48 @@
 
 ** My better-defaults
 
-Since I've been using Emacs I noticed some actual default variables are not the best fit for me. I managed to put
-together a list of my better defaults and they are here:
+Since I've been using Emacs I noticed some actual default variables are not the
+best fit for me. I managed to put together a list of my better defaults and they
+are here:
 
 #+BEGIN_SRC emacs-lisp
 (setq-default
- confirm-kill-emacs 'yes-or-no-p                  ; Confirm before exit
- cursor-in-non-selected-windows t                 ; Hide cursor in inactive windows
- delete-by-moving-to-trash t                      ; Move file to trash instead of removing it
- display-time-default-load-average nil            ; Don't display load avereage
- display-time-format "%H:%M"                      ; Format the time string
- fill-column 120                                  ; Width before automatic line breaks
- help-window-select t                             ; Focus help windows when opened
- indent-tabs-mode nil                             ; Use spaces for indentation
- inhibit-startup-screen t                         ; Disable the startup window
- initial-scratch-message ""                       ; Empty *scratch* buffer
- left-margin-width 1 right-margin-width 0         ; Add left and right margins
- ring-bell-function 'ignore                       ; Ignore any kind of bell notifications
- scroll-conservatively most-positive-fixnum       ; Always scroll by one line
- scroll-margin 10                                 ; Add a margin when scrolling vertically
- select-enable-clipboard t                        ; merge system's and Emacs' clipboard
- sentence-end-double-space nil                    ; End sentence when dot and space
- show-trailing-whitespace nil                     ; Display trailing whitespaces
- split-width-threshold nil                        ; Disable horizontal window splitting
- tab-width 4                                      ; Set indentation width
- uniquify-buffer-name-style 'forward              ; Make buffer names unique
- visible-bell nil                                 ; Replace the alarm to an audible one
- window-combination-resize t                      ; Resize window proportionally
- x-stretch-cursor t)                              ; Give cursor glyph width
-(delete-selection-mode)                           ; Replace region when inserting text
-(display-time-mode)                               ; Enable time-mode in mode-line
-(fset 'yes-or-no-p 'y-or-n-p)                     ; Alias y/n prompts to yes/no
-(fringe-mode 0)                                   ; No fringe!
-(global-hl-line-mode)                             ; Highlight current line
-(global-subword-mode)                             ; Iterate through camelCase words
-(menu-bar-mode 0)                                 ; Disable the menu bar
-(scroll-bar-mode 0)                               ; Disable the scroll-bar
-(tool-bar-mode 0)                                 ; Disable the tool-bar
-(mouse-avoidance-mode 'banish)                    ; Avoid mouse colission with point
+ confirm-kill-emacs 'yes-or-no-p                         ; Confirm before exit
+ cursor-in-non-selected-windows t                        ; Hide cursor in inactive windows
+ delete-by-moving-to-trash t                             ; Move file to trash instead of removing it
+ display-time-default-load-average nil                   ; Don't display load avereage
+ display-time-format "%H:%M"                             ; Format the time string
+ fill-column 80                                          ; Width before automatic line breaks
+ frame-title-format '((:eval (projectile-project-name))) ; Change frame title to project name
+ help-window-select t                                    ; Focus help windows when opened
+ indent-tabs-mode nil                                    ; Use spaces for indentation
+ inhibit-startup-screen t                                ; Disable the startup window
+ initial-scratch-message ""                              ; Empty *scratch* buffer
+ left-margin-width 1 right-margin-width 0                ; Add left and right margins
+ ring-bell-function 'ignore                              ; Ignore any kind of bell notifications
+ scroll-conservatively most-positive-fixnum              ; Always scroll by one line
+ scroll-margin 10                                        ; Add a margin when scrolling vertically
+ select-enable-clipboard t                               ; Merge system's and Emacs' clipboard
+ sentence-end-double-space nil                           ; End sentence when dot and space
+ show-trailing-whitespace nil                            ; Display trailing whitespaces
+ split-height-threshold nil                               ; Enable vertical splitting by 20 lines
+ split-width-threshold nil                               ; Disable horizontal window splitting
+ tab-width 4                                             ; Set indentation width
+ truncate-lines nil                                      ; Disable truncate lines
+ uniquify-buffer-name-style 'forward                     ; Make buffer names unique
+ visible-bell nil                                        ; Replace the alarm to an audible one
+ window-combination-resize t                             ; Resize window proportionally
+ x-stretch-cursor t)                                     ; Give cursor glyph width
+(delete-selection-mode)                                  ; Replace region when inserting text
+(display-time-mode)                                      ; Enable time-mode in mode-line
+(fset 'yes-or-no-p 'y-or-n-p)                            ; Alias y/n prompts to yes/no
+(fringe-mode 0)                                          ; No fringe!
+(global-hl-line-mode)                                    ; Highlight current line
+(global-subword-mode)                                    ; Iterate through camelCase words
+(menu-bar-mode 0)                                        ; Disable the menu bar
+(scroll-bar-mode 0)                                      ; Disable the scroll-bar
+(tool-bar-mode 0)                                        ; Disable the tool-bar
+(mouse-avoidance-mode 'none)                             ; Avoid mouse colission with point
 #+END_SRC
 
 ** My variables
@@ -345,8 +349,8 @@ I'm not using =python-mode= all the time but sometimes I create little scripts t
 
 ** Scala
 
-I don't like IntelliJ and Emacs provides me with a mode to work with Scala as I want. I need =scala-mode= and =ensime=
-to make it work but worth the try.
+I don't like IntelliJ and Emacs provides me with a mode to work with Scala as I
+want. I need =scala-mode= and =ensime= to make it work but worth the try.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ensime)
@@ -514,6 +518,14 @@ This package allows me to rename the major/minor modes "lightes", so they look m
                          (pcase (vc-state (buffer-file-name))
                            (`up-to-date "")
                            (`edited " *"))))))))
+  (spaceline-define-segment
+      elnawe/twitter
+    "Show Twitter notifications"
+    (concat
+     "Twitter "
+     (if (bound-and-true-p twittering-unread-status-info)
+         '("%e" (:eval (twittering-make-unread-status-notifier-string)))
+       "0")))
   :config
   (setq-default
    powerline-default-separator 'slant
@@ -525,12 +537,13 @@ This package allows me to rename the major/minor modes "lightes", so they look m
 
   (spaceline-install
     '((major-mode :face highlight-face)
-      (projectile-root)
-      ((buffer-id line column) :separator ":")
+      ((buffer-id) :separator ":")
+      (line-column)
       (elnawe/version-control))
     '((anzu :when active)
       (selection-info :when mark-active)
       ((hud buffer-position))
+      (elnawe/twitter)
       (elnawe/date-time :face highlight-face)))
 
   (zenburn-with-color-variables
@@ -881,10 +894,10 @@ Move around windows with ease.
 (use-package windmove
   :ensure nil
   :bind
-  (("C-M-<left>". windmove-left)
-   ("C-M-<right>". windmove-right)
-   ("C-M-<up>". windmove-up)
-   ("C-M-<down>". windmove-down)))
+  (("<f2> <left>". windmove-left)
+   ("<f2> <right>". windmove-right)
+   ("<f2> <up>". windmove-up)
+   ("<f2> <down>". windmove-down)))
 #+END_SRC
 
 Window splitting. After create a new window, switch to the new one.
@@ -1136,7 +1149,43 @@ Clean my buffer list on delay with =midnight= beucase I leave Emacs always open.
 #+BEGIN_SRC emacs-lisp
 (use-package midnight
   :ensure nil
+  :init
+  (add-hook 'midnight-mode #'clean-buffer-list)
   :config
   (setq-default clean-buffers-list-delay-general 1)
-  (add-to-list 'clean-buffers-list-kill-never-buffer-names "initdotel.org"))
+  (add-to-list 'clean-buffer-list-kill-never-buffer-names "initdotel.org")
+  (midnight-mode 1))
+#+END_SRC
+
+* Social networking
+
+Using Emacs for everything includes using it for social media.
+
+** Personal information
+
+#+BEGIN_SRC emacs-lisp
+(setq
+ user-full-name "Nahuel Jesús Sacchetti"
+ user-mail-address "nahueljsacchetti@gmail.com"
+ calendar-latitude -32.9
+ calendar-longitude -60.6
+ calendar-location-name "Rosario, Argentina")
+#+END_SRC
+
+** Twitter
+
+I often use Twitter and when I do it is inside Emacs.
+
+#+BEGIN_SRC emacs-lisp
+(use-package twittering-mode
+  :delight twittering-mode "Twitter"
+  :config
+  (setq
+   twittering-display-remaining t
+   twittering-icon-mode t
+   twittering-icon-storage-file "~/.emacs.d/cache"
+   twittering-retweet-format '(nil _ "RT @%s: %t")
+   twittering-timer-interval 300
+   twittering-use-icon-storage t
+   twittering-use-master-password t))
 #+END_SRC
