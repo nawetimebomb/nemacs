@@ -504,27 +504,24 @@ This package allows me to rename the major/minor modes "lightes", so they look m
   (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main))))
   (spaceline-define-segment
       elnawe/date-time
-    "Better date time, remove global"
+    "Better date time, removes (global)"
     (shell-command-to-string "echo -n \"$(date '+%a %d %b %H:%M')\""))
   (spaceline-define-segment
       elnawe/version-control
-    "Better version control information."
+    "Minimal version control information."
     (when vc-mode
-      (defvar current-branch
-        (substring vc-mode (+ 2 (length (symbol-name (vc-backend buffer-file-name))))))
       (powerline-raw
-       (s-trim (concat current-branch
-                       (when (buffer-file-name)
-                         (pcase (vc-state (buffer-file-name))
-                           (`up-to-date "")
-                           (`edited " *"))))))))
+       (s-trim (when (buffer-file-name)
+                 (pcase (vc-state (buffer-file-name))
+                   (`up-to-date "-")
+                   (`edited "*")))))))
   (spaceline-define-segment
       elnawe/twitter
     "Show Twitter notifications"
     (concat
      "Twitter "
-     (if (bound-and-true-p twittering-unread-status-info)
-         '("%e" (:eval (twittering-make-unread-status-notifier-string)))
+     (if (boundp 'twittering-unread-status-info)
+         (powerline-raw (twittering-make-unread-status-notifier-string))
        "0")))
   :config
   (setq-default
@@ -537,9 +534,8 @@ This package allows me to rename the major/minor modes "lightes", so they look m
 
   (spaceline-install
     '((major-mode :face highlight-face)
-      ((buffer-id) :separator ":")
-      (line-column)
-      (elnawe/version-control))
+      ((elnawe/version-control buffer-id) :separator " ")
+      (line-column))
     '((anzu :when active)
       (selection-info :when mark-active)
       ((hud buffer-position))
