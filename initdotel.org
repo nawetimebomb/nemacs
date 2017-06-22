@@ -495,13 +495,20 @@ This package allows me to rename the major/minor modes "lightes", so they look m
     (let ((inhibit-mode-name-delight nil)) ad-do-it)))
 #+END_SRC
 
+*** Icons
+
+A fancy looking mode-line is fancy!
+
+#+BEGIN_SRC emacs-lisp
+(use-package all-the-icons)
+#+END_SRC
+
 *** Spaceline
 
 #+BEGIN_SRC emacs-lisp
 (use-package spaceline
   :init
   (require 'spaceline-config)
-  (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main))))
   (spaceline-define-segment
       elnawe/date-time
     "Better date time, removes (global)"
@@ -510,22 +517,35 @@ This package allows me to rename the major/minor modes "lightes", so they look m
       elnawe/version-control
     "Minimal version control information."
     (when vc-mode
-      (powerline-raw
-       (s-trim (when (buffer-file-name)
-                 (pcase (vc-state (buffer-file-name))
-                   (`up-to-date "-")
-                   (`edited "*")))))))
+      (defvar current-branch
+        (substring vc-mode (+ 2 (length (symbol-name (vc-backend buffer-file-name))))))
+      (concat
+       (propertize (all-the-icons-faicon "code-fork")
+                   'face `(:family ,(all-the-icons-faicon-family)
+                                   :foreground "#DFAF8F"
+                                   :height 1.1)
+                   'display '(raise -0.1))
+       " "
+       (powerline-raw
+        (s-trim (concat current-branch
+                        (when (buffer-file-name)
+                          (pcase (vc-state (buffer-file-name))
+                            (`up-to-date " -")
+                            (`edited " *")))))))))
   (spaceline-define-segment
       elnawe/twitter
     "Show Twitter notifications"
-    (concat
-     "Twitter "
-     (if (boundp 'twittering-unread-status-info)
-         (powerline-raw (twittering-make-unread-status-notifier-string))
-       "0")))
+    (when (boundp 'twittering-unread-status-info)
+      (propertize (all-the-icons-faicon "twitter")
+                  'face `(:family ,(all-the-icons-faicon-family)
+                                  :background nil
+                                  :foreground "#6CA0A3"
+                                  :height 1.1)
+                  'display '(raise -0.1))))
   :config
   (setq-default
-   powerline-default-separator 'slant
+   mode-line-format '("%e" (:eval (spaceline-ml-main)))
+   powerline-default-separator 'arrow
    powerline-height 20
    spaceline-flycheck-bullet (format "%s %s" "⚑" "%s")
    spaceline-highlight-face-func 'spaceline-highlight-face-modified
@@ -534,24 +554,32 @@ This package allows me to rename the major/minor modes "lightes", so they look m
 
   (spaceline-install
     '((major-mode :face highlight-face)
-      ((elnawe/version-control buffer-id) :separator " ")
-      (line-column))
+      (buffer-id)
+      (line-column)
+      (elnawe/version-control))
     '((anzu :when active)
       (selection-info :when mark-active)
-      ((hud buffer-position))
       (elnawe/twitter)
+      ((hud buffer-position))
       (elnawe/date-time :face highlight-face)))
 
   (zenburn-with-color-variables
     (set-face-attribute 'mode-line nil
+                        :background zenburn-bg-1
                         :box nil
-                        :foreground zenburn-bg+3)
+                        :foreground zenburn-fg)
+    (set-face-attribute 'powerline-active1 nil
+                        :background zenburn-bg-1
+                        :foreground zenburn-fg)
     (set-face-attribute 'mode-line-inactive nil
+                        :background zenburn-bg-1
                         :box nil
                         :foreground zenburn-bg+3)
-    (set-face-attribute 'spaceline-flycheck-error nil :foreground zenburn-red)
-    (set-face-attribute 'spaceline-flycheck-info nil :foreground zenburn-blue+1)
-    (set-face-attribute 'spaceline-flycheck-warning nil :foreground zenburn-orange)
+    (set-face-attribute 'powerline-inactive1 nil
+                        :background zenburn-bg-1
+                        :foreground zenburn-bg+3)
+    (set-face-attribute 'powerline-active2 nil :background zenburn-bg-05)
+    (set-face-attribute 'powerline-inactive2 nil :background zenburn-bg-1)
     (set-face-attribute 'spaceline-highlight-face nil
                         :background zenburn-yellow
                         :foreground zenburn-fg-1)
@@ -1181,7 +1209,7 @@ I often use Twitter and when I do it is inside Emacs.
    twittering-icon-mode t
    twittering-icon-storage-file "~/.emacs.d/cache"
    twittering-retweet-format '(nil _ "RT @%s: %t")
-   twittering-timer-interval 300
+   twittering-timer-interval 180
    twittering-use-icon-storage t
    twittering-use-master-password t))
 #+END_SRC
