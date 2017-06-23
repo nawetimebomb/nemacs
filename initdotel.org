@@ -54,10 +54,7 @@ are here:
 #+BEGIN_SRC emacs-lisp
 (setq
  user-full-name "Nahuel Jesús Sacchetti"
- user-mail-address "nahueljsacchetti@gmail.com"
- calendar-latitude -32.9
- calendar-longitude -60.6
- calendar-location-name "Rosario, Argentina")
+ user-mail-address "nahueljsacchetti@gmail.com")
 #+END_SRC
 
 ** My variables
@@ -88,6 +85,15 @@ new configuration. To fix this, I move the Emacs customization changes to a new 
 (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
+#+END_SRC
+
+** Load =secrets=
+
+This loads a collection of secret and sensible information. I keep this file
+separated to maintain privacy.
+
+#+BEGIN_SRC emacs-lisp
+(load "~/.elnawe.secrets/.emacs" t)
 #+END_SRC
 
 ** OS specific configurations
@@ -521,8 +527,6 @@ Not going outside too much but always know what is happening out there.
 #+BEGIN_SRC emacs-lisp
 (use-package forecast
   :init
-  (setq
-   forecast-api-key "4e040e8d67c61726996e1a28fb851f17")
   (when (not (boundp 'forecast--load-data))
     (elnawe/create-new-forecast-buffer)))
 #+END_SRC
