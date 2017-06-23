@@ -56,7 +56,7 @@ aware that editting these may cause trouble!
 
 #+BEGIN_SRC emacs-lisp
 (defvar elnawe/font-family "DejaVu Sans Mono-12" "Font used for theming")
-(defvar elnawe/font-size 140 "Default font size")
+(defvar elnawe/font-size 100 "Default font size")
 (defvar elnawe/font-size-title 150 "Font size used in titles")
 #+END_SRC
 
@@ -116,6 +116,13 @@ code.
   "Concats a directory name with an environment variable"
   (interactive)
   (concat (getenv "DROPBOX_HOME") dirname))
+
+(defun elnawe/create-new-forecast-buffer ()
+  (require 'forecast)
+  (forecast--load-data
+   (lambda ()
+     (forecast--make-buffer "Weather Forecast"))))
+
 #+END_SRC
 
 * Theme
@@ -502,9 +509,7 @@ A fancy looking mode-line is fancy!
 
 #+BEGIN_SRC emacs-lisp
 (use-package all-the-icons
-  :init
-  (when (boundp 'all-the-icons-faicon)
-    (all-the-icons-install-fonts)))
+  :after spaceline)
 #+END_SRC
 
 *** Spaceline
@@ -513,6 +518,16 @@ A fancy looking mode-line is fancy!
 (use-package spaceline
   :init
   (require 'spaceline-config)
+  (setq-default
+   mode-line-format '("%e" (:eval (spaceline-ml-main))))
+  :config
+  (setq
+   powerline-default-separator 'arrow
+   powerline-height 20
+   spaceline-highlight-face-func 'spaceline-highlight-face-modified
+   spaceline-separator-dir-left '(left . left)
+   spaceline-separator-dir-right '(right . right))
+
   (spaceline-define-segment
       elnawe/date-time
     "Better date time, removes (global)"
@@ -541,29 +556,38 @@ A fancy looking mode-line is fancy!
     "Show Twitter notifications"
     (when (boundp 'twittering-unread-status-info)
       (propertize (all-the-icons-faicon "twitter")
+                  'display '(raise -0.1)
                   'face `(:family ,(all-the-icons-faicon-family)
-                                  :background nil
                                   :foreground "#6CA0A3"
-                                  :height 1.1)
-                  'display '(raise -0.1))))
-  :config
-  (setq-default
-   mode-line-format '("%e" (:eval (spaceline-ml-main)))
-   powerline-default-separator 'arrow
-   powerline-height 20
-   spaceline-flycheck-bullet (format "%s %s" "⚑" "%s")
-   spaceline-highlight-face-func 'spaceline-highlight-face-modified
-   spaceline-separator-dir-left '(left . left)
-   spaceline-separator-dir-right '(right . right))
+                                  :height 1.1))))
+  (spaceline-define-segment
+      elnawe/forecast
+    "Show the current temperature"
+    (propertize
+     (concat
+      (propertize (all-the-icons-faicon "sun-o")
+                  'display '(raise 0)
+                  'face `(:family ,(all-the-icons-faicon-family)
+                                  :foreground "#D0BF8F"
+                                  :height 1.1))
+      " "
+      (forecast--temperature-string))
+     'help-echo '(format
+                  "Feels-like: %s\nDetails: %s\nHumidity: %s\nWind: %s"
+                  (forecast--apparent-temperature)
+                  (forecast--detailed-summary)
+                  (forecast--humidity)
+                  (forecast--wind-speed))))
 
   (spaceline-install
     '((major-mode :face highlight-face)
-      ((buffer-id projectile-root) :separator "@")
-      (line-column)
-      (elnawe/version-control))
+      (buffer-id)
+      (elnawe/version-control)
+      (elnawe/forecast)
+      (elnawe/twitter))
     '((anzu :when active)
-      (selection-info :when mark-active)
-      (elnawe/twitter)
+      (projectile-root)
+      (line-column)
       ((hud buffer-position))
       (elnawe/date-time :face highlight-face)))
 
@@ -1180,12 +1204,12 @@ Clean my buffer list on delay with =midnight= beucase I leave Emacs always open.
   :init
   (add-hook 'midnight-mode #'clean-buffer-list)
   :config
-  (setq-default clean-buffers-list-delay-general 1)
+  (setq clean-buffers-list-delay-general 1)
   (add-to-list 'clean-buffer-list-kill-never-buffer-names "initdotel.org")
   (midnight-mode 1))
 #+END_SRC
 
-* Social networking
+* Social and other perks
 
 Using Emacs for everything includes using it for social media.
 
@@ -1216,4 +1240,17 @@ I often use Twitter and when I do it is inside Emacs.
    twittering-timer-interval 180
    twittering-use-icon-storage t
    twittering-use-master-password t))
+#+END_SRC
+
+** Weather and forecast
+
+Not going outside too much but always know what is happening out there.
+
+#+BEGIN_SRC emacs-lisp
+(use-package forecast
+  :init
+  (setq
+   forecast-api-key "4e040e8d67c61726996e1a28fb851f17")
+  (when (not (boundp 'forecast--load-data))
+    (elnawe/create-new-forecast-buffer)))
 #+END_SRC
