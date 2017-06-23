@@ -49,6 +49,17 @@ are here:
 (mouse-avoidance-mode 'none)                             ; Avoid mouse colission with point
 #+END_SRC
 
+** Personal information
+
+#+BEGIN_SRC emacs-lisp
+(setq
+ user-full-name "Nahuel Jesús Sacchetti"
+ user-mail-address "nahueljsacchetti@gmail.com"
+ calendar-latitude -32.9
+ calendar-longitude -60.6
+ calendar-location-name "Rosario, Argentina")
+#+END_SRC
+
 ** My variables
 
 In order to maintain this configuration file I setted up some variables. These are carefully crafted and you should be
@@ -121,8 +132,7 @@ code.
   (require 'forecast)
   (forecast--load-data
    (lambda ()
-     (forecast--make-buffer "Weather Forecast"))))
-
+     (forecast--make-buffer "*Weather Forecast*"))))
 #+END_SRC
 
 * Theme
@@ -210,7 +220,7 @@ Using HTML mode defined in =sgml-mode.el=
     (add-hook 'html-mode-hook #'sgml-electric-tag-pair-mode)
     (add-hook 'html-mode-hook #'sgml-name-8bit-mode)
     :config
-    (setq-default sgml-basic-offset 4))
+    (setq sgml-basic-offset 4))
 #+END_SRC
 
 ** Java
@@ -308,7 +318,7 @@ not the best user. I'm learning though. Also, I'm working with [[Agenda administ
   (add-hook 'org-mode-hook #'org-sticky-header-mode)
   (add-hook 'org-mode-hook #'org-bullets-mode)
   :config
-  (setq-default
+  (setq
    org-descriptive-links nil
    org-ellipsis " ↓"
    org-support-shift-select 'always
@@ -323,7 +333,7 @@ not the best user. I'm learning though. Also, I'm working with [[Agenda administ
   :ensure nil
   :after org
   :config
-  (setq-default
+  (setq
    org-edit-src-content-indentation 0
    org-edit-src-persistent-message nil
    org-src-fontify-natively t
@@ -336,7 +346,7 @@ Display the Org header in the header-line
 #+BEGIN_SRC emacs-lisp
 (use-package org-sticky-header
   :config
-  (setq-default
+  (setq
    org-sticky-header-full-path 'full
    org-sticky-header-outline-path-separator " / "))
 #+END_SRC
@@ -394,7 +404,7 @@ I'm not a very big fan of auto-complete my words but sometimes it's a bit helpfu
 (use-package company
   :config
   (global-company-mode)
-  (setq-default
+  (setq
    company-idle-delay 0.5
    company-minimum-prefix-length 1
    company-tooltip-align-annotations t))
@@ -416,8 +426,9 @@ Mostly you can use any kind of expansion with =<C-return>=
   :init
   (add-hook 'css-mode-hook #'emmet-mode)
   (add-hook 'html-mode-hook #'emmet-mode)
+  (add-hook 'rjsx-mode-hook #'emmet-mode)
   :config
-  (setq-default emmet-move-cursor-between-quote t))
+  (setq emmet-move-cursor-between-quote t))
 
 (use-package hippie-exp
   :ensure nil
@@ -443,7 +454,7 @@ Mostly you can use any kind of expansion with =<C-return>=
   (add-hook 'org-mode-hook #'yas-minor-mode)
   (add-hook 'python-mode-hook #'yas-minor-mode)
   :config
-  (setq-default yas-snippet-dirs '("~/.emacs.d/snippets"))
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
   (yas-reload-all)
   (unbind-key "TAB" yas-minor-mode-map)
   (unbind-key "<tab>" yas-minor-mode-map))
@@ -474,7 +485,7 @@ This configuration need some binaries so don't forget to read my [[file+emacs:RE
   (add-hook 'emacs-lisp-mode-hook #'flycheck-mode)
   (add-hook 'js-mode-hook #'flycheck-mode)
   :config
-  (setq-default
+  (setq
    flycheck-check-syntax-automatically '(save mode-enabled)
    flycheck-disabled-checkers '(emacs-lisp-checkdoc)
    flycheck-display-errors-delay .3)
@@ -501,6 +512,19 @@ This package allows me to rename the major/minor modes "lightes", so they look m
   :config
   (defadvice powerline-major-mode (around delight-powerline-major-mode activate)
     (let ((inhibit-mode-name-delight nil)) ad-do-it)))
+#+END_SRC
+
+*** Forecast
+
+Not going outside too much but always know what is happening out there.
+
+#+BEGIN_SRC emacs-lisp
+(use-package forecast
+  :init
+  (setq
+   forecast-api-key "4e040e8d67c61726996e1a28fb851f17")
+  (when (not (boundp 'forecast--load-data))
+    (elnawe/create-new-forecast-buffer)))
 #+END_SRC
 
 *** Icons
@@ -586,6 +610,7 @@ A fancy looking mode-line is fancy!
       (elnawe/forecast)
       (elnawe/twitter))
     '((anzu :when active)
+      (selection-info :when mark-active)
       (projectile-root)
       (line-column)
       ((hud buffer-position))
@@ -661,7 +686,7 @@ I barely use my mouse but when I do...
 (use-package mwheel
   :ensure nil
   :config
-  (setq-default
+  (setq
    mouse-wheel-progressive-speed nil
    mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control)))))
 #+END_SRC
@@ -765,7 +790,7 @@ I love =projectile= and I think its the best project management tool you'll ever
 (use-package projectile
   :defer 1
   :init
-  (setq
+  (setq-default
    projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
    projectile-keymap-prefix (kbd "<f5>")
    projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory))
@@ -1209,20 +1234,9 @@ Clean my buffer list on delay with =midnight= beucase I leave Emacs always open.
   (midnight-mode 1))
 #+END_SRC
 
-* Social and other perks
+* Social networks
 
 Using Emacs for everything includes using it for social media.
-
-** Personal information
-
-#+BEGIN_SRC emacs-lisp
-(setq
- user-full-name "Nahuel Jesús Sacchetti"
- user-mail-address "nahueljsacchetti@gmail.com"
- calendar-latitude -32.9
- calendar-longitude -60.6
- calendar-location-name "Rosario, Argentina")
-#+END_SRC
 
 ** Twitter
 
@@ -1240,17 +1254,4 @@ I often use Twitter and when I do it is inside Emacs.
    twittering-timer-interval 180
    twittering-use-icon-storage t
    twittering-use-master-password t))
-#+END_SRC
-
-** Weather and forecast
-
-Not going outside too much but always know what is happening out there.
-
-#+BEGIN_SRC emacs-lisp
-(use-package forecast
-  :init
-  (setq
-   forecast-api-key "4e040e8d67c61726996e1a28fb851f17")
-  (when (not (boundp 'forecast--load-data))
-    (elnawe/create-new-forecast-buffer)))
 #+END_SRC
