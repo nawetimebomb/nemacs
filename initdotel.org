@@ -170,7 +170,7 @@ Load zenburn theme and fix some faces with zenburn color variables
                         :background zenburn-bg-1
                         :box nil)
     (set-face-attribute 'region nil
-                        :background zenburn-blue-3
+                        :background zenburn-green-1
                         :distant-foreground 'unspecified)
     (set-face-attribute 'vertical-border nil :foreground zenburn-bg))
 
