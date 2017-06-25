@@ -66,7 +66,21 @@ aware that editting these may cause trouble!
 (defvar elnawe/font-family "DejaVu Sans Mono-12" "Font used for theming")
 (defvar elnawe/font-size 100 "Default font size")
 (defvar elnawe/font-size-title 150 "Font size used in titles")
+(defvar elnawe/start-time-seconds 10 "Time in seconds to start a mini application")
 (defvar elnawe/update-time-seconds 1800 "Time in seconds to update/refresh mini applications")
+#+END_SRC
+
+** Helpers
+
+This is a set of helper functions that are used in this configuration. Most of
+them are just a way to /standarize/ the code.
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe::start-with-delay (FUNC)
+  "Runs `FUNC' with a delay declared in
+  `elnawe/start-time-seconds'. This function should be used to
+  run smaller apps that are not crucial for Emacs to work."
+  (run-at-time elnawe/start-time-seconds nil (funcall FUNC)))
 #+END_SRC
 
 ** Garbage collection
@@ -120,26 +134,6 @@ Intializing env inside Emacs
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
   :config (exec-path-from-shell-initialize))
-#+END_SRC
-
-** Helper functions
-
-This is a set of helper functions that are used in this configuration. Most of them are just a way to /standarize/ the
-code.
-
-- TODO: =elnawe/concat-dropbox= is not being used right now. Replace hardcoded Dropbox dir to this method.
-
-#+BEGIN_SRC emacs-lisp
-(defun elnawe/concat-dropbox (dirname)
-  "Concats a directory name with an environment variable"
-  (interactive)
-  (concat (getenv "DROPBOX_HOME") dirname))
-
-(defun elnawe/create-new-forecast-buffer ()
-  (require 'forecast)
-  (forecast--load-data
-   (lambda ()
-     (forecast--make-buffer "*Weather Forecast*"))))
 #+END_SRC
 
 * Theme
@@ -228,18 +222,6 @@ Using HTML mode defined in =sgml-mode.el=
     (add-hook 'html-mode-hook #'sgml-name-8bit-mode)
     :config
     (setq sgml-basic-offset 4))
-#+END_SRC
-
-** Java
-
-- TODO: Add =jdee= configuration.
-
-#+BEGIN_SRC emacs-lisp
-(use-package java-mode
-  :ensure nil
-  :delight java-mode "Java")
-
-;;(use-package jdee)
 #+END_SRC
 
 ** JavaScript
@@ -371,25 +353,6 @@ I'm not using =python-mode= all the time but sometimes I create little scripts t
   :delight pip-requirements-mode "PyPA Requirements")
 #+END_SRC
 
-** Scala
-
-I don't like IntelliJ and Emacs provides me with a mode to work with Scala as I
-want. I need =scala-mode= and =ensime= to make it work but worth the try.
-
-#+BEGIN_SRC emacs-lisp
-(use-package ensime)
-
-(use-package scala-mode
-  :after ensime
-  :init
-  (add-hook 'scala-mode-hook #'ensime-mode)
-  :interpreter
-  ("scala" . scala-mode))
-
-(use-package sbt-mode
-  :commands sbt-start sbt-command)
-#+END_SRC
-
 * Major features
 
 ** Auto-completition
@@ -439,21 +402,6 @@ Mostly you can use any kind of expansion with =<C-return>=
   (setq-default
    hippie-expand-try-functions-list '(yas-hippie-try-expand elnawe/emmet-try-expand-line)
    hippie-expand-verbose nil))
-
-(use-package yasnippet
-  :disabled t
-  :init
-  (add-hook 'csharp-mode-hook #'yas-minor-code)
-  (add-hook 'emacs-lisp-mode-hook #'yas-minor-mode)
-  (add-hook 'html-mode-hook #'yas-minor-mode)
-  (add-hook 'js2-mode-hook #'yas-minor-mode)
-  (add-hook 'org-mode-hook #'yas-minor-mode)
-  (add-hook 'python-mode-hook #'yas-minor-mode)
-  :config
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
-  (yas-reload-all)
-  (unbind-key "TAB" yas-minor-mode-map)
-  (unbind-key "<tab>" yas-minor-mode-map))
 #+END_SRC
 
 ** Help
@@ -518,9 +466,11 @@ Not going outside too much but always know what is happening out there.
 (use-package forecast
   :after spaceline
   :config
-  (when (not (boundp 'forecast--load-data))
-    (run-at-time 30 nil (lambda ()
-                          (elnawe/create-new-forecast-buffer))))
+  (progn
+    (run-at-time elnawe/start-time-seconds nil
+                 (lambda ()
+                   (forecast--load-data (lambda ()
+                                          (forecast--make-buffer "*Weather Forecast*"))))))
 
   (run-at-time t elnawe/update-time-seconds (lambda ()
                                               (forecast-refresh))))
@@ -553,48 +503,39 @@ First, download Spaceline if doesn't exist and override =mode-line-format=.
 After that I define all my custom segments.
 
 #+BEGIN_SRC emacs-lisp
+(defmacro with-face (STR &rest PROPS)
+  "Return STR propertized with PROPS."
+  `(propertize ,STR 'face (list ,@PROPS)))
+
 (spaceline-define-segment elnawe/date-time
   "Better date time, removes (global)"
-  (shell-command-to-string "echo -n \"$(date '+%a %d %b %H:%M')\""))
+  (concat
+   "\xf017 "
+   (format-time-string "%a %d %b %H:%M" (current-time))))
 
 (spaceline-define-segment elnawe/version-control
   "Minimal version control information."
-  (when vc-mode
-    (defvar current-branch (substring vc-mode (+ 2 (length (symbol-name (vc-backend buffer-file-name))))))
+  (when (fboundp 'magit-get-current-branch)
     (concat
-     (propertize (all-the-icons-faicon "code-fork")
-                 'face `(:family ,(all-the-icons-faicon-family)
-                                 :foreground "#DFAF8F"
-                                 :height 1.0)
-                 'display '(raise -0.1))
-     " "
+     (with-face "\xe907 " '(:foreground "#DFAF8F"))
+     (magit-get-current-branch)
      (powerline-raw
-      (s-trim (concat current-branch
-                      (when (buffer-file-name)
-                        (pcase (vc-state (buffer-file-name))
-                          (`up-to-date "")
-                          (`edited " *")))))))))
+      (when (buffer-file-name)
+        (pcase (vc-state (buffer-file-name))
+          (`up-to-date "")
+          (`edited " *")))))))
 
 (spaceline-define-segment elnawe/twitter
   "Show Twitter notifications"
   (when (boundp 'twittering-unread-status-info)
-     (propertize (all-the-icons-faicon "twitter")
-                 'display '(raise -0.1)
-                 'face `(:family ,(all-the-icons-faicon-family)
-                                 :foreground "#6CA0A3"
-                                 :height 1.1))))
+    (with-face "\xf099" '(:foreground "#6CA0A3"))))
 
 (spaceline-define-segment elnawe/forecast
   "Show the current temperature"
   (when (bound-and-true-p forecast--buffer)
     (propertize
      (concat
-      (propertize (all-the-icons-faicon "sun-o")
-                  'display '(raise 0)
-                  'face `(:family ,(all-the-icons-faicon-family)
-                                  :foreground "#D0BF8F"
-                                  :height 1.0))
-      " "
+      (with-face "\xf185 " '(:foreground "#D0BF8F"))
       (forecast--temperature-string))
      'help-echo '(format
                   "Feels-like: %s\nDetails: %s\nHumidity: %s\nWind: %s\n\nUpdated %s"
@@ -890,7 +831,7 @@ Magit provides everything I need when working with Version Control, all within E
            (t '(display-buffer-same-window)))))
   :config
   (setq-default
-   magit-display-buffer-function 'elnawe/magit-display-buffer-same
+   magit-display-buffer-function #'elnawe/magit-display-buffer-same
    magit-diff-highlight-hunk-body nil
    magit-diff-highlight-hunk-region-functions
    '(magit-diff-highlight-hunk-region-dim-outside
@@ -999,25 +940,6 @@ Save and restore Emacs status
   :config
   (desktop-save-mode)
   (add-to-list 'desktop-globals-to-save 'golden-ratio-adjust-factor))
-#+END_SRC
-
-Adjust windows and focus the active one. Uses mathematical golden ration.
-
-#+BEGIN_SRC emacs-lisp
-(use-package golden-ratio
-  :disabled t
-  :demand t
-  :preface
-  (defconst elnawe/golden-ratio-adjust-factor-bi-split .805)
-  (defconst elnawe/golden-ratio-adjust-factor-tri-split .53)
-  (defun elnawe/ediff-comparison-buffer-p ()
-    (if (boundp 'ediff-this-buffer-ediff-sessions)
-        (progn (balance-windows) ediff-this-buffer-ediff-sessions)))
-  :config
-  (golden-ratio-mode)
-  (setq-default golden-ratio-adjust-factor elnawe/golden-ratio-adjust-factor-tri-split)
-  (add-to-list 'golden-ratio-exclude-modes "ediff-mode")
-  (add-to-list 'golden-ratio-inhibit-functions 'elnawe/ediff-comparison-buffer-p))
 #+END_SRC
 
 Move around windows with ease.
@@ -1229,14 +1151,8 @@ editor. I use =ido-vertical-mode= to order my list with a neat look and also =fl
    ido-enable-flex-matching t
    ido-everywhere t
    ido-file-extensions-order '(".js" ".org" ".el" ".json")
-   ido-ignore-buffers '("\\ " shakurov/ido-ignore)
-   ido-use-filename-at-point 'guess)
-
-  (setq elnawe/ido-ignore-list '("*scratch*"))
-
-  (defun shakurov/ido-ignore (name)
-    "Ignore all buffers in `elnawe/ido-ignore-list'."
-    (member name elnawe/ido-ignore-list)))
+   ido-ignore-buffers '("\\ " "*scratch*" "*Ibuffer*")
+   ido-use-filename-at-point 'guess))
 
 (use-package ido-vertical-mode
   :init
@@ -1282,10 +1198,10 @@ Clean my buffer list on delay with =midnight= beucase I leave Emacs always open.
   :ensure nil
   :init
   (add-hook 'midnight-mode #'clean-buffer-list)
+  (midnight-mode 1)
   :config
   (setq clean-buffers-list-delay-general 1)
-  (add-to-list 'clean-buffer-list-kill-never-buffer-names "initdotel.org")
-  (midnight-mode 1))
+  (add-to-list 'clean-buffer-list-kill-never-buffer-names "initdotel.org"))
 #+END_SRC
 
 * Social networks
