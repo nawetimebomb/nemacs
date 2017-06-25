@@ -17,7 +17,7 @@ are here:
  display-time-default-load-average nil                   ; Don't display load avereage
  display-time-format "%H:%M"                             ; Format the time string
  fill-column 80                                          ; Width before automatic line breaks
- frame-title-format '((:eval (projectile-project-name))) ; Change frame title to project name
+ frame-title-format "Emacs"                              ; Change frame title to "Emacs"
  help-window-select t                                    ; Focus help windows when opened
  indent-tabs-mode nil                                    ; Use spaces for indentation
  inhibit-startup-screen t                                ; Disable the startup window
@@ -66,6 +66,7 @@ aware that editting these may cause trouble!
 (defvar elnawe/font-family "DejaVu Sans Mono-12" "Font used for theming")
 (defvar elnawe/font-size 100 "Default font size")
 (defvar elnawe/font-size-title 150 "Font size used in titles")
+(defvar elnawe/update-time-seconds 1800 "Time in seconds to update/refresh mini applications")
 #+END_SRC
 
 ** Garbage collection
@@ -333,7 +334,7 @@ not the best user. I'm learning though. Also, I'm working with [[Agenda administ
    org-todo-keywords '((sequence "TODO" "IN PROGRESS" "DONE")))
 
   (zenburn-with-color-variables
-    (setq-default org-todo-keyword-faces '(("IN PROGRESS" . (:foreground zenburn-blue :weight bold))))))
+    (setq org-todo-keyword-faces '(("IN PROGRESS" . (:foreground zenburn-blue :weight bold))))))
 
 (use-package org-src
   :ensure nil
@@ -390,17 +391,6 @@ want. I need =scala-mode= and =ensime= to make it work but worth the try.
 #+END_SRC
 
 * Major features
-
-** Alert
-
-Alerts instead of messages. Very useful when debugging!
-
-#+BEGIN_SRC emacs-lisp
-(use-package alert
-  :config
-  (when (eq system-type 'darwin)
-    (setq-default alert-defaults-style 'osx-notifier)))
-#+END_SRC
 
 ** Auto-completition
 
@@ -526,9 +516,14 @@ Not going outside too much but always know what is happening out there.
 
 #+BEGIN_SRC emacs-lisp
 (use-package forecast
-  :init
+  :after spaceline
+  :config
   (when (not (boundp 'forecast--load-data))
-    (elnawe/create-new-forecast-buffer)))
+    (run-at-time 30 nil (lambda ()
+                          (elnawe/create-new-forecast-buffer))))
+
+  (run-at-time t elnawe/update-time-seconds (lambda ()
+                                              (forecast-refresh))))
 #+END_SRC
 
 *** Icons
@@ -542,113 +537,143 @@ A fancy looking mode-line is fancy!
 
 *** Spaceline
 
+**** Setup
+
+First, download Spaceline if doesn't exist and override =mode-line-format=.
+
 #+BEGIN_SRC emacs-lisp
 (use-package spaceline
   :init
   (require 'spaceline-config)
-  (setq-default
-   mode-line-format '("%e" (:eval (spaceline-ml-main))))
-  :config
-  (setq
-   powerline-default-separator 'arrow
-   powerline-height 20
-   spaceline-highlight-face-func 'spaceline-highlight-face-modified
-   spaceline-separator-dir-left '(left . left)
-   spaceline-separator-dir-right '(right . right))
+  (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))))
+#+END_SRC
 
-  (spaceline-define-segment
-      elnawe/date-time
-    "Better date time, removes (global)"
-    (shell-command-to-string "echo -n \"$(date '+%a %d %b %H:%M')\""))
-  (spaceline-define-segment
-      elnawe/version-control
-    "Minimal version control information."
-    (when vc-mode
-      (defvar current-branch
-        (substring vc-mode (+ 2 (length (symbol-name (vc-backend buffer-file-name))))))
-      (concat
-       (propertize (all-the-icons-faicon "code-fork")
-                   'face `(:family ,(all-the-icons-faicon-family)
-                                   :foreground "#DFAF8F"
-                                   :height 1.1)
-                   'display '(raise -0.1))
-       " "
-       (powerline-raw
-        (s-trim (concat current-branch
-                        (when (buffer-file-name)
-                          (pcase (vc-state (buffer-file-name))
-                            (`up-to-date "")
-                            (`edited " *")))))))))
-  (spaceline-define-segment
-      elnawe/twitter
-    "Show Twitter notifications"
-    (when (boundp 'twittering-unread-status-info)
-      (propertize (all-the-icons-faicon "twitter")
-                  'display '(raise -0.1)
-                  'face `(:family ,(all-the-icons-faicon-family)
-                                  :foreground "#6CA0A3"
-                                  :height 1.1))))
-  (spaceline-define-segment
-      elnawe/forecast
-    "Show the current temperature"
+**** Define segments
+
+After that I define all my custom segments.
+
+#+BEGIN_SRC emacs-lisp
+(spaceline-define-segment elnawe/date-time
+  "Better date time, removes (global)"
+  (shell-command-to-string "echo -n \"$(date '+%a %d %b %H:%M')\""))
+
+(spaceline-define-segment elnawe/version-control
+  "Minimal version control information."
+  (when vc-mode
+    (defvar current-branch (substring vc-mode (+ 2 (length (symbol-name (vc-backend buffer-file-name))))))
+    (concat
+     (propertize (all-the-icons-faicon "code-fork")
+                 'face `(:family ,(all-the-icons-faicon-family)
+                                 :foreground "#DFAF8F"
+                                 :height 1.0)
+                 'display '(raise -0.1))
+     " "
+     (powerline-raw
+      (s-trim (concat current-branch
+                      (when (buffer-file-name)
+                        (pcase (vc-state (buffer-file-name))
+                          (`up-to-date "")
+                          (`edited " *")))))))))
+
+(spaceline-define-segment elnawe/twitter
+  "Show Twitter notifications"
+  (when (boundp 'twittering-unread-status-info)
+     (propertize (all-the-icons-faicon "twitter")
+                 'display '(raise -0.1)
+                 'face `(:family ,(all-the-icons-faicon-family)
+                                 :foreground "#6CA0A3"
+                                 :height 1.1))))
+
+(spaceline-define-segment elnawe/forecast
+  "Show the current temperature"
+  (when (bound-and-true-p forecast--buffer)
     (propertize
      (concat
       (propertize (all-the-icons-faicon "sun-o")
                   'display '(raise 0)
                   'face `(:family ,(all-the-icons-faicon-family)
                                   :foreground "#D0BF8F"
-                                  :height 1.1))
+                                  :height 1.0))
       " "
       (forecast--temperature-string))
      'help-echo '(format
-                  "Feels-like: %s\nDetails: %s\nHumidity: %s\nWind: %s"
+                  "Feels-like: %s\nDetails: %s\nHumidity: %s\nWind: %s\n\nUpdated %s"
                   (forecast--apparent-temperature)
                   (forecast--detailed-summary)
                   (forecast--humidity)
-                  (forecast--wind-speed))))
+                  (forecast--wind-speed)
+                  (format-time-string forecast-time-format forecast--update-time)))))
+#+END_SRC
 
-  (spaceline-install
-    '((major-mode :face highlight-face)
-      (buffer-id)
-      (elnawe/version-control)
-      (elnawe/forecast)
-      (elnawe/twitter))
-    '((anzu :when active)
-      (selection-info :when mark-active)
-      (projectile-root)
-      (line-column)
-      ((hud buffer-position))
-      (elnawe/date-time :face highlight-face)))
+**** Configuration
 
-  (zenburn-with-color-variables
-    (set-face-attribute 'mode-line nil
-                        :background zenburn-bg-1
-                        :box nil
-                        :foreground zenburn-fg)
-    (set-face-attribute 'powerline-active1 nil
-                        :background zenburn-bg-1
-                        :foreground zenburn-fg)
-    (set-face-attribute 'mode-line-inactive nil
-                        :background zenburn-bg-1
-                        :box nil
-                        :foreground zenburn-bg+3)
-    (set-face-attribute 'powerline-inactive1 nil
-                        :background zenburn-bg-1
-                        :foreground zenburn-bg+3)
-    (set-face-attribute 'powerline-active2 nil :background zenburn-bg-05)
-    (set-face-attribute 'powerline-inactive2 nil :background zenburn-bg-1)
-    (set-face-attribute 'spaceline-highlight-face nil
-                        :background zenburn-yellow
-                        :foreground zenburn-fg-1)
-    (set-face-attribute 'spaceline-modified nil
-                        :background zenburn-red
-                        :foreground zenburn-red-4)
-    (set-face-attribute 'spaceline-read-only nil
-                        :background zenburn-blue+1
-                        :foreground zenburn-blue-5)
-    (set-face-attribute 'spaceline-unmodified nil
-                        :background zenburn-green-1
-                        :foreground zenburn-green+4)))
+Setup the actual configuration
+
+#+BEGIN_SRC emacs-lisp
+(setq
+ powerline-default-separator 'arrow
+ powerline-height 20
+ spaceline-highlight-face-func 'spaceline-highlight-face-modified
+ spaceline-separator-dir-left '(left . left)
+ spaceline-separator-dir-right '(right . right))
+
+(spaceline-install
+  '((major-mode :face highlight-face)
+    (buffer-id)
+    (elnawe/version-control)
+    (elnawe/forecast)
+    (elnawe/twitter))
+  '((anzu :when active)
+    (selection-info :when mark-active)
+    ((flycheck-error flycheck-info flycheck-warning))
+    (projectile-root)
+    (line-column)
+    ((hud buffer-position))
+    (elnawe/date-time :face highlight-face)))
+#+END_SRC
+
+**** Theme
+
+And there's some theme configuration going on
+
+#+BEGIN_SRC emacs-lisp
+(zenburn-with-color-variables
+  (set-face-attribute 'mode-line nil
+                      :background zenburn-bg-1
+                      :box nil
+                      :foreground zenburn-fg)
+  (set-face-attribute 'powerline-active1 nil
+                      :background zenburn-bg-1
+                      :foreground zenburn-fg)
+  (set-face-attribute 'mode-line-inactive nil
+                      :background zenburn-bg-1
+                      :box nil
+                      :foreground zenburn-bg+3)
+  (set-face-attribute 'powerline-inactive1 nil
+                      :background zenburn-bg-1
+                      :foreground zenburn-bg+3)
+  (set-face-attribute 'powerline-active2 nil
+                      :background zenburn-bg-05)
+  (set-face-attribute 'powerline-inactive2 nil
+                      :background zenburn-bg-1)
+  (set-face-attribute 'spaceline-flycheck-error nil
+                      :foreground zenburn-red)
+  (set-face-attribute 'spaceline-flycheck-info nil
+                      :foreground zenburn-blue+1)
+  (set-face-attribute 'spaceline-flycheck-warning nil
+                      :foreground zenburn-orange)
+  (set-face-attribute 'spaceline-highlight-face nil
+                      :background zenburn-yellow
+                      :foreground zenburn-fg-1)
+  (set-face-attribute 'spaceline-modified nil
+                      :background zenburn-red
+                      :foreground zenburn-red-4)
+  (set-face-attribute 'spaceline-read-only nil
+                      :background zenburn-blue+1
+                      :foreground zenburn-blue-5)
+  (set-face-attribute 'spaceline-unmodified nil
+                      :background zenburn-green-1
+                      :foreground zenburn-green+4))
 #+END_SRC
 
 ** Navigation
@@ -797,7 +822,8 @@ I love =projectile= and I think its the best project management tool you'll ever
   (setq-default
    projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
    projectile-keymap-prefix (kbd "<f5>")
-   projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory))
+   projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory)
+   projectile-switch-project-action 'neotree-projectile-action)
   :config
   (projectile-global-mode)
   (setq
@@ -806,6 +832,29 @@ I love =projectile= and I think its the best project management tool you'll ever
    projectile-mode-line '(:eval (projectile-project-name)))
   :bind
   ("C-p" . projectile-find-file))
+#+END_SRC
+
+** Tree View
+
+I don't use this often but it's a good thing to have in hand if I need to find a
+file by its folder.
+
+#+BEGIN_SRC emacs-lisp
+(use-package neotree
+  :config
+  (setq
+   neo-autorefresh t
+   neo-smart-open t
+   neo-theme (if (display-graphic-p) 'icons 'arrow)
+   neo-vc-integration '(face char))
+
+  (zenburn-with-color-variables
+    (set-face-attribute 'neo-vc-edited-face nil
+                        :foreground zenburn-yellow-1)
+    (set-face-attribute 'neo-vc-added-face nil
+                        :foreground zenburn-green-1))
+  :bind
+  ([f6] . neotree-toggle))
 #+END_SRC
 
 ** Version Control
@@ -899,7 +948,9 @@ List all buffers and group them by type.
   :init
   (add-hook 'ibuffer-mode-hook (lambda ()
                                  (setq ibuffer-filter-groups
-                                       '(("Directories" (mode . dired-mode))
+                                       '(("Apps" (or (name . "^\\*Weather Forecast\\*$")
+                                                     (mode . twittering-mode)))
+                                         ("Directories" (mode . dired-mode))
                                          ("Lisp" (or (mode . lisp-mode)
                                                      (mode . emacs-lisp-mode)))
                                          ("Org" (mode . org-mode))
@@ -1181,12 +1232,11 @@ editor. I use =ido-vertical-mode= to order my list with a neat look and also =fl
    ido-ignore-buffers '("\\ " shakurov/ido-ignore)
    ido-use-filename-at-point 'guess)
 
-  (defvar elnawe/ido-unignore '())
+  (setq elnawe/ido-ignore-list '("*scratch*"))
 
   (defun shakurov/ido-ignore (name)
-    "Ignore all non-user (a.k.a. *starred*) buffers except those listed in `elnawe/ido-unignore'."
-    (and (string-match "\\*" name)
-         (not (member name elnawe/ido-unignore)))))
+    "Ignore all buffers in `elnawe/ido-ignore-list'."
+    (member name elnawe/ido-ignore-list)))
 
 (use-package ido-vertical-mode
   :init
@@ -1255,7 +1305,7 @@ I often use Twitter and when I do it is inside Emacs.
    twittering-icon-mode t
    twittering-icon-storage-file "~/.emacs.d/cache"
    twittering-retweet-format '(nil _ "RT @%s: %t")
-   twittering-timer-interval 180
+   twittering-timer-interval elnawe/update-time-seconds
    twittering-use-icon-storage t
    twittering-use-master-password t))
 #+END_SRC
