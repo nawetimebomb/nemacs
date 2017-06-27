@@ -400,7 +400,7 @@ Mostly you can use any kind of expansion with =<C-return>=
   ("<C-return>" . hippie-expand)
   :config
   (setq-default
-   hippie-expand-try-functions-list '(yas-hippie-try-expand elnawe/emmet-try-expand-line)
+   hippie-expand-try-functions-list '(elnawe/emmet-try-expand-line)
    hippie-expand-verbose nil))
 #+END_SRC
 
@@ -782,20 +782,26 @@ file by its folder.
 
 #+BEGIN_SRC emacs-lisp
 (use-package neotree
+  :bind
+  (([f6] . neotree-toggle)
+   :map neotree-mode-map
+   ("d" . neotree-delete-node)
+   ("s" . neotree-dir))
   :config
   (setq
    neo-autorefresh t
+   neo-force-change-root t
    neo-smart-open t
    neo-theme (if (display-graphic-p) 'icons 'arrow)
-   neo-vc-integration '(face char))
+   neo-vc-integration '(face char)
+   neo-window-width 50
+   neo-window-position 'right)
 
   (zenburn-with-color-variables
     (set-face-attribute 'neo-vc-edited-face nil
                         :foreground zenburn-yellow-1)
     (set-face-attribute 'neo-vc-added-face nil
-                        :foreground zenburn-green-1))
-  :bind
-  ([f6] . neotree-toggle))
+                        :foreground zenburn-green-1)))
 #+END_SRC
 
 ** Version Control
@@ -1151,7 +1157,7 @@ editor. I use =ido-vertical-mode= to order my list with a neat look and also =fl
    ido-enable-flex-matching t
    ido-everywhere t
    ido-file-extensions-order '(".js" ".org" ".el" ".json")
-   ido-ignore-buffers '("\\ " "*scratch*" "*Ibuffer*")
+   ido-ignore-buffers '("\\ " "*scratch*" "*Ibuffer*" "*Completions*" "*Backtrace*")
    ido-use-filename-at-point 'guess))
 
 (use-package ido-vertical-mode
@@ -1204,7 +1210,7 @@ Clean my buffer list on delay with =midnight= beucase I leave Emacs always open.
   (add-to-list 'clean-buffer-list-kill-never-buffer-names "initdotel.org"))
 #+END_SRC
 
-* Social networks
+* Networking
 
 Using Emacs for everything includes using it for social media.
 
