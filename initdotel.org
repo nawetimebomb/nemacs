@@ -800,7 +800,6 @@ file by its folder.
    neo-vc-integration '(face char)
    neo-window-width 50
    neo-window-position 'right)
-  (add-hook 'neo-enter-hook #'neotree-hide)
 
   (zenburn-with-color-variables
     (set-face-attribute 'neo-vc-edited-face nil
