@@ -170,7 +170,7 @@ Load zenburn theme and fix some faces with zenburn color variables
                         :background zenburn-bg-1
                         :box nil)
     (set-face-attribute 'region nil
-                        :background zenburn-green-1
+                        :background zenburn-red-4
                         :distant-foreground 'unspecified)
     (set-face-attribute 'vertical-border nil :foreground zenburn-bg))
 
@@ -245,7 +245,8 @@ I use =js2-mode= for my code since it looks and feels better.
   :delight json-mode "JSON")
 
 (use-package rjsx-mode
-  :delight rjsx-mode "React")
+  :delight rjsx-mode "React"
+  :mode ("/swa-ui-app/.*\\.js$"))
 
 (use-package tide)
 
@@ -764,7 +765,7 @@ I love =projectile= and I think its the best project management tool you'll ever
    projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
    projectile-keymap-prefix (kbd "<f5>")
    projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory)
-   projectile-switch-project-action 'neotree-projectile-action)
+   projectile-switch-project-action 'projectile-find-file)
   :config
   (projectile-global-mode)
   (setq
@@ -785,7 +786,10 @@ file by its folder.
   :bind
   (([f6] . neotree-toggle)
    :map neotree-mode-map
+   ("<return>" . neotree-enter)
+   ("c" . neotree-create-node)
    ("d" . neotree-delete-node)
+   ("r" . neotree-rename-node)
    ("s" . neotree-dir))
   :config
   (setq
@@ -796,6 +800,7 @@ file by its folder.
    neo-vc-integration '(face char)
    neo-window-width 50
    neo-window-position 'right)
+  (add-hook 'neo-enter-hook #'neotree-hide)
 
   (zenburn-with-color-variables
     (set-face-attribute 'neo-vc-edited-face nil
