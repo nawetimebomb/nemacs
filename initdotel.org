@@ -32,7 +32,7 @@ are here:
  split-height-threshold nil                               ; Enable vertical splitting by 20 lines
  split-width-threshold nil                               ; Disable horizontal window splitting
  tab-width 4                                             ; Set indentation width
- truncate-lines nil                                      ; Disable truncate lines
+ truncate-lines t                                        ; Disable truncate lines
  uniquify-buffer-name-style 'forward                     ; Make buffer names unique
  visible-bell nil                                        ; Replace the alarm to an audible one
  window-combination-resize t                             ; Resize window proportionally
@@ -508,6 +508,12 @@ After that I define all my custom segments.
   "Return STR propertized with PROPS."
   `(propertize ,STR 'face (list ,@PROPS)))
 
+(spaceline-define-segment elnawe/buffer-id
+  "Better buffer name, without mouse interaction"
+  (concat
+   "\xf1c9 "
+  (buffer-name)))
+
 (spaceline-define-segment elnawe/date-time
   "Better date time, removes (global)"
   (concat
@@ -560,8 +566,8 @@ Setup the actual configuration
  spaceline-separator-dir-right '(right . right))
 
 (spaceline-install
-  '((major-mode :face highlight-face)
-    (buffer-id)
+  '((elnawe/buffer-id :face highlight-face)
+    (elnawe/date-time)
     (elnawe/version-control)
     (elnawe/forecast)
     (elnawe/twitter))
@@ -571,7 +577,7 @@ Setup the actual configuration
     (projectile-root)
     (line-column)
     ((hud buffer-position))
-    (elnawe/date-time :face highlight-face)))
+    (major-mode :face highlight-face)))
 #+END_SRC
 
 **** Theme
@@ -961,7 +967,8 @@ Move around windows with ease.
   (("<f2> <left>". windmove-left)
    ("<f2> <right>". windmove-right)
    ("<f2> <up>". windmove-up)
-   ("<f2> <down>". windmove-down)))
+   ("<f2> <down>". windmove-down)
+   ("<f2> <f2>" . other-window)))
 #+END_SRC
 
 Window splitting. After create a new window, switch to the new one.
