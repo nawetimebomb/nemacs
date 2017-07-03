@@ -192,7 +192,13 @@ This is probably one of my favorite languages right now I don't really know why 
 
 #+BEGIN_SRC emacs-lisp
 (use-package csharp-mode
-  :delight csharp-mode "C#")
+  :delight csharp-mode "C#"
+  :init
+  (add-hook 'csharp-mode-hook #'omnisharp-mode))
+
+(use-package omnisharp
+  :config
+  (setq omnisharp-server-executable-path "/usr/local/bin/omnisharp"))
 #+END_SRC
 
 ** CSS
@@ -243,6 +249,13 @@ I use =js2-mode= for my code since it looks and feels better.
 
 (use-package json-mode
   :delight json-mode "JSON")
+
+(use-package ng2-mode
+  :delight ng2-mode "Angular"
+  :mode ("/futbol-club/.*\\.ts" "/futbol-club/.*\\.html")
+  :config
+  (delight 'ng2-ts-mode "Angular TypeScript")
+  (delight 'ng2-html-mode "Angular HTML"))
 
 (use-package rjsx-mode
   :delight rjsx-mode "React"
