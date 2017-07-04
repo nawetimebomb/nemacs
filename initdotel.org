@@ -66,7 +66,7 @@ aware that editting these may cause trouble!
 (defvar elnawe/font-family "DejaVu Sans Mono-12" "Font used for theming")
 (defvar elnawe/font-size 100 "Default font size")
 (defvar elnawe/font-size-title 150 "Font size used in titles")
-(defvar elnawe/start-time-seconds 10 "Time in seconds to start a mini application")
+(defvar elnawe/start-time-seconds 20 "Time in seconds to start a mini application")
 (defvar elnawe/update-time-seconds 1800 "Time in seconds to update/refresh mini applications")
 #+END_SRC
 
@@ -81,6 +81,10 @@ them are just a way to /standarize/ the code.
   `elnawe/start-time-seconds'. This function should be used to
   run smaller apps that are not crucial for Emacs to work."
   (run-at-time elnawe/start-time-seconds nil (funcall FUNC)))
+
+(defun elnawe::load-package-dir (PACKAGE)
+  "Returns package `PACKAGE' from /packages directory"
+  (concat user-emacs-directory "packages/" PACKAGE))
 #+END_SRC
 
 ** Garbage collection
@@ -378,8 +382,8 @@ I'm not a very big fan of auto-complete my words but sometimes it's a bit helpfu
   :config
   (global-company-mode)
   (setq
-   company-idle-delay 0.5
-   company-minimum-prefix-length 1
+   company-idle-delay 0.3
+   company-minimum-prefix-length 3
    company-tooltip-align-annotations t))
 #+END_SRC
 
@@ -440,8 +444,8 @@ This configuration need some binaries so don't forget to read my [[file+emacs:RE
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
   :init
-  (add-hook 'emacs-lisp-mode-hook #'flycheck-mode)
-  (add-hook 'js-mode-hook #'flycheck-mode)
+  (add-hook 'js2-mode-hook #'flycheck-mode)
+  (add-hook 'flycheck-mode #'eldoc-mode)
   :config
   (setq
    flycheck-check-syntax-automatically '(save mode-enabled)
@@ -1143,13 +1147,13 @@ Automatically dim my other buffers
 
 ** Disable documentation at point
 
-I don't want to see documentation in the echo area because it conflicts with =flycheck=
+Always have the documentation ready! Only deactivated when [[Linting][=flycheck-mode=]] is on.
 
 #+BEGIN_SRC emacs-lisp
 (use-package eldoc
   :ensure nil
   :config
-  (global-eldoc-mode -1))
+  (eldoc-mode))
 #+END_SRC
 
 ** Fill paragraph automatically
@@ -1238,12 +1242,34 @@ Clean my buffer list on delay with =midnight= beucase I leave Emacs always open.
 
 Using Emacs for everything includes using it for social media.
 
+** Spotify
+
+I love music and I spent a lot of time in Spotify. Using it through Emacs is a
+big time-saver! /The configuration of this package is inside [[Load =secrets=][=secrets=]]/
+
+#+BEGIN_SRC emacs-lisp
+(eval-when-compile
+  (add-to-list 'load-path (elnawe::load-package-dir "spotify.el"))
+  (require 'spotify)
+  (spotify-remote-mode))
+
+(setq spotify-api-search-limit 25
+      spotify-mode-line-refresh-interval 20)
+
+(define-key spotify-remote-mode-map "\C-csc" #'spotify-connect)
+(define-key spotify-remote-mode-map "\C-css" #'spotify-track-search)
+(define-key spotify-remote-mode-map "\C-csf" #'spotify-playlist-search)
+(define-key spotify-remote-mode-map "\C-csp" #'spotify-play)
+(define-key spotify-remote-mode-map "\C-csn" #'spotify-next-track)
+ #+END_SRC
+
 ** Twitter
 
 I often use Twitter and when I do it is inside Emacs.
 
 #+BEGIN_SRC emacs-lisp
 (use-package twittering-mode
+  :defer t
   :delight twittering-mode "Twitter"
   :config
   (setq
