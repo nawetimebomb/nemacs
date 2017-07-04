@@ -320,7 +320,7 @@ not the best user. I'm learning though. Also, I'm working with [[Agenda administ
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :ensure nil
-  :delight org-mode "Org"
+  :delight org-mode "\xf03a Org"
   :init
   (add-hook 'org-mode-hook #'org-sticky-header-mode)
   (add-hook 'org-mode-hook #'org-bullets-mode)
@@ -527,32 +527,13 @@ After that I define all my custom segments.
 
 (spaceline-define-segment elnawe/buffer-id
   "Better buffer name, without mouse interaction"
-  (concat
-   "\xf1c9 "
-  (buffer-name)))
+  (buffer-name))
 
 (spaceline-define-segment elnawe/date-time
   "Better date time, removes (global)"
   (concat
-   "\xf017 "
-   (format-time-string "%a %d %b %H:%M" (current-time))))
-
-(spaceline-define-segment elnawe/version-control
-  "Minimal version control information."
-  (when (fboundp 'magit-get-current-branch)
-    (concat
-     (with-face "\xe907 " '(:foreground "#DFAF8F"))
-     (magit-get-current-branch)
-     (powerline-raw
-      (when (buffer-file-name)
-        (pcase (vc-state (buffer-file-name))
-          (`up-to-date "")
-          (`edited " *")))))))
-
-(spaceline-define-segment elnawe/twitter
-  "Show Twitter notifications"
-  (when (boundp 'twittering-unread-status-info)
-    (with-face "\xf099" '(:foreground "#6CA0A3"))))
+   (with-face "\xf017 " '(:foreground "#DCA3A3"))
+   (format-time-string "%H:%M" (current-time))))
 
 (spaceline-define-segment elnawe/forecast
   "Show the current temperature"
@@ -568,6 +549,30 @@ After that I define all my custom segments.
                   (forecast--humidity)
                   (forecast--wind-speed)
                   (format-time-string forecast-time-format forecast--update-time)))))
+
+(spaceline-define-segment elnawe/spotify
+  "Show the current song being played in Spotify"
+  (when (not (eq spotify-mode-line ""))
+    (concat
+     (with-face "\xf1bc" '(:foreground "#7F9F7F"))
+     spotify-mode-line)))
+
+(spaceline-define-segment elnawe/twitter
+  "Show Twitter notifications"
+  (when (boundp 'twittering-unread-status-info)
+    (with-face "\xf099" '(:foreground "#6CA0A3"))))
+
+(spaceline-define-segment elnawe/version-control
+  "Minimal version control information."
+  (when (fboundp 'magit-get-current-branch)
+    (concat
+     (with-face "\xe907 " '(:foreground "#DFAF8F"))
+     (magit-get-current-branch)
+     (powerline-raw
+      (when (buffer-file-name)
+        (pcase (vc-state (buffer-file-name))
+          (`up-to-date "")
+          (`edited " *")))))))
 #+END_SRC
 
 **** Configuration
@@ -583,10 +588,11 @@ Setup the actual configuration
  spaceline-separator-dir-right '(right . right))
 
 (spaceline-install
-  '((elnawe/buffer-id :face highlight-face)
+  '((major-mode :face highlight-face)
     (elnawe/date-time)
     (elnawe/version-control)
     (elnawe/forecast)
+    (elnawe/spotify)
     (elnawe/twitter))
   '((anzu :when active)
     (selection-info :when mark-active)
@@ -594,7 +600,7 @@ Setup the actual configuration
     (projectile-root)
     (line-column)
     ((hud buffer-position))
-    (major-mode :face highlight-face)))
+    (elnawe/buffer-id :face highlight-face)))
 #+END_SRC
 
 **** Theme
@@ -1248,19 +1254,30 @@ I love music and I spent a lot of time in Spotify. Using it through Emacs is a
 big time-saver! /The configuration of this package is inside [[Load =secrets=][=secrets=]]/
 
 #+BEGIN_SRC emacs-lisp
-(eval-when-compile
+(eval-and-compile
   (add-to-list 'load-path (elnawe::load-package-dir "spotify.el"))
   (require 'spotify)
-  (spotify-remote-mode))
 
-(setq spotify-api-search-limit 25
-      spotify-mode-line-refresh-interval 20)
+  (setq-default spotify-api-search-limit 25
+                spotify-mode-line-format "%at - %tt"
+                spotify-mode-line-prefix ""
+                spotify-mode-line-refresh-interval 1)
 
-(define-key spotify-remote-mode-map "\C-csc" #'spotify-connect)
-(define-key spotify-remote-mode-map "\C-css" #'spotify-track-search)
-(define-key spotify-remote-mode-map "\C-csf" #'spotify-playlist-search)
-(define-key spotify-remote-mode-map "\C-csp" #'spotify-play)
-(define-key spotify-remote-mode-map "\C-csn" #'spotify-next-track)
+  (spotify-update-mode-line "") ;; Resets mode-line at start
+
+  (add-hook 'text-mode-hook #'spotify-remote-mode)
+  (add-hook 'prog-mode-hook #'spotify-remote-mode)
+
+  (delight 'spotify-track-search-mode "Spotify Tracks")
+  (delight 'spotify-playlist-search-mode "Spotify Playlists")
+
+  (define-key spotify-remote-mode-map "\C-csc" #'spotify-connect)
+  (define-key spotify-remote-mode-map "\C-csq" #'spotify-disconnect)
+  (define-key spotify-remote-mode-map "\C-css" #'spotify-track-search)
+  (define-key spotify-remote-mode-map "\C-csf" #'spotify-playlist-search)
+  (define-key spotify-remote-mode-map "\C-csm" #'spotify-my-playlists)
+  (define-key spotify-remote-mode-map "\C-csp" #'spotify-toggle-play)
+  (define-key spotify-remote-mode-map "\C-csn" #'spotify-next-track))
  #+END_SRC
 
 ** Twitter
@@ -1270,7 +1287,6 @@ I often use Twitter and when I do it is inside Emacs.
 #+BEGIN_SRC emacs-lisp
 (use-package twittering-mode
   :defer t
-  :delight twittering-mode "Twitter"
   :config
   (setq
    twittering-display-remaining t
