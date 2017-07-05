@@ -537,29 +537,61 @@ First, download Spaceline if doesn't exist and override =mode-line-format=.
 
 **** Define segments
 
-After that I define all my custom segments.
+Useful macro to programatically put faces to my segments.
 
 #+BEGIN_SRC emacs-lisp
 (defmacro with-face (STR &rest PROPS)
   "Return STR propertized with PROPS."
   `(propertize ,STR 'face (list ,@PROPS)))
+#+END_SRC
 
-(spaceline-define-segment elnawe/buffer-id
-  "Better buffer name, without mouse interaction"
+Better buffer-id without mouseover and highlighting. I use the spaceline
+=highlight-face= for this segment.
+
+#+BEGIN_SRC emacs-lisp
+(spaceline-define-segment elnawe::buffer-id-segment
   (buffer-name))
+#+END_SRC
 
-(spaceline-define-segment elnawe/date-time
-  "Better date time, removes (global)"
+The time in my spaceline is super-important because I mostly use Emacs in
+fullscreen mode.
+
+#+BEGIN_SRC emacs-lisp
+(spaceline-define-segment elnawe::time-segment
   (concat
    (with-face "\xf017 " '(:foreground "#DCA3A3"))
    (format-time-string "%H:%M" (current-time))))
+#+END_SRC
 
-(spaceline-define-segment elnawe/forecast
+Weather in Emacs? Yes, you can do it with =forecast= which is a great package.
+Check also my [[Forecast]] configuration.
+
+#+BEGIN_SRC emacs-lisp
+(setq elnawe/forecast-icons-colors '(("clear-day" "\xf185 " :foreground "#F0DFAF")
+                                     ("clear-night" "" :foreground "")
+                                     ("cloudy" "" :foreground "")
+                                     ("fog" "" :foreground "")
+                                     ("partly-cloudy-day" "\xf0c2 " :foreground "#6F6F6F")
+                                     ("partly-cloudy-night" "\xf0c2 " :foreground "#6F6F6F")
+                                     ("rain" "\xf043 " :foreground "#94BFF3")
+                                     ("wind" "" :foreground "")))
+
+(defun elnawe::forecast/get-metadata ()
+  "Get a value from `elnawe/forecast-icons-colors' depending on
+what `currently.icon has (which is the same as current weather
+outside)'"
+  (assoc
+   (forecast--assoca '(currently icon) forecast--data)
+   elnawe/forecast-icons-colors))
+
+(spaceline-define-segment elnawe::forecast-segment
   "Show the current temperature"
   (when (bound-and-true-p forecast--buffer)
     (propertize
      (concat
-      (with-face "\xf185 " '(:foreground "#D0BF8F"))
+      (with-face
+       (car (cdr (elnawe::forecast/get-metadata)))
+       (cdr (elnawe::forecast/get-metadata)))
       (forecast--temperature-string))
      'help-echo '(format
                   "Feels-like: %s\nDetails: %s\nHumidity: %s\nWind: %s\n\nUpdated %s"
@@ -568,20 +600,37 @@ After that I define all my custom segments.
                   (forecast--humidity)
                   (forecast--wind-speed)
                   (format-time-string forecast-time-format forecast--update-time)))))
+#+END_SRC
 
-(spaceline-define-segment elnawe/spotify
+Like any programmer I listen a lot of music. I don't like to change my focus
+from my fullscreen-mode-Emacs to the Spotify application so with this I can
+control Spotify in Emacs and also see what I'm listening too in my spaceline.
+Check the [[Spotify]] configuration.
+
+#+BEGIN_SRC emacs-lisp
+(spaceline-define-segment elnawe::spotify-segment
   "Show the current song being played in Spotify"
   (when (not (eq spotify-mode-line ""))
     (concat
      (with-face "\xf1bc" '(:foreground "#7F9F7F"))
      spotify-mode-line)))
+#+END_SRC
 
-(spaceline-define-segment elnawe/twitter
+Twitter in Emacs is useful when you have some time to spare or wait until the
+build is done. Check my [[Twitter]] configuration.
+
+#+BEGIN_SRC emacs-lisp
+(spaceline-define-segment elnawe::twitter-segment
   "Show Twitter notifications"
   (when (boundp 'twittering-unread-status-info)
     (with-face "\xf099" '(:foreground "#6CA0A3"))))
+#+END_SRC
 
-(spaceline-define-segment elnawe/version-control
+I don't like how default Emacs =vc-mode= works for the mode-line so I created my
+own segment where I can manipulate a little bit how this segment works.
+
+#+BEGIN_SRC emacs-lisp
+(spaceline-define-segment elnawe::version-control-segment
   "Minimal version control information."
   (when (fboundp 'magit-get-current-branch)
     (concat
@@ -608,18 +657,18 @@ Setup the actual configuration
 
 (spaceline-install
   '((major-mode :face highlight-face)
-    (elnawe/date-time)
-    (elnawe/version-control)
-    (elnawe/forecast)
-    (elnawe/spotify)
-    (elnawe/twitter))
+    (elnawe::time-segment)
+    (elnawe::version-control-segment)
+    (elnawe::forecast-segment)
+    (elnawe::spotify-segment)
+    (elnawe::twitter-segment))
   '((anzu :when active)
     (selection-info :when mark-active)
     ((flycheck-error flycheck-info flycheck-warning))
     (projectile-root)
     (line-column)
     ((hud buffer-position))
-    (elnawe/buffer-id :face highlight-face)))
+    (elnawe::buffer-id-segment :face highlight-face)))
 #+END_SRC
 
 **** Theme
