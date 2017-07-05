@@ -503,6 +503,7 @@ Not going outside too much but always know what is happening out there.
 (use-package forecast
   :after spaceline
   :config
+  (setq forecast-rain-symbol "\xf043")
   (progn
     (run-at-time elnawe/start-time-seconds nil
                  (lambda ()
@@ -568,17 +569,17 @@ Check also my [[Forecast]] configuration.
 
 #+BEGIN_SRC emacs-lisp
 (setq elnawe/forecast-icons-colors '(("clear-day" "\xf185 " :foreground "#F0DFAF")
-                                     ("clear-night" "" :foreground "")
-                                     ("cloudy" "" :foreground "")
-                                     ("fog" "" :foreground "")
-                                     ("partly-cloudy-day" "\xf0c2 " :foreground "#6F6F6F")
+                                     ("clear-night" "\xf186 " :foreground "#6F6F6F")
+                                     ("cloudy" "\xf0c2 " :foreground "#6F6F6F")
+                                     ("fog" "\xf04d " :foreground "#6F6F6F")
+                                     ("partly-cloudy-day" "\xf0c2 " :foreground "#D0BF8F")
                                      ("partly-cloudy-night" "\xf0c2 " :foreground "#6F6F6F")
                                      ("rain" "\xf043 " :foreground "#94BFF3")
-                                     ("wind" "" :foreground "")))
+                                     ("wind" "\xf1d9 " :foreground "#DCDCCC")))
 
 (defun elnawe::forecast/get-metadata ()
   "Get a value from `elnawe/forecast-icons-colors' depending on
-what `currently.icon has (which is the same as current weather
+what `currently.icon' has (which is the same as current weather
 outside)'"
   (assoc
    (forecast--assoca '(currently icon) forecast--data)
@@ -623,7 +624,9 @@ build is done. Check my [[Twitter]] configuration.
 (spaceline-define-segment elnawe::twitter-segment
   "Show Twitter notifications"
   (when (boundp 'twittering-unread-status-info)
-    (with-face "\xf099" '(:foreground "#6CA0A3"))))
+    (concat
+     (with-face "\xf099 " '(:foreground "#6CA0A3"))
+     (number-to-string twittering-new-tweets-count))))
 #+END_SRC
 
 I don't like how default Emacs =vc-mode= works for the mode-line so I created my
@@ -1259,7 +1262,7 @@ editor. I use =ido-vertical-mode= to order my list with a neat look and also =fl
    ido-enable-flex-matching t
    ido-everywhere t
    ido-file-extensions-order '(".js" ".org" ".el" ".json")
-   ido-ignore-buffers '("\\ " "*scratch*" "*Ibuffer*" "*Completions*" "*Backtrace*" "spotify-player-status")
+   ido-ignore-buffers '("\\ " "*Ibuffer*" "*Completions*" "*Backtrace*" "spotify-player-status")
    ido-use-filename-at-point 'guess))
 
 (use-package ido-vertical-mode
@@ -1327,9 +1330,10 @@ big time-saver! /The configuration of this package is inside [[Load =secrets=][=
   (require 'spotify)
 
   (setq-default spotify-api-search-limit 25
-                spotify-mode-line-format "%at - %tt"
+                spotify-mode-line-format "%tt"
                 spotify-mode-line-prefix ""
-                spotify-mode-line-refresh-interval 1)
+                spotify-mode-line-refresh-interval 1
+                spotify-mode-line-truncate-length 20)
 
   (spotify-update-mode-line "") ;; Resets mode-line at start
 
@@ -1345,7 +1349,8 @@ big time-saver! /The configuration of this package is inside [[Load =secrets=][=
   (define-key spotify-remote-mode-map "\C-csf" #'spotify-playlist-search)
   (define-key spotify-remote-mode-map "\C-csm" #'spotify-my-playlists)
   (define-key spotify-remote-mode-map "\C-csp" #'spotify-toggle-play)
-  (define-key spotify-remote-mode-map "\C-csn" #'spotify-next-track))
+  (define-key spotify-remote-mode-map "\C-csn" #'spotify-next-track)
+  (define-key spotify-remote-mode-map "\C-csb" #'spotify-previous-track))
  #+END_SRC
 
 ** Twitter
