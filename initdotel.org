@@ -1368,5 +1368,6 @@ I often use Twitter and when I do it is inside Emacs.
    twittering-retweet-format '(nil _ "RT @%s: %t")
    twittering-timer-interval elnawe/update-time-seconds
    twittering-use-icon-storage t
-   twittering-use-master-password t))
+   twittering-use-master-password t)
+  (twittering-enable-unread-status-notifier))
 #+END_SRC
