@@ -59,8 +59,9 @@ are here:
 
 ** My variables
 
-In order to maintain this configuration file I setted up some variables. These are carefully crafted and you should be
-aware that editting these may cause trouble!
+In order to maintain this configuration file I setted up some variables. These
+are carefully crafted and you should be aware that editting these may cause
+trouble!
 
 #+BEGIN_SRC emacs-lisp
 (defvar elnawe/font-family "DejaVu Sans Mono-12" "Font used for theming")
@@ -97,8 +98,9 @@ Collect the garbage when you focus out, this feels a little bit faster
 
 ** Load =.custom.el=
 
-You can use the customization interface that Emacs provide but when you edit something, =init.el= is overriden with the
-new configuration. To fix this, I move the Emacs customization changes to a new file and then I load it.
+You can use the customization interface that Emacs provide but when you edit
+something, =init.el= is overriden with the new configuration. To fix this, I
+move the Emacs customization changes to a new file and then I load it.
 
 #+BEGIN_SRC emacs-lisp
 (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
@@ -144,7 +146,8 @@ Intializing env inside Emacs
 
 ** Remove the underlines on non-italic fonts
 
-If font doesn't support italic text, by default Emacs tries to underline it and I don't like that.
+If font doesn't support italic text, by default Emacs tries to underline it and
+I don't like that.
 
 #+BEGIN_SRC emacs-lisp
   (set-face-attribute 'italic nil :underline nil)
@@ -152,7 +155,7 @@ If font doesn't support italic text, by default Emacs tries to underline it and 
 
 ** Zenburn theme and faces
 
-Load zenburn theme and fix some faces with zenburn color variables
+Load zenburn theme and fix some faces with zenburn color variables.
 
 #+BEGIN_SRC emacs-lisp
 (use-package zenburn-theme
@@ -188,11 +191,13 @@ Load zenburn theme and fix some faces with zenburn color variables
 
 * Language support
 
-I use Emacs for almost everything, but mostly to code. These are my configurations.
+I use Emacs for almost everything, but mostly to code. These are my
+configurations.
 
 ** C#
 
-This is probably one of my favorite languages right now I don't really know why though everyone seems to hate it.
+This is probably one of my favorite languages right now I don't really know why
+though everyone seems to hate it.
 
 #+BEGIN_SRC emacs-lisp
 (use-package csharp-mode
@@ -284,7 +289,8 @@ I use =js2-mode= for my code since it looks and feels better.
 
 ** Lisp
 
-Like I said: I use Emacs a lot... And I really mean a lot! Lisp isn't my favourite language, though I'm always using it.
+Like I said: I use Emacs a lot... And I really mean a lot! Lisp isn't my
+favourite language, though I'm always using it.
 
 #+BEGIN_SRC emacs-lisp
 (use-package emacs-lisp-mode
@@ -314,13 +320,14 @@ Mostly I use =org-mode=, but sometimes you need to write down your README files.
 
 ** Org
 
-My whole configuration is written in =org-mode=. I also write all my TODO lists in Org. This is a powerful tool and I'm
-not the best user. I'm learning though. Also, I'm working with [[Agenda administration][=org-agenda=]]
+My whole configuration is written in =org-mode=. I also write all my TODO lists
+in Org. This is a powerful tool and I'm not the best user. I'm learning though.
+Also, I'm working with [[Agenda administration][=org-agenda=]]
 
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :ensure nil
-  :delight org-mode "\xf03a Org"
+  :delight org-mode "Org"
   :init
   (add-hook 'org-mode-hook #'org-sticky-header-mode)
   (add-hook 'org-mode-hook #'org-bullets-mode)
@@ -360,7 +367,8 @@ Display the Org header in the header-line
 
 ** Python
 
-I'm not using =python-mode= all the time but sometimes I create little scripts to help me with the dirty work.
+I'm not using =python-mode= all the time but sometimes I create little scripts
+to help me with the dirty work.
 
 #+BEGIN_SRC emacs-lisp
 (use-package python
@@ -375,7 +383,8 @@ I'm not using =python-mode= all the time but sometimes I create little scripts t
 
 ** Auto-completition
 
-I'm not a very big fan of auto-complete my words but sometimes it's a bit helpful.
+I'm not a very big fan of auto-complete my words but sometimes it's a bit
+helpful.
 
 #+BEGIN_SRC emacs-lisp
 (use-package company
@@ -389,8 +398,9 @@ I'm not a very big fan of auto-complete my words but sometimes it's a bit helpfu
 
 ** Expanding code
 
-Using built-in =hippie-exp= package to manage expansions. This is a DWIM-like (Do What I Mean) expansion, trying to be smart depending on its context.
-Mostly you can use any kind of expansion with =<C-return>=
+Using built-in =hippie-exp= package to manage expansions. This is a DWIM-like
+(Do What I Mean) expansion, trying to be smart depending on its context. Mostly
+you can use any kind of expansion with =<C-return>=
 
 #+BEGIN_SRC emacs-lisp
 (use-package emmet-mode
@@ -424,7 +434,8 @@ Mostly you can use any kind of expansion with =<C-return>=
 
 ** Help
 
-One great feature of Emacs is the self-documentation. This little configuration makes navigating through it a little bit easier.
+One great feature of Emacs is the self-documentation. This little configuration
+makes navigating through it a little bit easier.
 
 #+BEGIN_SRC emacs-lisp
 (use-package help-mode
@@ -438,8 +449,11 @@ One great feature of Emacs is the self-documentation. This little configuration 
 
 ** Linting
 
-I write a big amount of code everyday and sometimes I'm really inspired so I don't stop writing and coding. When I finish I've to double-check my code to see if I miss something and that's when my linting configuration kicks in.
-This configuration need some binaries so don't forget to read my [[file+emacs:README.org][README.org]] to learn about this.
+I write a big amount of code everyday and sometimes I'm really inspired so I
+don't stop writing and coding. When I finish I've to double-check my code to see
+if I miss something and that's when my linting configuration kicks in. This
+configuration need some binaries so don't forget to read my
+[[file+emacs:README.org][README.org]] to learn about this.
 
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
@@ -462,11 +476,16 @@ This configuration need some binaries so don't forget to read my [[file+emacs:RE
 
 ** Mode-line
 
-This is where I spend most of the time. I love customization and Emacs bring me something like this to play. I use =spaceline= to customize my mode-line, but I'm positive that in some future I will move back to =powerline=.
+This is where I spend most of the time. I love customization and Emacs bring me
+something like this to play. I use =spaceline= to customize my mode-line, but
+I'm positive that in some future I will move back to =powerline=.
 
 *** Delight
 
-This package allows me to rename the major/minor modes "lightes", so they look more like a compact and  descriptive string instead of the awful name that they already have (I'm looking at you =js2-mode=). *NOTE*: Since this package is installed as main dependency, this piece of coude is merely for configuration.
+This package allows me to rename the major/minor modes "lightes", so they look
+more like a compact and descriptive string instead of the awful name that they
+already have (I'm looking at you =js2-mode=). *NOTE*: Since this package is
+installed as main dependency, this piece of code is merely for configuration.
 
 #+BEGIN_SRC emacs-lisp
 (use-package delight
@@ -1191,7 +1210,7 @@ editor. I use =ido-vertical-mode= to order my list with a neat look and also =fl
    ido-enable-flex-matching t
    ido-everywhere t
    ido-file-extensions-order '(".js" ".org" ".el" ".json")
-   ido-ignore-buffers '("\\ " "*scratch*" "*Ibuffer*" "*Completions*" "*Backtrace*")
+   ido-ignore-buffers '("\\ " "*scratch*" "*Ibuffer*" "*Completions*" "*Backtrace*" "spotify-player-status")
    ido-use-filename-at-point 'guess))
 
 (use-package ido-vertical-mode
