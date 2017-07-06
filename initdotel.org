@@ -158,35 +158,39 @@ I don't like that.
 Load zenburn theme and fix some faces with zenburn color variables.
 
 #+BEGIN_SRC emacs-lisp
-(use-package zenburn-theme
-  :init
-  (load-theme 'zenburn t)
-  :config
-  (set-face-attribute 'font-lock-comment-face nil :italic t)
-  (set-face-attribute 'font-lock-doc-face nil :italic t)
+  (use-package zenburn-theme
+    :init
+    (load-theme 'zenburn t)
+    :config
+    (set-face-attribute 'font-lock-comment-face nil :italic t)
+    (set-face-attribute 'font-lock-doc-face nil :italic t)
 
-  (zenburn-with-color-variables
-    (set-face-attribute 'button nil :foreground zenburn-yellow-2)
-    (set-face-attribute 'default nil
-                        :background zenburn-bg-05
-                        :height elnawe/font-size
-                        :font elnawe/font-family)
-    (set-face-attribute 'help-argument-name nil :foreground zenburn-orange :italic nil)
-    (set-face-attribute 'hl-line nil :background zenburn-bg+1)
-    (set-face-attribute 'header-line nil
-                        :background zenburn-bg-1
-                        :box nil)
-    (set-face-attribute 'region nil
-                        :background zenburn-blue-5
-                        :distant-foreground 'unspecified)
-    (set-face-attribute 'vertical-border nil :foreground zenburn-bg))
+    (zenburn-with-color-variables
+      (set-face-attribute 'button nil :foreground zenburn-yellow-2)
+      (set-face-attribute 'default nil
+                          :background zenburn-bg-05
+                          :height elnawe/font-size
+                          :font elnawe/font-family)
+      (set-face-attribute 'font-lock-warning-face nil
+                          :foreground zenburn-green+4
+                          :underline '(:style wave)
+                          :weight 'bold)
+      (set-face-attribute 'help-argument-name nil :foreground zenburn-orange :italic nil)
+      (set-face-attribute 'hl-line nil :background zenburn-bg+1)
+      (set-face-attribute 'header-line nil
+                          :background zenburn-bg-1
+                          :box nil)
+      (set-face-attribute 'region nil
+                          :background zenburn-blue-5
+                          :distant-foreground 'unspecified)
+      (set-face-attribute 'vertical-border nil :foreground zenburn-bg))
 
-  (zenburn-with-color-variables
-    (mapc
-     (lambda (face)
-       (when (eq (face-attribute face :background) zenburn-bg)
-         (set-face-attribute face nil :background 'unspecified)))
-     (face-list))))
+    (zenburn-with-color-variables
+      (mapc
+       (lambda (face)
+         (when (eq (face-attribute face :background) zenburn-bg)
+           (set-face-attribute face nil :background 'unspecified)))
+       (face-list))))
 #+END_SRC
 
 * Language support
@@ -242,8 +246,6 @@ Using HTML mode defined in =sgml-mode.el=
 ** JavaScript
 
 I use =js2-mode= for my code since it looks and feels better.
-
-- TODO: Add =rjsx-mode= to support React.
 
 #+BEGIN_SRC emacs-lisp
 (use-package js
@@ -388,8 +390,9 @@ helpful.
 
 #+BEGIN_SRC emacs-lisp
 (use-package company
+  :init
+  (add-hook 'after-init-hook #'global-company-mode)
   :config
-  (global-company-mode)
   (setq
    company-idle-delay 0.3
    company-minimum-prefix-length 3
@@ -592,7 +595,7 @@ outside)'"
      (concat
       (with-face
        (car (cdr (elnawe::forecast/get-metadata)))
-       (cdr (elnawe::forecast/get-metadata)))
+       (cdr (cdr (elnawe::forecast/get-metadata))))
       (forecast--temperature-string))
      'help-echo '(format
                   "Feels-like: %s\nDetails: %s\nHumidity: %s\nWind: %s\n\nUpdated %s"
@@ -626,7 +629,7 @@ build is done. Check my [[Twitter]] configuration.
   (when (boundp 'twittering-unread-status-info)
     (concat
      (with-face "\xf099 " '(:foreground "#6CA0A3"))
-     (number-to-string twittering-new-tweets-count))))
+     (number-to-string (apply '+ (mapcar 'cadr twittering-unread-status-info))))))
 #+END_SRC
 
 I don't like how default Emacs =vc-mode= works for the mode-line so I created my
@@ -1068,22 +1071,25 @@ Move around windows with ease.
 Window splitting. After create a new window, switch to the new one.
 
 #+BEGIN_SRC emacs-lisp
-(defun elnawe/create-bottom-and-switch ()
+(defun elnawe::window/create-bottom-and-switch ()
   "Creates a new window to the bottom and then switch to it"
   (interactive)
   (split-window-below)
   (balance-windows)
   (other-window 1))
 
-(defun elnawe/create-right-and-switch ()
+(defun elnawe::window/create-right-and-switch ()
   "Creates a new window to the right and then switch to it"
   (interactive)
   (split-window-right)
   (balance-windows)
   (other-window 1))
 
-(global-set-key (kbd "C-x 2") 'elnawe/create-bottom-and-switch)
-(global-set-key (kbd "C-x 3") 'elnawe/create-right-and-switch)
+(global-set-key (kbd "C-x 2") 'elnawe::window/create-bottom-and-switch)
+(global-set-key (kbd "C-x 3") 'elnawe::window/create-right-and-switch)
+(global-set-key (kbd "C-c b") 'ido-switch-buffer-other-window)
+(global-set-key (kbd "C-x `") 'ido-switch-buffer-other-window)
+
 #+END_SRC
 
 Split horizontally for new temporary buffers. Props to: [[https://github.com/hrs][hrs]].
@@ -1104,6 +1110,24 @@ Undo and redo with the window configuration using =C-c left= to undo and =C-c ri
   :ensure nil
   :defer 1
   :config (winner-mode))
+#+END_SRC
+
+** Word highlighting
+
+Higlight words like `TODO`, `FIXME` or `BUG` when in programming mode.
+
+#+BEGIN_SRC emacs-lisp
+;; TODO:
+
+(zenburn-with-color-variables
+  (set-face-attribute 'font-lock-warning-face nil
+                      :foreground zenburn-red+1
+                      :underline '(:style wave)
+                      :weight 'bold))
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (font-lock-add-keywords nil
+                                    '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
 #+END_SRC
 
 * Emacs everyday
@@ -1360,6 +1384,9 @@ I often use Twitter and when I do it is inside Emacs.
 #+BEGIN_SRC emacs-lisp
 (use-package twittering-mode
   :defer t
+  :bind
+  ("C-c t t" . twit)
+  ("C-c t c" . twittering-update-status-interactive)
   :config
   (setq
    twittering-display-remaining t
@@ -1369,5 +1396,14 @@ I often use Twitter and when I do it is inside Emacs.
    twittering-timer-interval elnawe/update-time-seconds
    twittering-use-icon-storage t
    twittering-use-master-password t)
-  (twittering-enable-unread-status-notifier))
+  (twittering-enable-unread-status-notifier)
+
+  (zenburn-with-color-variables
+    (set-face-attribute 'twittering-username-face nil
+                        :foreground zenburn-cyan
+                        :underline nil
+                        :weight 'bold)
+    (set-face-attribute 'twittering-uri-face nil
+                        :foreground zenburn-fg
+                        :underline t)))
 #+END_SRC
