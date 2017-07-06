@@ -169,7 +169,7 @@ If font doesn't support italic text, by default Emacs tries to underline it and
 I don't like that.
 
 #+BEGIN_SRC emacs-lisp
-  (set-face-attribute 'italic nil :underline nil)
+(set-face-attribute 'italic nil :underline nil)
 #+END_SRC
 
 ** Zenburn theme and faces
@@ -966,7 +966,7 @@ Setup the actual configuration
 #+BEGIN_SRC emacs-lisp
 (setq
  powerline-default-separator 'arrow
- powerline-height 20
+ powerline-height 25
  spaceline-highlight-face-func 'spaceline-highlight-face-modified
  spaceline-separator-dir-left '(left . left)
  spaceline-separator-dir-right '(right . right))
@@ -982,9 +982,9 @@ Setup the actual configuration
     (selection-info :when mark-active)
     ((flycheck-error flycheck-info flycheck-warning))
     (projectile-root)
-    (line-column)
+    (line-column :priority 13)
     ((hud buffer-position))
-    (elnawe::buffer-id-segment :face highlight-face)))
+    (elnawe::buffer-id-segment :face highlight-face :priority 13)))
 #+END_SRC
 
 **** Theme
@@ -1030,7 +1030,6 @@ And there's some theme configuration going on
                       :background zenburn-green-1
                       :foreground zenburn-green+4))
 #+END_SRC
-
 
 ** Window management
 
@@ -1388,8 +1387,7 @@ big time-saver! /The configuration of this package is inside [[Load =secrets=][=
 
   (spotify-update-mode-line "") ;; Resets mode-line at start
 
-  (add-hook 'text-mode-hook #'spotify-remote-mode)
-  (add-hook 'prog-mode-hook #'spotify-remote-mode)
+  (add-hook 'after-init-hook #'global-spotify-remote-mode)
 
   (delight 'spotify-track-search-mode "Spotify Tracks")
   (delight 'spotify-playlist-search-mode "Spotify Playlists")
@@ -1431,6 +1429,6 @@ I often use Twitter and when I do it is inside Emacs.
                         :underline nil
                         :weight 'bold)
     (set-face-attribute 'twittering-uri-face nil
-                        :foreground zenburn-fg
-                        :underline t)))
+                        :foreground zenburn-fg+1
+                        :italic t)))
 #+END_SRC
