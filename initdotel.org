@@ -51,6 +51,11 @@ them are just a way to /standarize/ the code.
 (defun elnawe::load-package-dir (PACKAGE)
   "Returns package `PACKAGE' from /packages directory"
   (concat user-emacs-directory "packages/" PACKAGE))
+
+(defun elnawe::open-config-file ()
+  "Opens the config file `initdotel.org' on a new buffer."
+  (interactive)
+  (find-file "~/.emacs.d/initdotel.org"))
 #+END_SRC
 
 ** My better-defaults
@@ -61,42 +66,43 @@ are here:
 
 #+BEGIN_SRC emacs-lisp
 (setq-default
- confirm-kill-emacs 'yes-or-no-p                         ; Confirm before exit
- cursor-in-non-selected-windows t                        ; Hide cursor in inactive windows
- delete-by-moving-to-trash t                             ; Move file to trash instead of removing it
- display-time-default-load-average nil                   ; Don't display load avereage
- display-time-format "%H:%M"                             ; Format the time string
- fill-column 80                                          ; Width before automatic line breaks
- frame-title-format "Emacs"                              ; Change frame title to "Emacs"
- help-window-select t                                    ; Focus help windows when opened
- indent-tabs-mode nil                                    ; Use spaces for indentation
- inhibit-startup-screen t                                ; Disable the startup window
- initial-scratch-message ""                              ; Empty *scratch* buffer
- left-margin-width 1 right-margin-width 0                ; Add left and right margins
- ring-bell-function 'ignore                              ; Ignore any kind of bell notifications
- scroll-conservatively most-positive-fixnum              ; Always scroll by one line
- scroll-margin 10                                        ; Add a margin when scrolling vertically
- select-enable-clipboard t                               ; Merge system's and Emacs' clipboard
- sentence-end-double-space nil                           ; End sentence when dot and space
- show-trailing-whitespace nil                            ; Display trailing whitespaces
- split-height-threshold nil                               ; Enable vertical splitting by 20 lines
- split-width-threshold nil                               ; Disable horizontal window splitting
- tab-width 4                                             ; Set indentation width
- truncate-lines t                                        ; Disable truncate lines
- uniquify-buffer-name-style 'forward                     ; Make buffer names unique
- visible-bell nil                                        ; Replace the alarm to an audible one
- window-combination-resize t                             ; Resize window proportionally
- x-stretch-cursor t)                                     ; Give cursor glyph width
-(delete-selection-mode)                                  ; Replace region when inserting text
-(display-time-mode)                                      ; Enable time-mode in mode-line
-(fset 'yes-or-no-p 'y-or-n-p)                            ; Alias y/n prompts to yes/no
-(fringe-mode 0)                                          ; No fringe!
-(global-hl-line-mode)                                    ; Highlight current line
-(global-subword-mode)                                    ; Iterate through camelCase words
-(menu-bar-mode 0)                                        ; Disable the menu bar
-(scroll-bar-mode 0)                                      ; Disable the scroll-bar
-(tool-bar-mode 0)                                        ; Disable the tool-bar
-(mouse-avoidance-mode 'none)                             ; Avoid mouse colission with point
+ confirm-kill-emacs 'yes-or-no-p                           ; Confirm before exit
+ cursor-in-non-selected-windows t                          ; Hide cursor in inactive windows
+ delete-by-moving-to-trash t                               ; Move file to trash instead of removing it
+ display-time-default-load-average nil                     ; Don't display load avereage
+ display-time-format "%H:%M"                               ; Format the time string
+ fill-column 80                                            ; Width before automatic line breaks
+ frame-title-format "Emacs"                                ; Change frame title to "Emacs"
+ help-window-select t                                      ; Focus help windows when opened
+ indent-tabs-mode nil                                      ; Use spaces for indentation
+ inhibit-startup-screen t                                  ; Disable the startup window
+ initial-scratch-message ""                                ; Empty *scratch* buffer
+ left-margin-width 1 right-margin-width 0                  ; Add left and right margins
+ ring-bell-function 'ignore                                ; Ignore any kind of bell notifications
+ scroll-conservatively most-positive-fixnum                ; Always scroll by one line
+ scroll-margin 10                                          ; Add a margin when scrolling vertically
+ select-enable-clipboard t                                 ; Merge system's and Emacs' clipboard
+ sentence-end-double-space nil                             ; End sentence when dot and space
+ show-trailing-whitespace nil                              ; Display trailing whitespaces
+ split-height-threshold nil                                ; Enable vertical splitting by 20 lines
+ split-width-threshold nil                                 ; Disable horizontal window splitting
+ tab-width 4                                               ; Set indentation width
+ truncate-lines t                                          ; Disable truncate lines
+ uniquify-buffer-name-style 'forward                       ; Make buffer names unique
+ visible-bell nil                                          ; Replace the alarm to an audible one
+ window-combination-resize t                               ; Resize window proportionally
+ x-stretch-cursor t)                                       ; Give cursor glyph width
+(delete-selection-mode)                                    ; Replace region when inserting text
+(display-time-mode)                                        ; Enable time-mode in mode-line
+(fset 'yes-or-no-p 'y-or-n-p)                              ; Alias y/n prompts to yes/no
+(fringe-mode 0)                                            ; No fringe!
+(global-hl-line-mode)                                      ; Highlight current line
+(global-subword-mode)                                      ; Iterate through camelCase words
+(menu-bar-mode 0)                                          ; Disable the menu bar
+(scroll-bar-mode 0)                                        ; Disable the scroll-bar
+(tool-bar-mode 0)                                          ; Disable the tool-bar
+(mouse-avoidance-mode 'none)                               ; Avoid mouse colission with point
+(define-key global-map "\C-ci" #'elnawe::open-config-file) ; Binds `C-ci' to open the configuration
 #+END_SRC
 
 ** Personal information
@@ -664,6 +670,8 @@ file by its folder.
    ("<return>" . neotree-enter)
    ("c" . neotree-create-node)
    ("d" . neotree-delete-node)
+   ("j" . neotree-next-line)
+   ("k" . neotree-previous-line)
    ("r" . neotree-rename-node)
    ("s" . neotree-dir))
   :config
@@ -1019,16 +1027,16 @@ And there's some theme configuration going on
                       :foreground zenburn-orange)
   (set-face-attribute 'spaceline-highlight-face nil
                       :background zenburn-yellow
-                      :foreground zenburn-fg-1)
+                      :foreground zenburn-bg-1)
   (set-face-attribute 'spaceline-modified nil
                       :background zenburn-red
-                      :foreground zenburn-red-4)
+                      :foreground zenburn-bg-1)
   (set-face-attribute 'spaceline-read-only nil
                       :background zenburn-blue+1
-                      :foreground zenburn-blue-5)
+                      :foreground zenburn-bg-1)
   (set-face-attribute 'spaceline-unmodified nil
                       :background zenburn-green-1
-                      :foreground zenburn-green+4))
+                      :foreground zenburn-bg-1))
 #+END_SRC
 
 ** Window management
@@ -1225,14 +1233,6 @@ Defining templates for capturing new tasks. Also, quickly capture =TODO=.
   (org-todo 'done)
   (org-archive-subtree))
 
-(defun open-index-file ()
-  "Open the master org TODO list."
-  (interactive)
-  (find-file org-index-file)
-  (flycheck-mode -1)
-  (end-of-buffer))
-
-(global-set-key (kbd "C-c i") 'open-index-file)
 (define-key org-mode-map (kbd "C-c C-x C-s") 'elnawe/mark-done-and-archive)
 #+END_SRC
 
