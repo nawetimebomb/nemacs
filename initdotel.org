@@ -56,6 +56,12 @@ them are just a way to /standarize/ the code.
   "Opens the config file `initdotel.org' on a new buffer."
   (interactive)
   (find-file "~/.emacs.d/initdotel.org"))
+
+(defun elnawe::ivy/kill-buffer ()
+  "Kill the selected buffer from the `ivy-switch-buffer' menu."
+  (interactive)
+  (ivy-set-action 'kill-buffer)
+  (ivy-done))
 #+END_SRC
 
 ** My better-defaults
@@ -165,6 +171,19 @@ Intializing env inside Emacs
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
   :config (exec-path-from-shell-initialize))
+#+END_SRC
+
+** Restart Emacs
+
+When I am updating or changing some configuration on my Emacs I like to restart
+it to clean up everything I removed. There's an excellent package to do that and
+it's called =restart-emacs=. Instead of =C-x C-c= (quit-emacs) I use =C-x C-M-c=
+to restart it.
+
+#+BEGIN_SRC emacs-lisp
+(use-package restart-emacs
+  :bind
+  ("C-x C-M-c" . restart-emacs))
 #+END_SRC
 
 * Theme
@@ -650,7 +669,7 @@ I love =projectile= and I think its the best project management tool you'll ever
   :config
   (projectile-global-mode)
   (setq
-   projectile-completition-system 'ido
+   projectile-completition-system 'ivy
    projectile-enable-caching t
    projectile-mode-line '(:eval (projectile-project-name)))
   :bind
@@ -697,15 +716,6 @@ Magit provides everything I need when working with Version Control, all within E
 =mode-line= configuration.
 
 #+BEGIN_SRC emacs-lisp
-(use-package git-commit
-  :preface
-  (defun elnawe/git-commit-auto-fill ()
-    (setq-local comment-auto-fill-only-comments nil))
-  :init
-  (add-hook 'git-commit-mode-hook #'elnawe/git-commit-auto-fill)
-  :config
-  (setq-default git-commit-summary-max-length 50))
-
 (use-package magit
   :preface
   (defun elnawe/magit-display-buffer-same (buffer)
@@ -1139,8 +1149,8 @@ Window splitting. After create a new window, switch to the new one.
 
 (global-set-key (kbd "C-x 2") 'elnawe::window/create-bottom-and-switch)
 (global-set-key (kbd "C-x 3") 'elnawe::window/create-right-and-switch)
-(global-set-key (kbd "C-c b") 'ido-switch-buffer-other-window)
-(global-set-key (kbd "C-x `") 'ido-switch-buffer-other-window)
+(global-set-key (kbd "C-c b") 'ivy-switch-buffer-other-window)
+(global-set-key (kbd "C-x `") 'ivy-switch-buffer-other-window)
 
 #+END_SRC
 
@@ -1295,59 +1305,31 @@ it by myself, because Emacs allow me to do it automatically!
   (add-hook 'text-mode-hook #'turn-on-auto-fill))
 #+END_SRC
 
-** Interactively doing things =ido=
+** =ivy-mode= for minibuffer completition
 
-I use =ido-mode= because it feels super fast. I like what =helm= does but makes my editor look like any other modern
-editor. I use =ido-vertical-mode= to order my list with a neat look and also =flx-ido= to better matching.
-
-#+BEGIN_SRC emacs-lisp
-(use-package ido
-  :init
-  (ido-mode 1)
-  :bind
-  (("C-x C-b" . ido-switch-buffer))
-  :config
-  (setq-default
-   ido-create-new-buffer 'always
-   ido-enable-flex-matching t
-   ido-everywhere t
-   ido-file-extensions-order '(".js" ".org" ".el" ".json")
-   ido-ignore-buffers '("\\ " "*Ibuffer*" "*Completions*" "*Backtrace*" "spotify-player-status")
-   ido-use-filename-at-point 'guess))
-
-(use-package ido-vertical-mode
-  :init
-  (ido-vertical-mode 1)
-  :config
-  (setq-default
-   ido-use-faces t
-   ido-vertical-define-keys 'C-n-C-p-up-and-down
-   ido-vertical-show-count t)
-
-  (zenburn-with-color-variables
-    (set-face-attribute 'ido-vertical-first-match-face nil
-                        :background zenburn-bg+1
-                        :bold t
-                        :foreground zenburn-yellow-1)
-    (set-face-attribute 'ido-vertical-only-match-face nil
-                        :background nil
-                        :foreground nil)
-    (set-face-attribute 'ido-vertical-match-face nil
-                        :foreground nil)))
-
-(use-package flx-ido
-  :init
-  (flx-ido-mode 1))
-#+END_SRC
-
-Also =smex= helps me go through =M-x= easily and with all the benefits of =ido-mode=
+First I used =helm= but it felt slow. Then I moved to the built-in =ido-mode=
+and, though it worked great, I wanted to try =ivy= and after searching the
+Internet I found it very useful!
 
 #+BEGIN_SRC emacs-lisp
-(use-package smex
+(use-package ivy
   :init
-  (smex-initialize)
+  (ido-mode -1)
+  (ivy-mode 1)
   :bind
-  ("M-x" . smex))
+  (:map ivy-switch-buffer-map
+        ("C-k" . elnawe::ivy/kill-buffer))
+  :config
+  (setq
+   enable-recursive-minibuffers t
+   ivy-count-format "[%d/%d] "
+   ivy-display-style 'fancy
+   ivy-extra-directories nil
+   ivy-use-virtual-buffer t))
+
+(use-package counsel)
+
+(use-package swiper)
 #+END_SRC
 
 ** Kill unused buffers
