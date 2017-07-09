@@ -173,6 +173,16 @@ Intializing env inside Emacs
   :config (exec-path-from-shell-initialize))
 #+END_SRC
 
+*** TOS
+
+I'm a pretty big fan of Terminal Operating System and my desktop (and one of my
+laptops) has a clean ArchLinux installed with no visual desktop o GUI. These
+configurations are needed to ensure that my Emacs works well on those boxes!
+
+#+BEGIN_SRC emacs-lisp
+(global-hl-line-mode -1)
+#+END_SRC
+
 ** Restart Emacs
 
 When I am updating or changing some configuration on my Emacs I like to restart
@@ -226,8 +236,8 @@ Load zenburn theme and fix some faces with zenburn color variables.
                         :box nil)
     (set-face-attribute 'region nil
                         :background zenburn-blue-5
-                        :distant-foreground 'unspecified)
-    (set-face-attribute 'vertical-border nil :foreground zenburn-bg))
+                        :foreground zenburn-bg)
+    (set-face-attribute 'vertical-border nil :foreground zenburn-yellow-2))
 
   (zenburn-with-color-variables
     (mapc
@@ -800,6 +810,8 @@ makes navigating through it a little bit easier.
   :ensure nil
   :bind
   (:map help-mode-map
+        ("j" . next-line)
+        ("k" . previous-line)
         ("q" . kill-buffer-and-window)
         ("<" . help-go-back)
         (">" . help-go-forward)))
@@ -942,7 +954,8 @@ Check the [[Spotify]] configuration.
 #+BEGIN_SRC emacs-lisp
 (spaceline-define-segment elnawe::spotify-segment
   "Show the current song being played in Spotify"
-  (when (not (eq spotify-mode-line ""))
+  (when (and (boundp 'spotify-mode-line)
+         (not (eq spotify-mode-line "")))
     (concat
      (with-face "\xf1bc" '(:foreground "#7F9F7F"))
      spotify-mode-line)))
@@ -1042,7 +1055,7 @@ And there's some theme configuration going on
                       :background zenburn-red
                       :foreground zenburn-bg-1)
   (set-face-attribute 'spaceline-read-only nil
-                      :background zenburn-blue+1
+                      :background zenburn-blue
                       :foreground zenburn-bg-1)
   (set-face-attribute 'spaceline-unmodified nil
                       :background zenburn-green-1
@@ -1357,31 +1370,32 @@ I love music and I spent a lot of time in Spotify. Using it through Emacs is a
 big time-saver! /The configuration of this package is inside [[Load =secrets=][=secrets=]]/
 
 #+BEGIN_SRC emacs-lisp
-(eval-and-compile
-  (add-to-list 'load-path (elnawe::load-package-dir "spotify.el"))
-  (require 'spotify)
+(when window-system
+  (eval-and-compile
+    (add-to-list 'load-path (elnawe::load-package-dir "spotify.el"))
+    (require 'spotify)
 
-  (setq-default spotify-api-search-limit 25
-                spotify-mode-line-format "%tt"
-                spotify-mode-line-prefix ""
-                spotify-mode-line-refresh-interval 1
-                spotify-mode-line-truncate-length 20)
+    (setq-default spotify-api-search-limit 25
+                  spotify-mode-line-format "%tt"
+                  spotify-mode-line-prefix ""
+                  spotify-mode-line-refresh-interval 1
+                  spotify-mode-line-truncate-length 20)
 
-  (spotify-update-mode-line "") ;; Resets mode-line at start
+    (spotify-update-mode-line "") ;; Resets mode-line at start
 
-  (add-hook 'after-init-hook #'global-spotify-remote-mode)
+    (add-hook 'after-init-hook #'global-spotify-remote-mode)
 
-  (delight 'spotify-track-search-mode "Spotify Tracks")
-  (delight 'spotify-playlist-search-mode "Spotify Playlists")
+    (delight 'spotify-track-search-mode "Spotify Tracks")
+    (delight 'spotify-playlist-search-mode "Spotify Playlists")
 
-  (define-key spotify-remote-mode-map "\C-csc" #'spotify-connect)
-  (define-key spotify-remote-mode-map "\C-csq" #'spotify-disconnect)
-  (define-key spotify-remote-mode-map "\C-css" #'spotify-track-search)
-  (define-key spotify-remote-mode-map "\C-csf" #'spotify-playlist-search)
-  (define-key spotify-remote-mode-map "\C-csm" #'spotify-my-playlists)
-  (define-key spotify-remote-mode-map "\C-csp" #'spotify-toggle-play)
-  (define-key spotify-remote-mode-map "\C-csn" #'spotify-next-track)
-  (define-key spotify-remote-mode-map "\C-csb" #'spotify-previous-track))
+    (define-key spotify-remote-mode-map "\C-csc" #'spotify-connect)
+    (define-key spotify-remote-mode-map "\C-csq" #'spotify-disconnect)
+    (define-key spotify-remote-mode-map "\C-css" #'spotify-track-search)
+    (define-key spotify-remote-mode-map "\C-csf" #'spotify-playlist-search)
+    (define-key spotify-remote-mode-map "\C-csm" #'spotify-my-playlists)
+    (define-key spotify-remote-mode-map "\C-csp" #'spotify-toggle-play)
+    (define-key spotify-remote-mode-map "\C-csn" #'spotify-next-track)
+    (define-key spotify-remote-mode-map "\C-csb" #'spotify-previous-track)))
  #+END_SRC
 
 ** Twitter
@@ -1405,12 +1419,13 @@ I often use Twitter and when I do it is inside Emacs.
    twittering-use-master-password t)
   (twittering-enable-unread-status-notifier)
 
-  (zenburn-with-color-variables
-    (set-face-attribute 'twittering-username-face nil
-                        :foreground zenburn-cyan
-                        :underline nil
-                        :weight 'bold)
-    (set-face-attribute 'twittering-uri-face nil
-                        :foreground zenburn-fg+1
-                        :italic t)))
+  (when (boundp 'twittering-username-face)
+    (zenburn-with-color-variables
+      (set-face-attribute 'twittering-username-face nil
+                          :foreground zenburn-cyan
+                          :underline nil
+                          :weight 'bold)
+      (set-face-attribute 'twittering-uri-face nil
+                          :foreground zenburn-fg+1
+                          :italic t))))
 #+END_SRC
