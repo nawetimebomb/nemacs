@@ -181,7 +181,7 @@ laptops) has a clean ArchLinux installed with no visual desktop o GUI. These
 configurations are needed to ensure that my Emacs works well on those boxes!
 
 #+BEGIN_SRC emacs-lisp
-(when window-system
+(when (not window-system)
   (setq-default
    elnawe/icons-enabled nil)
   (global-hl-line-mode -1))
@@ -880,8 +880,7 @@ A fancy looking mode-line is fancy!
     (cdr
      (assoc NAME ati/icons-alist)))
 
-  (when (or (not elnawe/icons-enabled)
-            (not window-system))
+  (when (not elnawe/icons-enabled)
     (setq ati/icons-alist '((clock . "time ")
                             (git . "git ")
                             (spotify . "listening ")
@@ -957,7 +956,7 @@ outside)'"
     (propertize
      (concat
       (with-face
-       (if window-system (car (cdr (elnawe::forecast/get-metadata))) (car (elnawe::forecast/get-metadata)))
+       (if elnawe/icons-enabled (car (cdr (elnawe::forecast/get-metadata))) (car (elnawe::forecast/get-metadata)))
        (cdr (cdr (elnawe::forecast/get-metadata))))
       " "
       (forecast--temperature-string))
