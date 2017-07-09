@@ -34,6 +34,7 @@ trouble!
 (defvar elnawe/font-size-title 150 "Font size used in titles")
 (defvar elnawe/start-time-seconds 20 "Time in seconds to start a mini application")
 (defvar elnawe/update-time-seconds 1800 "Time in seconds to update/refresh mini applications")
+(defvar elnawe/icons-enabled t "Show/hide special icons. Most of them used in mode-line")
 #+END_SRC
 
 *** Helpers
@@ -180,7 +181,10 @@ laptops) has a clean ArchLinux installed with no visual desktop o GUI. These
 configurations are needed to ensure that my Emacs works well on those boxes!
 
 #+BEGIN_SRC emacs-lisp
-(global-hl-line-mode -1)
+(when window-system
+  (setq-default
+   elnawe/icons-enabled nil)
+  (global-hl-line-mode -1))
 #+END_SRC
 
 ** Restart Emacs
@@ -235,7 +239,7 @@ Load zenburn theme and fix some faces with zenburn color variables.
                         :background zenburn-bg-1
                         :box nil)
     (set-face-attribute 'region nil
-                        :background zenburn-blue-5
+                        :background zenburn-blue
                         :foreground zenburn-bg)
     (set-face-attribute 'vertical-border nil :foreground zenburn-yellow-2))
 
@@ -860,10 +864,29 @@ Not going outside too much but always know what is happening out there.
 *** Icons
 
 A fancy looking mode-line is fancy!
+*Note*: Weather icons [[Forecast][here]]
 
 #+BEGIN_SRC emacs-lisp
 (use-package all-the-icons
-  :after spaceline)
+  :init
+  (defvar ati/icons-alist '((clock . "\xf017 ")
+                            (git . "\xe907 ")
+                            (spotify . "\xf1bc")
+                            (twitter . "\xf099 ")
+                            (web . "\xf0c1 ")))
+
+  (defun elnawe::ati/get-icon (NAME)
+    "Uses `NAME' to retrieve an icon from `ati/icons-alist'"
+    (cdr
+     (assoc NAME ati/icons-alist)))
+
+  (when (or (not elnawe/icons-enabled)
+            (not window-system))
+    (setq ati/icons-alist '((clock . "time ")
+                            (git . "git ")
+                            (spotify . "listening ")
+                            (twitter . "twitter ")
+                            (web . "web ")))))
 #+END_SRC
 
 *** Spaceline
@@ -903,7 +926,7 @@ fullscreen mode.
 #+BEGIN_SRC emacs-lisp
 (spaceline-define-segment elnawe::time-segment
   (concat
-   (with-face "\xf017 " '(:foreground "#DCA3A3"))
+   (with-face (elnawe::ati/get-icon 'clock) '(:foreground "#DCA3A3"))
    (format-time-string "%H:%M" (current-time))))
 #+END_SRC
 
@@ -911,14 +934,14 @@ Weather in Emacs? Yes, you can do it with =forecast= which is a great package.
 Check also my [[Forecast]] configuration.
 
 #+BEGIN_SRC emacs-lisp
-(setq elnawe/forecast-icons-colors '(("clear-day" "\xf185 " :foreground "#F0DFAF")
-                                     ("clear-night" "\xf186 " :foreground "#6F6F6F")
-                                     ("cloudy" "\xf0c2 " :foreground "#6F6F6F")
-                                     ("fog" "\xf04d " :foreground "#6F6F6F")
-                                     ("partly-cloudy-day" "\xf0c2 " :foreground "#D0BF8F")
-                                     ("partly-cloudy-night" "\xf0c2 " :foreground "#6F6F6F")
-                                     ("rain" "\xf043 " :foreground "#94BFF3")
-                                     ("wind" "\xf1d9 " :foreground "#DCDCCC")))
+(setq elnawe/forecast-icons-colors '(("clear-day" "\xf185" :foreground "#F0DFAF")
+                                     ("clear-night" "\xf186" :foreground "#6F6F6F")
+                                     ("cloudy" "\xf0c2" :foreground "#6F6F6F")
+                                     ("fog" "\xf04d" :foreground "#6F6F6F")
+                                     ("partly-cloudy-day" "\xf0c2" :foreground "#D0BF8F")
+                                     ("partly-cloudy-night" "\xf0c2" :foreground "#6F6F6F")
+                                     ("rain" "\xf043" :foreground "#94BFF3")
+                                     ("wind" "\xf1d9" :foreground "#DCDCCC")))
 
 (defun elnawe::forecast/get-metadata ()
   "Get a value from `elnawe/forecast-icons-colors' depending on
@@ -934,8 +957,9 @@ outside)'"
     (propertize
      (concat
       (with-face
-       (car (cdr (elnawe::forecast/get-metadata)))
+       (if window-system (car (cdr (elnawe::forecast/get-metadata))) (car (elnawe::forecast/get-metadata)))
        (cdr (cdr (elnawe::forecast/get-metadata))))
+      " "
       (forecast--temperature-string))
      'help-echo '(format
                   "Feels-like: %s\nDetails: %s\nHumidity: %s\nWind: %s\n\nUpdated %s"
@@ -957,7 +981,7 @@ Check the [[Spotify]] configuration.
   (when (and (boundp 'spotify-mode-line)
          (not (eq spotify-mode-line "")))
     (concat
-     (with-face "\xf1bc" '(:foreground "#7F9F7F"))
+     (with-face (elnawe::ati/get-icon 'spotify) '(:foreground "#7F9F7F"))
      spotify-mode-line)))
 #+END_SRC
 
@@ -969,7 +993,7 @@ build is done. Check my [[Twitter]] configuration.
   "Show Twitter notifications"
   (when (boundp 'twittering-unread-status-info)
     (concat
-     (with-face "\xf099 " '(:foreground "#6CA0A3"))
+     (with-face (elnawe::ati/get-icon 'twitter) '(:foreground "#6CA0A3"))
      (number-to-string (apply '+ (mapcar 'cadr twittering-unread-status-info))))))
 #+END_SRC
 
@@ -981,13 +1005,26 @@ own segment where I can manipulate a little bit how this segment works.
   "Minimal version control information."
   (when (fboundp 'magit-get-current-branch)
     (concat
-     (with-face "\xe907 " '(:foreground "#DFAF8F"))
+     (with-face (elnawe::ati/get-icon 'git) '(:foreground "#DFAF8F"))
      (magit-get-current-branch)
      (powerline-raw
       (when (buffer-file-name)
         (pcase (vc-state (buffer-file-name))
           (`up-to-date "")
           (`edited " *")))))))
+#+END_SRC
+
+=w3m= is one of the best browser out there and it's even more useful when you
+only work on =TOS= machines, this segments shows the title of the website I'm
+currently navigating.
+
+#+BEGIN_SRC emacs-lisp
+(spaceline-define-segment elnawe::w3m-segment
+  "Shows the website title"
+  (when (get-buffer "*w3m*")
+    (concat
+     (with-face (elnawe::ati/get-icon 'web) '(:foreground "#6CA0A3"))
+     (w3m-buffer-title (get-buffer "*w3m*")))))
 #+END_SRC
 
 **** Configuration
@@ -1008,7 +1045,8 @@ Setup the actual configuration
     (elnawe::version-control-segment)
     (elnawe::forecast-segment)
     (elnawe::spotify-segment)
-    (elnawe::twitter-segment))
+    (elnawe::twitter-segment)
+    (elnawe::w3m-segment))
   '((anzu :when active)
     (selection-info :when mark-active)
     ((flycheck-error flycheck-info flycheck-warning))
@@ -1329,6 +1367,7 @@ Internet I found it very useful!
   :init
   (ido-mode -1)
   (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
   :bind
   (:map ivy-switch-buffer-map
         ("C-k" . elnawe::ivy/kill-buffer))
@@ -1337,8 +1376,7 @@ Internet I found it very useful!
    enable-recursive-minibuffers t
    ivy-count-format "[%d/%d] "
    ivy-display-style 'fancy
-   ivy-extra-directories nil
-   ivy-use-virtual-buffer t))
+   ivy-extra-directories nil))
 
 (use-package counsel)
 
@@ -1428,4 +1466,34 @@ I often use Twitter and when I do it is inside Emacs.
       (set-face-attribute 'twittering-uri-face nil
                           :foreground zenburn-fg+1
                           :italic t))))
+#+END_SRC
+
+** =w3m= browser
+
+Since I use Emacs on my =TOS= a lot and sometimes need to browse on the web, I
+need a powerful tool and =w3m= is pretty awesome!
+
+#+BEGIN_SRC emacs-lisp
+(use-package w3m
+  :bind
+  ("C-c w w" . w3m)
+  ("C-c w r" . elnawe::w3m/open-reddit)
+  :init
+  (defun elnawe::browser/choose-browser (url &rest args)
+    "Let you choose a browser to navigate the web when `browse-url' is called"
+    (interactive "sURL: ")
+    (if (and window-system
+             (y-or-n-p "Use external browser? ")
+            (browse-url-generic url))
+        (w3m-browse-url url)))
+
+  (defun elnawe::w3m/open-reddit (SUBREDDIT)
+    "Opens the `SUBREDDIT' in `w3m'"
+    (interactive (list
+                  (read-string "Enter subreddit (default: emacs): " nil nil "emacs" nil)))
+    (w3m-browse-url (format "https://i.reddit.com/r/%s" SUBREDDIT)))
+  :config
+  (setq
+   browse-url-browser-function 'elnawe::browser/choose-browser
+   w3m-use-cookies t))
 #+END_SRC

@@ -16,9 +16,8 @@ initdotel.el
 .projectile-bookmarks
 .projectile-cache
 .custom.el
-smex-items
-ido.last
 bookmarks
 cache
 eshell
 oauth2*
+recentf
