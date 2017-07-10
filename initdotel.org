@@ -226,7 +226,7 @@ Load zenburn theme and fix some faces with zenburn color variables.
   (zenburn-with-color-variables
     (set-face-attribute 'button nil :foreground zenburn-yellow-2)
     (set-face-attribute 'default nil
-                        :background zenburn-bg-05
+                        :background zenburn-bg
                         :height elnawe/font-size
                         :font elnawe/font-family)
     (set-face-attribute 'font-lock-warning-face nil
@@ -1407,32 +1407,31 @@ I love music and I spent a lot of time in Spotify. Using it through Emacs is a
 big time-saver! /The configuration of this package is inside [[Load =secrets=][=secrets=]]/
 
 #+BEGIN_SRC emacs-lisp
-(when window-system
-  (eval-and-compile
-    (add-to-list 'load-path (elnawe::load-package-dir "spotify.el"))
-    (require 'spotify)
+(eval-and-compile
+  (add-to-list 'load-path (elnawe::load-package-dir "spotify.el"))
+  (require 'spotify)
 
-    (setq-default spotify-api-search-limit 25
-                  spotify-mode-line-format "%tt"
-                  spotify-mode-line-prefix ""
-                  spotify-mode-line-refresh-interval 1
-                  spotify-mode-line-truncate-length 20)
+  (setq-default spotify-api-search-limit 25
+                spotify-mode-line-format "%tt"
+                spotify-mode-line-prefix ""
+                spotify-mode-line-refresh-interval 1
+                spotify-mode-line-truncate-length 20)
 
-    (spotify-update-mode-line "") ;; Resets mode-line at start
+  (spotify-update-mode-line "") ;; Resets mode-line at start
 
-    (add-hook 'after-init-hook #'global-spotify-remote-mode)
+  (add-hook 'after-init-hook #'global-spotify-remote-mode)
 
-    (delight 'spotify-track-search-mode "Spotify Tracks")
-    (delight 'spotify-playlist-search-mode "Spotify Playlists")
+  (delight 'spotify-track-search-mode "Spotify Tracks")
+  (delight 'spotify-playlist-search-mode "Spotify Playlists")
 
-    (define-key spotify-remote-mode-map "\C-csc" #'spotify-connect)
-    (define-key spotify-remote-mode-map "\C-csq" #'spotify-disconnect)
-    (define-key spotify-remote-mode-map "\C-css" #'spotify-track-search)
-    (define-key spotify-remote-mode-map "\C-csf" #'spotify-playlist-search)
-    (define-key spotify-remote-mode-map "\C-csm" #'spotify-my-playlists)
-    (define-key spotify-remote-mode-map "\C-csp" #'spotify-toggle-play)
-    (define-key spotify-remote-mode-map "\C-csn" #'spotify-next-track)
-    (define-key spotify-remote-mode-map "\C-csb" #'spotify-previous-track)))
+  (define-key spotify-remote-mode-map "\C-csc" #'spotify-connect)
+  (define-key spotify-remote-mode-map "\C-csq" #'spotify-disconnect)
+  (define-key spotify-remote-mode-map "\C-css" #'spotify-track-search)
+  (define-key spotify-remote-mode-map "\C-csf" #'spotify-playlist-search)
+  (define-key spotify-remote-mode-map "\C-csm" #'spotify-my-playlists)
+  (define-key spotify-remote-mode-map "\C-csp" #'spotify-toggle-play)
+  (define-key spotify-remote-mode-map "\C-csn" #'spotify-next-track)
+  (define-key spotify-remote-mode-map "\C-csb" #'spotify-previous-track))
  #+END_SRC
 
 ** Twitter

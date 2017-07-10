@@ -1,0 +1,3 @@
+[submodule "packages/spotify.el"]
+	path = packages/spotify.el
+	url = https://github.com/danielfm/spotify.el
