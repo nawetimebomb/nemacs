@@ -85,6 +85,7 @@ are here:
  inhibit-startup-screen t                                  ; Disable the startup window
  initial-scratch-message ""                                ; Empty *scratch* buffer
  left-margin-width 1 right-margin-width 0                  ; Add left and right margins
+ view-read-only t                                          ; View the readonly files
  ring-bell-function 'ignore                                ; Ignore any kind of bell notifications
  scroll-conservatively most-positive-fixnum                ; Always scroll by one line
  scroll-margin 10                                          ; Add a margin when scrolling vertically
@@ -618,6 +619,22 @@ Better search and replace with =anzu=. This is a known =vim= package that [[http
     (set-face-attribute 'isearch-lazy-highlight-face nil
                         :background zenburn-blue-5
                         :foreground zenburn-blue)))
+#+END_SRC
+
+*** vi-like navigation
+
+I tend to use the terminal a lot and most of the programs you use there uses a
+vi-like navigation. You just get used to it.
+
+#+BEGIN_SRC emacs-lisp
+(define-key global-map [f4] #'read-only-mode)
+(add-hook 'read-only-mode-hook
+          (lambda ()
+            (define-key view-mode-map "j" #'next-line)
+            (define-key view-mode-map "k" #'previous-line)
+            (define-key view-mode-map "l" #'right-char)
+            (define-key view-mode-map "h" #'left-char)
+            (define-key view-mode-map "i" #'read-only-mode)))
 #+END_SRC
 
 ** Parentheses
