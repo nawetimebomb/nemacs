@@ -1048,7 +1048,6 @@ Setup the actual configuration
     (elnawe::w3m-segment))
   '((anzu :when active)
     (selection-info :when mark-active)
-    ((flycheck-error flycheck-info flycheck-warning))
     (projectile-root)
     (line-column :priority 13)
     ((hud buffer-position))
