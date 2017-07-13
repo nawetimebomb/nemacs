@@ -2,3 +2,5 @@
 configuration.el
 elpa
 .custom.el
+.emacs.desktop*
+recentf
