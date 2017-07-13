@@ -1,32 +1,40 @@
-#+TITLE: InitDotEl - Emacs configuration file
+#+TITLE: Configuration.org - A literate programming for my Emacs configuration
 #+AUTHOR: Nahuel Jesús Sacchetti
+#+OPTIONS: toc:3
 
 * Introduction
 
 Welcome to my configuration file for GNU Emacs.
 
 #+BEGIN_QUOTE
-Emacs was originally an extensible text editor written by Richard Stallman, but
-it became a way of life and a religion. Emacs is love, Emacs is life.
+Emacs was originally an extensible text editor written by Richard
+Stallman, but it became a way of life and a religion. Emacs is love,
+Emacs is life.
 #+END_QUOTE
+
+This is my third version of the configuration file. I've been learning a
+lot lately and I felt the responsability of updating this file to match
+all my new "standards" and also to keep those really clear.
 
 ** =TODOs=
 
-This section is inteded to have all the things I want =todo= but I do not have
-time to right now. So, my future configuration will have...
+This section is inteded to have all the things I want =todo= but I do
+not have time to right now.
 
-- Better sections: I moved some of them already but a nice-to-have will be to
-  arrange these sections better.
-- Spell checking for =text-mode=.
-- Standarize function names: They should be =elnawe::<module_or_feature>/<what_it_does>=.
+** Personal information
 
-** Bootstrap
+#+BEGIN_SRC emacs-lisp
+(setq
+ user-full-name "Nahuel Jesús Sacchetti"
+ user-mail-address "nahueljsacchetti@gmail.com")
+#+END_SRC
 
-*** My variables
+* Bootstrapping my Emacs
 
-In order to maintain this configuration file I setted up some variables. These
-are carefully crafted and you should be aware that editting these may cause
-trouble!
+It's nice to have your Emacs /standarided/ and feel that you're using
+the same configuration everywhere.
+
+** Custom variables
 
 #+BEGIN_SRC emacs-lisp
 (defvar elnawe/font-family "DejaVu Sans Mono-12" "Font used for theming")
@@ -37,39 +45,19 @@ trouble!
 (defvar elnawe/icons-enabled t "Show/hide special icons. Most of them used in mode-line")
 #+END_SRC
 
-*** Helpers
+** Make Emacs faster
 
-This is a set of helper functions that are used in this configuration. Most of
-them are just a way to /standarize/ the code.
+Collect garbage when focus out your Emacs.
 
 #+BEGIN_SRC emacs-lisp
-(defun elnawe::start-with-delay (FUNC)
-  "Runs `FUNC' with a delay declared in
-  `elnawe/start-time-seconds'. This function should be used to
-  run smaller apps that are not crucial for Emacs to work."
-  (run-at-time elnawe/start-time-seconds nil (funcall FUNC)))
-
-(defun elnawe::load-package-dir (PACKAGE)
-  "Returns package `PACKAGE' from /packages directory"
-  (concat user-emacs-directory "packages/" PACKAGE))
-
-(defun elnawe::open-config-file ()
-  "Opens the config file `initdotel.org' on a new buffer."
-  (interactive)
-  (find-file "~/.emacs.d/initdotel.org"))
-
-(defun elnawe::ivy/kill-buffer ()
-  "Kill the selected buffer from the `ivy-switch-buffer' menu."
-  (interactive)
-  (ivy-set-action 'kill-buffer)
-  (ivy-done))
+(add-hook 'focus-out-hook #'garbage-collect)
 #+END_SRC
 
 ** My better-defaults
 
-Since I've been using Emacs I noticed some actual default variables are not the
-best fit for me. I managed to put together a list of my better defaults and they
-are here:
+Since I've been using Emacs I noticed some actual default variables are
+not the best fit for me. I managed to put together a list of my better
+defaults and they are here:
 
 #+BEGIN_SRC emacs-lisp
 (setq-default
@@ -78,7 +66,7 @@ are here:
  delete-by-moving-to-trash t                               ; Move file to trash instead of removing it
  display-time-default-load-average nil                     ; Don't display load avereage
  display-time-format "%H:%M"                               ; Format the time string
- fill-column 80                                            ; Width before automatic line breaks
+ fill-column 72                                            ; Width before automatic line breaks
  frame-title-format "Emacs"                                ; Change frame title to "Emacs"
  help-window-select t                                      ; Focus help windows when opened
  indent-tabs-mode nil                                      ; Use spaces for indentation
@@ -92,8 +80,8 @@ are here:
  select-enable-clipboard t                                 ; Merge system's and Emacs' clipboard
  sentence-end-double-space nil                             ; End sentence when dot and space
  show-trailing-whitespace nil                              ; Display trailing whitespaces
- split-height-threshold nil                                ; Enable vertical splitting by 20 lines
- split-width-threshold nil                                 ; Disable horizontal window splitting
+ split-height-threshold nil                                ; Disable vertical splitting
+ split-width-threshold 1000                                ; Enable horizontal splitting
  tab-width 4                                               ; Set indentation width
  truncate-lines t                                          ; Disable truncate lines
  uniquify-buffer-name-style 'forward                       ; Make buffer names unique
@@ -113,27 +101,33 @@ are here:
 (define-key global-map "\C-ci" #'elnawe::open-config-file) ; Binds `C-ci' to open the configuration
 #+END_SRC
 
-** Personal information
+** Helpers
+
+This is a set of helper functions that are used in this configuration.
 
 #+BEGIN_SRC emacs-lisp
-(setq
- user-full-name "Nahuel Jesús Sacchetti"
- user-mail-address "nahueljsacchetti@gmail.com")
-#+END_SRC
+(defun elnawe::start-with-delay (FUNC)
+  "Runs `FUNC' with a delay declared in
+  `elnawe/start-time-seconds'. This function should be used to
+  run smaller apps that are not crucial for Emacs to work."
+  (run-at-time elnawe/start-time-seconds nil (funcall FUNC)))
 
-** Garbage collection
+(defun elnawe::load-package-dir (PACKAGE)
+  "Returns package `PACKAGE' from /packages directory"
+  (concat user-emacs-directory "packages/" PACKAGE))
 
-Collect the garbage when you focus out, this feels a little bit faster
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'focus-out-hook #'garbage-collect)
+(defun elnawe::open-config-file ()
+  "Opens the config file `initdotel.org' on a new buffer."
+  (interactive)
+  (find-file "~/.emacs.d/initdotel.org"))
 #+END_SRC
 
 ** Load =.custom.el=
 
-You can use the customization interface that Emacs provide but when you edit
-something, =init.el= is overriden with the new configuration. To fix this, I
-move the Emacs customization changes to a new file and then I load it.
+You can use the customization interface that Emacs provide but when you
+edit something, =init.el= is overriden with the new configuration. To
+fix this, I move the Emacs customization changes to a new file and then
+I load it.
 
 #+BEGIN_SRC emacs-lisp
 (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
@@ -143,8 +137,8 @@ move the Emacs customization changes to a new file and then I load it.
 
 ** Load =secrets=
 
-This loads a collection of secret and sensible information. I keep this file
-separated to maintain privacy.
+This loads a collection of secret and sensible information. I keep this
+file separated to maintain privacy.
 
 #+BEGIN_SRC emacs-lisp
 (load "~/.elnawe.secrets/.emacs" t)
@@ -177,9 +171,10 @@ Intializing env inside Emacs
 
 *** TOS
 
-I'm a pretty big fan of Terminal Operating System and my desktop (and one of my
-laptops) has a clean ArchLinux installed with no visual desktop o GUI. These
-configurations are needed to ensure that my Emacs works well on those boxes!
+I'm a pretty big fan of Terminal Operating System and my desktop (and
+one of my laptops) has a clean ArchLinux installed with no visual
+desktop o GUI. These configurations are needed to ensure that my Emacs
+works well on those boxes!
 
 #+BEGIN_SRC emacs-lisp
 (when (not window-system)
@@ -188,33 +183,14 @@ configurations are needed to ensure that my Emacs works well on those boxes!
   (global-hl-line-mode -1))
 #+END_SRC
 
-** Restart Emacs
+* Theming
 
-When I am updating or changing some configuration on my Emacs I like to restart
-it to clean up everything I removed. There's an excellent package to do that and
-it's called =restart-emacs=. Instead of =C-x C-c= (quit-emacs) I use =C-x C-M-c=
-to restart it.
+** Zenburn
 
-#+BEGIN_SRC emacs-lisp
-(use-package restart-emacs
-  :bind
-  ("C-x C-M-c" . restart-emacs))
-#+END_SRC
-
-* Theme
-
-** Remove the underlines on non-italic fonts
-
-If font doesn't support italic text, by default Emacs tries to underline it and
-I don't like that.
-
-#+BEGIN_SRC emacs-lisp
-(set-face-attribute 'italic nil :underline nil)
-#+END_SRC
-
-** Zenburn theme and faces
-
-Load zenburn theme and fix some faces with zenburn color variables.
+It's the best thing that happened to me since I started programming. I'm
+just in love with *Zenburn*. By the way, everything I use looks like
+Zenburn. [[https://github.com/bbatsov/zenburn-emacs][This]] is the theme
+I use.
 
 #+BEGIN_SRC emacs-lisp
 (use-package zenburn-theme
@@ -222,10 +198,10 @@ Load zenburn theme and fix some faces with zenburn color variables.
   (load-theme 'zenburn t)
   :config
   (set-face-attribute 'font-lock-comment-face nil :italic nil)
-  (set-face-attribute 'font-lock-doc-face nil :italic nil)
 
   (zenburn-with-color-variables
-    (set-face-attribute 'button nil :foreground zenburn-yellow-2)
+    (set-face-attribute 'button nil
+                        :foreground zenburn-yellow-2)
     (set-face-attribute 'default nil
                         :background zenburn-bg-05
                         :height elnawe/font-size
@@ -234,7 +210,9 @@ Load zenburn theme and fix some faces with zenburn color variables.
                         :foreground zenburn-green+2
                         :underline '(:style wave)
                         :weight 'bold)
-    (set-face-attribute 'help-argument-name nil :foreground zenburn-orange :italic nil)
+    (set-face-attribute 'help-argument-name nil
+                        :foreground zenburn-orange
+                        :italic nil)
     (set-face-attribute 'hl-line nil :background zenburn-bg+1)
     (set-face-attribute 'header-line nil
                         :background zenburn-bg-1
@@ -242,20 +220,282 @@ Load zenburn theme and fix some faces with zenburn color variables.
     (set-face-attribute 'region nil
                         :background zenburn-blue
                         :foreground zenburn-bg)
-    (set-face-attribute 'vertical-border nil :foreground zenburn-yellow-2))
-
-  (zenburn-with-color-variables
+    (set-face-attribute 'vertical-border nil
+                        :foreground zenburn-yellow-2)
     (mapc
      (lambda (face)
        (when (eq (face-attribute face :background) zenburn-bg)
-         (set-face-attribute face nil :background 'unspecified)))
+         (set-face-attribute face nil
+                             :background 'unspecified)))
      (face-list))))
+#+END_SRC
+
+* Emacs everyday
+
+** Agenda
+
+When you use Emacs for a while you understand that you can not just edit
+code, create presentations or write quite beautiful tables and lists.
+You can also have a very nice =TODO= list synched all the time with your
+server that acts as your agenda and note-taking. This is actually nice.
+
+*** Capturing
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe::org/capture-todo ()
+  "Opens a minibuffer to capture a new `TODO'"
+  (interactive)
+  (org-capture :keys "t"))
+
+(setq
+ org-capture-templates '(("i" "Ideas"
+                          entry
+                          (file (elnawe::org/file-path "ideas.org"))
+                          "* %?\n")
+                         ("t" "TODO"
+                          entry
+                          (file+headline org-index-file "Inbox")
+                          "* TODO %?\n"))
+ org-log-done 'time)
+#+END_SRC
+
+*** Directories
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe::org/file-path (FILENAME)
+  "Returns the absolute path of a given `FILENAME` with default `org-directory`"
+  (concat (file-name-as-directory org-directory) filename))
+
+(setq
+ org-agenda-files (list org-index-file)
+ org-archive-location (concat (elnawe::org/file-path "archive.org" ":: From %s"))
+ org-directory "~/Dropbox/orgs"
+ org-index-file (elnawe::org/file-path "index.org"))
+#+END_SRC
+
+*** Keybindings
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe::org/mark-done-and-archive ()
+  "Mark the state of an org-mode item as `DONE' and archive it"
+  (interactive)
+  (org-todo 'done)
+  (org-archive-subtree))
+
+(define-key global-map "\C-ca" 'org-agenda)
+(define-key global-map "\C-cc" 'org-capture)
+(define-key org-mode-map (kbd "C-c C-x C-s") 'elnawe::org/mark-done-and-archive)
+#+END_SRC
+
+** TODO Backup copies
+
+Manage the backup copies. Always keeping them but save them inside Emacs
+directory.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default
+ backup-by-copying t
+ backup-directory-alist '(("." . "~/.emacs.d/saves"))
+ delete-old-versions 'never
+ make-backup-files t
+ version-control 'numbered)
+#+END_SRC
+
+** Dim other buffers
+
+It gives a nice look-and-feel and also keeps you focused on active
+buffers.
+
+#+BEGIN_SRC emacs-lisp
+(use-package auto-dim-other-buffers
+  :init
+  (auto-dim-other-buffers-mode)
+  :config
+  (zenburn-with-color-variables
+    (set-face-attribute 'auto-dim-other-buffers-face nil
+                        :background zenburn-bg-1)))
+#+END_SRC
+
+** Fill paragraph automatically
+
+When I'm in =text-mode= I want my paragraph to be just the lenght of my
+ruler. Also, I don't want to use =M-q= to adjust it by myself, because
+Emacs allow me to do it automatically!
+
+#+BEGIN_SRC emacs-lisp
+(use-package simple
+  :ensure nil
+  :config
+  (add-hook 'text-mode-hook #'turn-on-auto-fill))
+#+END_SRC
+
+** =ivy-mode= for minibuffer completition
+
+First I used =helm= but it felt slow. Then I moved to the built-in
+=ido-mode= and, though it worked great, I wanted to try =ivy= and after
+searching the Internet I found it very useful!
+
+#+BEGIN_SRC emacs-lisp
+(use-package ivy
+  :bind
+  (:map ivy-switch-buffer-map
+        ("C-k" . elnawe::ivy/kill-buffer))
+  :init
+  (defun elnawe::ivy/kill-buffer ()
+    "Kill the selected buffer from the `ivy-switch-buffer' menu."
+    (interactive)
+    (ivy-set-action 'kill-buffer)
+    (ivy-done))
+  (setq ivy-use-virtual-buffers t)
+  (ivy-mode 1)
+  :config
+  (setq
+   enable-recursive-minibuffers t
+   ivy-count-format "[%d/%d] "
+   ivy-display-style 'fancy
+   ivy-extra-directories nil))
+
+(use-package counsel)
+
+(use-package swiper)
+#+END_SRC
+
+** Navigation
+
+This is something you always need in your text editors, and this is a
+must if you don't use mouse, like me.
+
+*** Disable mouse
+
+Is this the best package for Emacs?
+
+#+BEGIN_SRC emacs-lisp
+(use-package disable-mouse
+  :init
+  (global-disable-mouse-mode))
+#+END_SRC
+
+*** Vi-like
+
+I tend to use the terminal a lot, and most of the programs not only uses
+the Emacs-like navigation. Also Vi does a great job on that aspect and
+you just get used to it.
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'read-only-mode-hook
+          (lambda ()
+            (define-key view-mode-map "J" #'scroll-up-line)
+            (define-key view-mode-map "K" #'scroll-down-line)
+            (define-key view-mode-map "j" #'next-line)
+            (define-key view-mode-map "k" #'previous-line)
+            (define-key view-mode-map "l" #'right-char)
+            (define-key view-mode-map "h" #'left-char)
+            (define-key view-mode-map "i" #'read-only-mode)))
+(define-key global-map [f4] #'read-only-mode)
+#+END_SRC
+
+** TODO Spell checking
+
+A dictionary inside Emacs is always a great addition. TODO: Update this
+configuration.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ispell
+  :ensure nil)
+#+END_SRC
+
+** Window management
+
+As Emacs does everything, I also need to be consistent on what I do with
+my windows. Splitting, management and other perks.
+
+*** Desktop
+
+=Destop= in Emacs is considered your work session. I keep my work
+sessions saved so I can always restore from where I left and continue
+working.
+
+#+BEGIN_SRC emacs-lisp
+(use-package desktop
+  :ensure nil
+  :config
+  (desktop-save-mode))
+#+END_SRC
+
+*** Move to another window
+
+A way to move around windows easily. This is clutch when you have a lot
+of windows opened.
+
+#+BEGIN_SRC emacs-lisp
+(use-package windmove
+  :ensure nil
+  :bind
+  (("C-c b j" . windmove-up)
+   ("C-c b k" . windmove-down)
+   ("C-c b h" . windmove-left)
+   ("C-c b l" . windmove-right)))
+#+END_SRC
+
+*** Splitting windows
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe::window/create-bottom-and-switch ()
+  "Creates a new window to the bottom and then switch to it"
+  (interactive)
+  (split-window-below)
+  (balance-windows)
+  (other-window 1))
+
+(defun elnawe::window/create-right-and-switch ()
+  "Creates a new window to the right and then switch to it"
+  (interactive)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
+
+(define-key global-map (kbd "C-x 2") 'elnawe::window/create-bottom-and-switch)
+(define-key global-map (kbd "C-x 3") 'elnawe::window/create-right-and-switch)
+(define-key global-map (kbd "C-x `") 'ivy-switch-buffer-other-window)
+#+END_SRC
+
+*** Temporal buffers
+
+I like to work on vertical split windows so if a temporal buffer appears
+I prefer to have them on a horizontal split. This function was taken
+from the
+[[https://www.emacswiki.org/emacs/HorizontalSplitting][EmacsWiki]]
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe::buffers/split-horizontally-for-temporal ()
+  "Split the window horizontally for temporal buffers."
+  (when (and (one-window-p t)
+     	     (not (active-minibuffer-window)))
+    (split-window-horizontally)))
+
+(setq split-window-preferred-function
+      'elnawe::buffers/split-horizontally-for-temporal)
+#+END_SRC
+
+*** Window history
+
+Sometimes I close windows by mistake but Emacs handles that really well
+with =winner=.
+
+#+BEGIN_SRC emacs-lisp
+(use-package winner
+  :ensure nil
+  :bind
+  (("C-c b b" . winner-undo)
+   ("C-c b f" . winner-redo))
+  :init
+  (winner-mode))
 #+END_SRC
 
 * Programming
 
-I use Emacs for almost everything, but mostly to code. These are my
-configurations.
+I use Emacs for everything, even code. I like to keep it good looking
+but really functional.
 
 ** Auto-completition
 
@@ -271,6 +511,16 @@ helpful.
    company-idle-delay 0.3
    company-minimum-prefix-length 3
    company-tooltip-align-annotations t))
+#+END_SRC
+
+** Auto-indent as you write
+
+Helps me to maintain my code aligned with aggresive indentation
+
+#+BEGIN_SRC emacs-lisp
+(use-package aggressive-indent
+  :config
+  (aggressive-indent-global-mode))
 #+END_SRC
 
 ** Expanding code
@@ -309,7 +559,24 @@ you can use any kind of expansion with =<C-return>=
    hippie-expand-verbose nil))
 #+END_SRC
 
-** Languages
+** Go to definition
+
+When working on big projects *go to definition* it's a must. =dumb-jump=
+helps me with that.
+
+#+BEGIN_SRC emacs-lisp
+(use-package dumb-jump
+  :bind
+  (("C-c g g" . dumb-jump-go)
+   ("C-c g n" . dumb-jump-go-prefer-external-other-window))
+  :init
+  (dumb-jump-mode 1))
+#+END_SRC
+
+
+** TODO Languages
+
+TODO: Inspect this part of the configuration
 
 *** C#
 
@@ -437,7 +704,7 @@ Mostly I use =org-mode=, but sometimes you need to write down your README files.
 
 My whole configuration is written in =org-mode=. I also write all my TODO lists
 in Org. This is a powerful tool and I'm not the best user. I'm learning though.
-Also, I'm working with [[Agenda administration][=org-agenda=]]
+Also, I'm working with [[Agenda][=org-agenda=]]
 
 #+BEGIN_SRC emacs-lisp
 (use-package org
@@ -496,11 +763,12 @@ to help me with the dirty work.
 
 ** Linting
 
-I write a big amount of code everyday and sometimes I'm really inspired so I
-don't stop writing and coding. When I finish I've to double-check my code to see
-if I miss something and that's when my linting configuration kicks in. This
-configuration need some binaries so don't forget to read my
-[[file+emacs:README.org][README.org]] to learn about this.
+I write a big amount of code everyday and sometimes I'm really inspired
+so I don't stop writing and coding. When I finish I've to double-check
+my code to see if I miss something and that's when my linting
+configuration kicks in. This configuration need some binaries so don't
+forget to read my [[file+emacs:README.org][README.org]] to learn about
+this.
 
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
@@ -523,120 +791,15 @@ configuration need some binaries so don't forget to read my
 
 ** Multiple cursors
 
-I actually like some of the features that modern IDE provides, like multiple
-cursor editing. It's great that Emacs can do that as well!
+I actually like some of the features that modern IDE provides, like
+multiple cursor editing. It's great that Emacs can do that as well!
 
 #+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors
   :bind
-  (("C-S-l" . mc/edit-lines)
-   ("C-x C-l" . mc/mark-all-words-like-this)))
+  (("C-c l m" . mc/edit-lines)
+   ("C-c l l" . mc/mark-all-words-like-this)))
 #+END_SRC
-
-** Navigation
-
-Some helpers to navigate through and inside files
-
-Smarter =C-a=. Props to: [[http://github.com/angrybacon][angrybacon]]
-
-#+BEGIN_SRC emacs-lisp
-(global-set-key [remap move-beginning-of-line] 'angrybacon/beginning-of-line-dwim)
-
-(defun angrybacon/beginning-of-line-dwim ()
-  "Move point to first non-whitespace character, or beginning of line."
-  (interactive "^")
-  (let ((origin (point)))
-    (beginning-of-line)
-    (and (= origin (point))
-         (back-to-indentation))))
-#+END_SRC
-
-*** Go to definition
-
-When working on big projects *go to definition* it's a must. =dumb-jump= helps me with that.
-
-#+BEGIN_SRC emacs-lisp
-(use-package dumb-jump
-  :bind
-  (([f12] . dumb-jump-go)
-   ("C-M-S-g" . dumb-jump-go-prefer-external-other-window))
-  :config
-  (dumb-jump-mode 1))
-#+END_SRC
-
-*** Mouse scrolling
-
-I barely use my mouse but when I do...
-
-#+BEGIN_SRC emacs-lisp
-(use-package mwheel
-  :ensure nil
-  :config
-  (setq
-   mouse-wheel-progressive-speed nil
-   mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control)))))
-#+END_SRC
-
-*** Search and replace
-
-Better search and replace with =anzu=. This is a known =vim= package that [[https://github.com/syohex/emacs-anzu][syohex]] ported to Emacs. Also, here I've some =isearch= configuration to work with better regexp searching mechanics.
-
-#+BEGIN_SRC emacs-lisp
-(use-package anzu
-  :bind ([remap query-replace] . anzu-query-replace-regexp)
-  :config
-  (global-anzu-mode)
-  (setq-default
-   anzu-cons-mode-line-p nil)
-  (zenburn-with-color-variables
-    (set-face-attribute 'anzu-replace-highlight nil
-                        :background zenburn-red-4
-                        :foreground zenburn-red+1)
-    (set-face-attribute 'anzu-replace-to nil
-                        :background zenburn-green-1
-                        :foreground zenburn-green+4)))
-
-(use-package isearch
-  :ensure nil
-  :bind
-  (("C-S-r" . isearch-backward-regexp)
-   ("C-S-s" . isearch-forward-regexp)
-   :map isearch-mode-map
-   ("<M-down>" . isearch-ring-advance)
-   ("<M-up>" . isearch-ring-retreat)
-   :map minibuffer-local-isearch-map
-   ("<M-down>" . next-history-element)
-   ("<M-up>" . previous-history-element))
-  :init
-  (setq-default
-   isearch-allow-scroll t
-   lazy-highlight-cleanup nil
-   lazy-highlight-initial-delay 0)
-  (zenburn-with-color-variables
-    (set-face-attribute 'isearch nil
-                        :background zenburn-blue
-                        :foreground zenburn-blue-5)
-    (set-face-attribute 'isearch-lazy-highlight-face nil
-                        :background zenburn-blue-5
-                        :foreground zenburn-blue)))
-#+END_SRC
-
-*** vi-like navigation
-
-I tend to use the terminal a lot and most of the programs you use there uses a
-vi-like navigation. You just get used to it.
-
-#+BEGIN_SRC emacs-lisp
-(define-key global-map [f4] #'read-only-mode)
-(add-hook 'read-only-mode-hook
-          (lambda ()
-            (define-key view-mode-map "j" #'next-line)
-            (define-key view-mode-map "k" #'previous-line)
-            (define-key view-mode-map "l" #'right-char)
-            (define-key view-mode-map "h" #'left-char)
-            (define-key view-mode-map "i" #'read-only-mode)))
-#+END_SRC
-
 ** Parentheses
 
 When programming, I use different kind of wrapper. Lisp knows it well.
@@ -686,7 +849,8 @@ Also I use =smartparens= to be sure I don't forget to close 'em! It takes some t
 
 ** Project management
 
-I love =projectile= and I think its the best project management tool you'll ever need in Emacs.
+I love =projectile= and I think its the best project management tool
+you'll ever need in Emacs.
 
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
@@ -694,28 +858,72 @@ I love =projectile= and I think its the best project management tool you'll ever
   :init
   (setq-default
    projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
-   projectile-keymap-prefix (kbd "<f5>")
-   projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory)
-   projectile-switch-project-action 'projectile-find-file)
-  :config
-  (projectile-global-mode)
-  (setq
    projectile-completition-system 'ivy
    projectile-enable-caching t
-   projectile-mode-line '(:eval (projectile-project-name)))
+   projectile-keymap-prefix (kbd "C-c p")
+   projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory)
+   projectile-mode-line '(:eval (projectile-project-name))
+   projectile-switch-project-action 'projectile-find-file)
+  (projectile-global-mode))
+#+END_SRC
+
+** Search and replace
+
+Better search and replace with =anzu=. This is a known =vim= package
+that [[https://github.com/syohex/emacs-anzu][syohex]] ported to Emacs.
+Also, here I've some =isearch= configuration to work with better regexp
+searching mechanics.
+
+#+BEGIN_SRC emacs-lisp
+(use-package anzu
+  :bind ([remap query-replace] . anzu-query-replace-regexp)
+  :config
+  (global-anzu-mode)
+  (setq-default
+   anzu-cons-mode-line-p nil)
+  (zenburn-with-color-variables
+    (set-face-attribute 'anzu-replace-highlight nil
+                        :background zenburn-red-4
+                        :foreground zenburn-red+1)
+    (set-face-attribute 'anzu-replace-to nil
+                        :background zenburn-green-1
+                        :foreground zenburn-green+4)))
+
+(use-package isearch
+  :ensure nil
   :bind
-  ("C-p" . projectile-find-file))
+  (("C-S-r" . isearch-backward-regexp)
+   ("C-S-s" . isearch-forward-regexp)
+   :map isearch-mode-map
+   ("M-j" . isearch-ring-advance)
+   ("M-k" . isearch-ring-retreat)
+   :map minibuffer-local-isearch-map
+   ("M-j" . next-history-element)
+   ("M-k" . previous-history-element))
+  :init
+  (setq-default
+   isearch-allow-scroll t
+   lazy-highlight-cleanup nil
+   lazy-highlight-initial-delay 0)
+  (zenburn-with-color-variables
+    (set-face-attribute 'isearch nil
+                        :background zenburn-blue
+                        :foreground zenburn-blue-5)
+    (set-face-attribute 'isearch-lazy-highlight-face nil
+                        :background zenburn-blue-5
+                        :foreground zenburn-blue)))
 #+END_SRC
 
 ** Tree view
 
-I don't use this often but it's a good thing to have in hand if I need to find a
-file by its folder.
+I don't use this often but it's a good thing to have in hand if I need
+to find a file by its folder.
 
 #+BEGIN_SRC emacs-lisp
 (use-package neotree
   :bind
   (([f6] . neotree-toggle)
+   ("M-2" . neotree-toggle)
    :map neotree-mode-map
    ("<return>" . neotree-enter)
    ("c" . neotree-create-node)
@@ -743,13 +951,14 @@ file by its folder.
 
 ** Version Control
 
-Magit provides everything I need when working with Version Control, all within Emacs. Also, it merges very well with my
-=mode-line= configuration.
+Magit provides everything I need when working with Version Control, all
+within Emacs. Also, it merges very well with my =mode-line=
+configuration.
 
 #+BEGIN_SRC emacs-lisp
 (use-package magit
   :preface
-  (defun elnawe/magit-display-buffer-same (buffer)
+  (defun elnawe::magit/display-buffer-same (buffer)
     "Display most magit popups in the current buffer."
     (display-buffer
      buffer
@@ -765,7 +974,7 @@ Magit provides everything I need when working with Version Control, all within E
            (t '(display-buffer-same-window)))))
   :config
   (setq-default
-   magit-display-buffer-function #'elnawe/magit-display-buffer-same
+   magit-display-buffer-function #'elnawe::magit/display-buffer-same
    magit-diff-highlight-hunk-body nil
    magit-diff-highlight-hunk-region-functions
    '(magit-diff-highlight-hunk-region-dim-outside
@@ -794,7 +1003,8 @@ Magit provides everything I need when working with Version Control, all within E
 
 ** Whitespaces
 
-Highlight trailing whitespaces, tabs and empty lines. Also remove them when saving the file.
+Highlight trailing whitespaces, tabs and empty lines. Also remove them
+when saving the file.
 
 #+BEGIN_SRC emacs-lisp
 (use-package whitespace
@@ -823,8 +1033,8 @@ Higlight words like `TODO`, `FIXME` or `BUG` when in programming mode.
 
 ** Help
 
-One great feature of Emacs is the self-documentation. This little configuration
-makes navigating through it a little bit easier.
+One great feature of Emacs is the self-documentation. This little
+configuration makes navigating through it a little bit easier.
 
 #+BEGIN_SRC emacs-lisp
 (use-package help-mode
@@ -840,16 +1050,18 @@ makes navigating through it a little bit easier.
 
 ** Mode-line
 
-This is where I spend most of the time. I love customization and Emacs bring me
-something like this to play. I use =spaceline= to customize my mode-line, but
-I'm positive that in some future I will move back to =powerline=.
+This is where I spend most of the time. I love customization and Emacs
+bring me something like this to play. I use =spaceline= to customize my
+mode-line, but I'm positive that in some future I will move back to
+=powerline=.
 
 *** Delight
 
-This package allows me to rename the major/minor modes "lightes", so they look
-more like a compact and descriptive string instead of the awful name that they
-already have (I'm looking at you =js2-mode=). *NOTE*: Since this package is
-installed as main dependency, this piece of code is merely for configuration.
+This package allows me to rename the major/minor modes "lightes", so
+they look more like a compact and descriptive string instead of the
+awful name that they already have (I'm looking at you =js2-mode=).
+*NOTE*: Since this package is installed as main dependency, this piece
+of code is merely for configuration.
 
 #+BEGIN_SRC emacs-lisp
 (use-package delight
@@ -880,8 +1092,8 @@ Not going outside too much but always know what is happening out there.
 
 *** Icons
 
-A fancy looking mode-line is fancy!
-*Note*: Weather icons [[Forecast][here]]
+A fancy looking mode-line is fancy! *Note*: Weather icons
+[[Define segments][here]]
 
 #+BEGIN_SRC emacs-lisp
 (use-package all-the-icons
@@ -909,7 +1121,8 @@ A fancy looking mode-line is fancy!
 
 **** Setup
 
-First, download Spaceline if doesn't exist and override =mode-line-format=.
+First, download Spaceline if doesn't exist and override
+=mode-line-format=.
 
 #+BEGIN_SRC emacs-lisp
 (use-package spaceline
@@ -936,8 +1149,8 @@ Better buffer-id without mouseover and highlighting. I use the spaceline
   (buffer-name))
 #+END_SRC
 
-The time in my spaceline is super-important because I mostly use Emacs in
-fullscreen mode.
+The time in my spaceline is super-important because I mostly use Emacs
+in fullscreen mode.
 
 #+BEGIN_SRC emacs-lisp
 (spaceline-define-segment elnawe::time-segment
@@ -946,8 +1159,8 @@ fullscreen mode.
    (format-time-string "%H:%M" (current-time))))
 #+END_SRC
 
-Weather in Emacs? Yes, you can do it with =forecast= which is a great package.
-Check also my [[Forecast]] configuration.
+Weather in Emacs? Yes, you can do it with =forecast= which is a great
+package. Check also my [[Forecast]] configuration.
 
 #+BEGIN_SRC emacs-lisp
 (setq elnawe/forecast-icons-colors '(("clear-day" "\xf185" :foreground "#F0DFAF")
@@ -986,10 +1199,10 @@ outside)'"
                   (format-time-string forecast-time-format forecast--update-time)))))
 #+END_SRC
 
-Like any programmer I listen a lot of music. I don't like to change my focus
-from my fullscreen-mode-Emacs to the Spotify application so with this I can
-control Spotify in Emacs and also see what I'm listening too in my spaceline.
-Check the [[Spotify]] configuration.
+Like any programmer I listen a lot of music. I don't like to change my
+focus from my fullscreen-mode-Emacs to the Spotify application so with
+this I can control Spotify in Emacs and also see what I'm listening too
+in my spaceline. Check the [[Spotify]] configuration.
 
 #+BEGIN_SRC emacs-lisp
 (spaceline-define-segment elnawe::spotify-segment
@@ -1001,8 +1214,8 @@ Check the [[Spotify]] configuration.
      spotify-mode-line)))
 #+END_SRC
 
-Twitter in Emacs is useful when you have some time to spare or wait until the
-build is done. Check my [[Twitter]] configuration.
+Twitter in Emacs is useful when you have some time to spare or wait
+until the build is done. Check my [[Twitter]] configuration.
 
 #+BEGIN_SRC emacs-lisp
 (spaceline-define-segment elnawe::twitter-segment
@@ -1013,8 +1226,9 @@ build is done. Check my [[Twitter]] configuration.
      (number-to-string (apply '+ (mapcar 'cadr twittering-unread-status-info))))))
 #+END_SRC
 
-I don't like how default Emacs =vc-mode= works for the mode-line so I created my
-own segment where I can manipulate a little bit how this segment works.
+I don't like how default Emacs =vc-mode= works for the mode-line so I
+created my own segment where I can manipulate a little bit how this
+segment works.
 
 #+BEGIN_SRC emacs-lisp
 (spaceline-define-segment elnawe::version-control-segment
@@ -1030,9 +1244,9 @@ own segment where I can manipulate a little bit how this segment works.
           (`edited " *")))))))
 #+END_SRC
 
-=w3m= is one of the best browser out there and it's even more useful when you
-only work on =TOS= machines, this segments shows the title of the website I'm
-currently navigating.
+=w3m= is one of the best browser out there and it's even more useful
+when you only work on =TOS= machines, this segments shows the title of
+the website I'm currently navigating.
 
 #+BEGIN_SRC emacs-lisp
 (spaceline-define-segment elnawe::w3m-segment
@@ -1073,7 +1287,7 @@ Setup the actual configuration
 
 **** Theme
 
-And there's some theme configuration going on
+And there's some theme configuration going on.
 
 #+BEGIN_SRC emacs-lisp
 (zenburn-with-color-variables
@@ -1115,312 +1329,15 @@ And there's some theme configuration going on
                       :foreground zenburn-bg-1))
 #+END_SRC
 
-** Window management
-
-When using Emacs you want to customize how windows, buffers and modes are saved.
-
-List all buffers and group them by type.
-
-#+BEGIN_SRC emacs-lisp
-(use-package ibuffer
-  :ensure nil
-  :delight ibuffer-mode "Buffers"
-  :bind
-  (("C-x c b" . ibuffer))
-  :init
-  (add-hook 'ibuffer-mode-hook (lambda ()
-                                 (setq ibuffer-filter-groups
-                                       '(("Apps" (or (name . "^\\*Weather Forecast\\*$")
-                                                     (mode . twittering-mode)))
-                                         ("Directories" (mode . dired-mode))
-                                         ("Lisp" (or (mode . lisp-mode)
-                                                     (mode . emacs-lisp-mode)))
-                                         ("Org" (mode . org-mode))
-                                         ("system" (or (name . "^\\*scratch\\*$")
-                                                       (name . "^\\*Messages\\*$")
-                                                       (name . "^\\*Warnings\\*$")))))))
-  :config
-  (setq-default
-   ibuffer-default-sorting-mode 'major-mode
-   ibuffer-formats '((mark modified read-only " " (name 18 18 :left :elide) " " (mode 16 16 :left :elide) " " filename-and-process))
-   ibuffer-use-other-window t))
-
-(use-package ibuffer-projectile
-  :init
-  (defun elnawe/ibuffer-sorting ()
-    "Sort buffers with projectile, alphabetic and major mode"
-    (ibuffer-do-sort-by-alphabetic)
-    (ibuffer-do-sort-by-major-mode))
-
-  (add-hook 'ibuffer-hook #'elnawe/ibuffer-sorting))
-#+END_SRC
-
-This function allows repeated use of =←= and =→= when using =previous-buffer= and =next-buffer=. Again, props to
-[[http://github.com/angrybacon/][angrybacon]].
-
-#+BEGIN_SRC emacs-lisp
-(defun angrybacon/switch-to-buffer-continue ()
-  "Activate a sparse keymap:
-  <left>   `previous-buffer'
-  <right>  `next-buffer'"
-  (set-transient-map
-   (let ((map (make-sparse-keymap)))
-     (define-key map (kbd "<left>") #'previous-buffer)
-     (define-key map (kbd "<right>") #'next-buffer)
-     map)))
-(advice-add 'previous-buffer :after #'angrybacon/switch-to-buffer-continue)
-(advice-add 'next-buffer :after #'angrybacon/switch-to-buffer-continue)
-#+END_SRC
-
-Save and restore Emacs status
-
-#+BEGIN_SRC emacs-lisp
-(use-package desktop
-  :ensure nil
-  :demand t
-  :config
-  (desktop-save-mode)
-  (add-to-list 'desktop-globals-to-save 'golden-ratio-adjust-factor))
-#+END_SRC
-
-Move around windows with ease.
-
-#+BEGIN_SRC emacs-lisp
-(use-package windmove
-  :ensure nil
-  :bind
-  (("<f2> <left>". windmove-left)
-   ("<f2> <right>". windmove-right)
-   ("<f2> <up>". windmove-up)
-   ("<f2> <down>". windmove-down)
-   ("<f2> <f2>" . other-window)))
-#+END_SRC
-
-Window splitting. After create a new window, switch to the new one.
-
-#+BEGIN_SRC emacs-lisp
-(defun elnawe::window/create-bottom-and-switch ()
-  "Creates a new window to the bottom and then switch to it"
-  (interactive)
-  (split-window-below)
-  (balance-windows)
-  (other-window 1))
-
-(defun elnawe::window/create-right-and-switch ()
-  "Creates a new window to the right and then switch to it"
-  (interactive)
-  (split-window-right)
-  (balance-windows)
-  (other-window 1))
-
-(global-set-key (kbd "C-x 2") 'elnawe::window/create-bottom-and-switch)
-(global-set-key (kbd "C-x 3") 'elnawe::window/create-right-and-switch)
-(global-set-key (kbd "C-c b") 'ivy-switch-buffer-other-window)
-(global-set-key (kbd "C-x `") 'ivy-switch-buffer-other-window)
-
-#+END_SRC
-
-Split horizontally for new temporary buffers. Props to: [[https://github.com/hrs][hrs]].
-
-#+BEGIN_SRC emacs-lisp
-(defun hrs/split-horizontally-for-temp-buffers ()
-  (when (one-window-p t)
-    (split-window-horizontally)))
-
-(add-hook 'temp-buffer-window-setup-hook
-          'hrs/split-horizontally-for-temp-buffers)
-#+END_SRC
-
-Undo and redo with the window configuration using =C-c left= to undo and =C-c right= to redo.
-
-#+BEGIN_SRC emacs-lisp
-(use-package winner
-  :ensure nil
-  :defer 1
-  :config (winner-mode))
-#+END_SRC
-
-* Emacs everyday
-
-Since I use Emacs all the time, everyday, almost for everything I need some neat configurations. They are all here.
-
-** Agenda administration
-
-*** Setup directories and configuration
-
-Setup directory for org files, save my =TODOs= to a index file and maintain an inbox in Dropbox. Also, archive all
-=DONE= tasks to =~/orgs/archive.org=.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-directory "~/Dropbox/orgs")
-
-(defun org-file-path (filename)
-  "Return the absolute address of an org file, given its relative name."
-  (concat (file-name-as-directory org-directory) filename))
-
-(setq
- org-index-file (org-file-path "index.org")
- org-archive-location (concat (org-file-path "archive.org") ":: From %s"))
-#+END_SRC
-
-All my =TODOs= are in the =index.org= so I'll load my agenda from there.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-agenda-files (list org-index-file))
-#+END_SRC
-
-Record the time when =TODO= was archived.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-log-done 'time)
-#+END_SRC
-
-*** Capturing new tasks
-
-Defining templates for capturing new tasks. Also, quickly capture =TODO=.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-capture-templates
-      '(("t" "Todo"
-         entry
-         (file+headline org-index-file "Inbox")
-         "* TODO %?\n")
-        ("i" "Ideas"
-         entry
-         (file (org-file-path "ideas.org"))
-         "* TODO %?\n")))
-
-(defun org-capture-todo ()
-  (interactive)
-  (org-capture :keys "t"))
-
-(global-set-key (kbd "M-n") 'org-capture-todo)
-#+END_SRC
-
-*** Keybindings
-
-#+BEGIN_SRC emacs-lisp
-(define-key global-map "\C-ca" 'org-agenda)
-(define-key global-map "\C-cc" 'org-capture)
-
-(defun elnawe/mark-done-and-archive ()
-  "Mark the state of an org-mode item as DONE and archive it."
-  (interactive)
-  (org-todo 'done)
-  (org-archive-subtree))
-
-(define-key org-mode-map (kbd "C-c C-x C-s") 'elnawe/mark-done-and-archive)
-#+END_SRC
-
-** Auto-indent as you write
-
-Helps me to maintain my code aligned with aggresive indentation
-
-#+BEGIN_SRC emacs-lisp
-(use-package aggressive-indent
-  :config
-  (aggressive-indent-global-mode))
-#+END_SRC
-
-** Backup copies
-
-Manage the backup copies. Always keeping them but save them inside Emacs directory.
-
-#+BEGIN_SRC emacs-lisp
-(setq-default
- backup-by-copying t
- backup-directory-alist '(("." . "~/.emacs.d/saves"))
- delete-old-versions 'never
- make-backup-files t
- version-control 'numbered)
-#+END_SRC
-
-** Dim other buffers
-
-Automatically dim my other buffers
-
-#+BEGIN_SRC emacs-lisp
-(use-package auto-dim-other-buffers
-  :init
-  (auto-dim-other-buffers-mode)
-  :config
-  (zenburn-with-color-variables
-    (set-face-attribute 'auto-dim-other-buffers-face nil :background zenburn-bg-1)))
-#+END_SRC
-
-** Disable documentation at point
-
-Always have the documentation ready! Only deactivated when [[Linting][=flycheck-mode=]] is on.
-
-#+BEGIN_SRC emacs-lisp
-(use-package eldoc
-  :ensure nil
-  :config
-  (eldoc-mode))
-#+END_SRC
-
-** Fill paragraph automatically
-
-When I'm in =text-mode= I want my paragraph to be just the lenght of my ruler. Also, I don't want to use =M-q= to adjust
-it by myself, because Emacs allow me to do it automatically!
-
-#+BEGIN_SRC emacs-lisp
-(use-package simple
-  :ensure nil
-  :config
-  (add-hook 'text-mode-hook #'turn-on-auto-fill))
-#+END_SRC
-
-** =ivy-mode= for minibuffer completition
-
-First I used =helm= but it felt slow. Then I moved to the built-in =ido-mode=
-and, though it worked great, I wanted to try =ivy= and after searching the
-Internet I found it very useful!
-
-#+BEGIN_SRC emacs-lisp
-(use-package ivy
-  :init
-  (ido-mode -1)
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  :bind
-  (:map ivy-switch-buffer-map
-        ("C-k" . elnawe::ivy/kill-buffer))
-  :config
-  (setq
-   enable-recursive-minibuffers t
-   ivy-count-format "[%d/%d] "
-   ivy-display-style 'fancy
-   ivy-extra-directories nil))
-
-(use-package counsel)
-
-(use-package swiper)
-#+END_SRC
-
-** Kill unused buffers
-
-Clean my buffer list on delay with =midnight= beucase I leave Emacs always open. Keep this configuration always alive.
-
-#+BEGIN_SRC emacs-lisp
-(use-package midnight
-  :ensure nil
-  :init
-  (add-hook 'midnight-mode #'clean-buffer-list)
-  (midnight-mode 1)
-  :config
-  (setq clean-buffers-list-delay-general 1)
-  (add-to-list 'clean-buffer-list-kill-never-buffer-names "initdotel.org"))
-#+END_SRC
-
 * Networking
 
 Using Emacs for everything includes using it for social media.
 
 ** Spotify
 
-I love music and I spent a lot of time in Spotify. Using it through Emacs is a
-big time-saver! /The configuration of this package is inside [[Load =secrets=][=secrets=]]/
+I love music and I spent a lot of time in Spotify. Using it through
+Emacs is a big time-saver! /The configuration of this package is inside
+[[Load =secrets=][=secrets=]]/
 
 #+BEGIN_SRC emacs-lisp
 (eval-and-compile
@@ -1484,8 +1401,8 @@ I often use Twitter and when I do it is inside Emacs.
 
 ** =w3m= browser
 
-Since I use Emacs on my =TOS= a lot and sometimes need to browse on the web, I
-need a powerful tool and =w3m= is pretty awesome!
+Since I use Emacs on my =TOS= a lot and sometimes need to browse on the
+web, I need a powerful tool and =w3m= is pretty awesome!
 
 #+BEGIN_SRC emacs-lisp
 (use-package w3m
