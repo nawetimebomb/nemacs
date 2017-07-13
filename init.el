@@ -23,5 +23,5 @@
   (use-package org
     :ensure org-plus-contrib)
 
-  (org-babel-load-file (expand-file-name "initdotel.org" user-emacs-directory))
+  (org-babel-load-file (expand-file-name "configuration.org" user-emacs-directory))
   (garbage-collect))

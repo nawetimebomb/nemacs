@@ -78,7 +78,7 @@ are here:
  delete-by-moving-to-trash t                               ; Move file to trash instead of removing it
  display-time-default-load-average nil                     ; Don't display load avereage
  display-time-format "%H:%M"                               ; Format the time string
- fill-column 80                                            ; Width before automatic line breaks
+ fill-column 72                                            ; Width before automatic line breaks
  frame-title-format "Emacs"                                ; Change frame title to "Emacs"
  help-window-select t                                      ; Focus help windows when opened
  indent-tabs-mode nil                                      ; Use spaces for indentation
@@ -186,19 +186,6 @@ configurations are needed to ensure that my Emacs works well on those boxes!
   (setq-default
    elnawe/icons-enabled nil)
   (global-hl-line-mode -1))
-#+END_SRC
-
-** Restart Emacs
-
-When I am updating or changing some configuration on my Emacs I like to restart
-it to clean up everything I removed. There's an excellent package to do that and
-it's called =restart-emacs=. Instead of =C-x C-c= (quit-emacs) I use =C-x C-M-c=
-to restart it.
-
-#+BEGIN_SRC emacs-lisp
-(use-package restart-emacs
-  :bind
-  ("C-x C-M-c" . restart-emacs))
 #+END_SRC
 
 * Theme
@@ -702,9 +689,7 @@ I love =projectile= and I think its the best project management tool you'll ever
   (setq
    projectile-completition-system 'ivy
    projectile-enable-caching t
-   projectile-mode-line '(:eval (projectile-project-name)))
-  :bind
-  ("C-p" . projectile-find-file))
+   projectile-mode-line '(:eval (projectile-project-name))))
 #+END_SRC
 
 ** Tree view
