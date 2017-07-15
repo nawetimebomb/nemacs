@@ -4,3 +4,4 @@ elpa
 .custom.el
 .emacs.desktop*
 recentf
+auto-save-list

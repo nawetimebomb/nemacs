@@ -338,16 +338,17 @@ searching the Internet I found it very useful!
 
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
-  :bind
-  ((:map ivy-switch-buffer-map
-         ("C-k" . elnawe::ivy/kill-buffer)))
-  :init
-  (ivy-mode 1)
+  :preface
   (defun elnawe::ivy/kill-buffer ()
     "Kill the selected buffer from the `ivy-switch-buffer' menu."
     (interactive)
     (ivy-set-action 'kill-buffer)
     (ivy-done))
+  :bind
+  ((:map ivy-switch-buffer-map
+         ("C-k" . elnawe::ivy/kill-buffer)))
+  :init
+  (ivy-mode 1)
   :config
   (setq
    enable-recursive-minibuffers t
@@ -788,6 +789,10 @@ you'll ever need in Emacs.
    projectile-mode-line '(:eval (projectile-project-name))
    projectile-switch-project-action 'projectile-find-file)
   (projectile-global-mode))
+
+(use-package counsel-projectile
+  :init
+  (counsel-projectile-on))
 #+END_SRC
 
 ** Search and replace
