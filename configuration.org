@@ -222,8 +222,8 @@ I use.
                         :background zenburn-bg-1
                         :box nil)
     (set-face-attribute 'region nil
-                        :background zenburn-blue
-                        :foreground zenburn-bg)
+                        :background zenburn-yellow-2
+                        :foreground zenburn-bg-1)
     (set-face-attribute 'vertical-border nil
                         :foreground zenburn-yellow-2)
     (mapc
@@ -338,15 +338,6 @@ searching the Internet I found it very useful!
 
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
-  :preface
-  (defun elnawe::ivy/kill-buffer ()
-    "Kill the selected buffer from the `ivy-switch-buffer' menu."
-    (interactive)
-    (ivy-set-action 'kill-buffer)
-    (ivy-done))
-  :bind
-  ((:map ivy-switch-buffer-map
-         ("C-k" . elnawe::ivy/kill-buffer)))
   :init
   (ivy-mode 1)
   :config
@@ -373,7 +364,7 @@ This is a better =move-beginning-of-line= function that also goes to
 beginning after indentation.
 
 #+BEGIN_SRC emacs-lisp
-(defun elnawe::/dwinbeginning-of-line ()
+(defun elnawe::dwin/beginning-of-line ()
   "Move point to first non-whitespace character, or beginning of line."
   (interactive "^")
   (let ((origin (point)))
@@ -381,7 +372,7 @@ beginning after indentation.
     (and (= origin (point))
          (back-to-indentation))))
 
-(global-set-key [remap move-beginning-of-line] #'elnawe::/dwinbeginning-of-line)
+(global-set-key [remap move-beginning-of-line] #'elnawe::dwin/beginning-of-line)
 #+END_SRC
 
 *** Disable mouse
