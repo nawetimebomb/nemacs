@@ -92,6 +92,7 @@ defaults and they are here:
 (display-time-mode)                                        ; Enable time-mode in mode-line
 (fset 'yes-or-no-p 'y-or-n-p)                              ; Alias y/n prompts to yes/no
 (fringe-mode 0)                                            ; No fringe!
+(global-auto-revert-mode)                                  ; Refresh buffer if changed outside Emacs
 (global-hl-line-mode)                                      ; Highlight current line
 (global-subword-mode)                                      ; Iterate through camelCase words
 (menu-bar-mode 0)                                          ; Disable the menu bar
@@ -117,7 +118,7 @@ This is a set of helper functions that are used in this configuration.
   (concat user-emacs-directory "packages/" PACKAGE))
 
 (defun elnawe::open-config-file ()
-  "Opens the config file `initdotel.org' on a new buffer"
+  "Opens the config file `configuration.org' on a new buffer"
   (interactive)
   (find-file "~/.emacs.d/configuration.org"))
 
@@ -161,8 +162,7 @@ works well on those boxes!
 #+BEGIN_SRC emacs-lisp
 (when (not window-system)
   (setq-default
-   elnawe/icons-enabled nil)
-  (global-hl-line-mode -1))
+   elnawe/icons-enabled nil))
 #+END_SRC
 
 ** Load =.custom.el=
@@ -277,15 +277,17 @@ server that acts as your agenda and note-taking. This is actually nice.
 #+BEGIN_SRC emacs-lisp
 (setq
  org-agenda-files (list org-index-file)
- org-capture-templates '(("i" "Ideas"
-                          entry
-                          (file (elnawe::org/file-path "ideas.org"))
-                          "* %?\n")
-                         ("t" "TODO"
-                          entry
-                          (file+headline org-index-file "Inbox")
-                          "* TODO %?\n"))
+ org-capture-templates '()
  org-log-done 'time)
+
+(add-to-list 'org-capture-templates '("i" "Ideas"
+                                      entry
+                                      (file (elnawe::org/file-path "ideas.org"))
+                                      "* %?\n"))
+(add-to-list 'org-capture-templates '("t" "TODO Item"
+                                      entry
+                                      (file+headline org-index-file "Inbox")
+                                      "* TODO %?\n"))
 #+END_SRC
 
 ** Backup copies
@@ -401,6 +403,30 @@ uses a vi-like navigation. You just get used to it.
 
 (define-key global-map [f4] #'read-only-mode)
 (define-key global-map "\M-3" #'read-only-mode)
+#+END_SRC
+
+** Pomodoro
+
+Time tracking for efficiency in any aspect. The Pomodoro technique is a
+well known way to maximize the time of your activities.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-pomodoro
+  :preface
+  (defun elnawe::open-tasks-file ()
+    "Opens the tasks file on a new buffer"
+    (interactive)
+    (find-file "~/Dropbox/orgs/tasks.org"))
+  :config
+  (add-to-list
+   'org-capture-templates
+   '("p" "Pomodoro"
+     entry
+     (file (elnawe::org/file-path "tasks.org"))
+     "
+,* %^{Task description}
+%?"
+     )))
 #+END_SRC
 
 ** Restart Emacs
@@ -1141,7 +1167,8 @@ Setup the actual configuration
   '((major-mode :face highlight-face)
     (elnawe::time-segment)
     (elnawe::version-control-segment)
-    (elnawe::forecast-segment))
+    (elnawe::forecast-segment)
+    (org-pomodoro))
   '((anzu :when active)
     (selection-info :when mark-active)
     (projectile-root)
