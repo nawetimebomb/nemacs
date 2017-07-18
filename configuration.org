@@ -417,6 +417,8 @@ well known way to maximize the time of your activities.
     "Opens the tasks file on a new buffer"
     (interactive)
     (find-file "~/Dropbox/orgs/tasks.org"))
+  :bind
+  ("C-c t" . elnawe::open-tasks-file)
   :config
   (add-to-list
    'org-capture-templates
