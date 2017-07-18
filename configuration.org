@@ -416,6 +416,9 @@ well known way to maximize the time of your activities.
   (defun elnawe::open-tasks-file ()
     "Opens the tasks file on a new buffer"
     (interactive)
+    (split-window-below)
+    (balance-windows)
+    (other-window 1)
     (find-file "~/Dropbox/orgs/tasks.org"))
   :bind
   ("C-c t" . elnawe::open-tasks-file)
