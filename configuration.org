@@ -277,17 +277,15 @@ server that acts as your agenda and note-taking. This is actually nice.
 #+BEGIN_SRC emacs-lisp
 (setq
  org-agenda-files (list org-index-file)
- org-capture-templates '()
+ org-capture-templates '(("i" "Ideas"
+                          entry
+                          (file (elnawe::org/file-path "ideas.org"))
+                          "* %?\n")
+                         ("t" "TODO Item"
+                          entry
+                          (file+headline org-index-file "Inbox")
+                          "* TODO %?\n"))
  org-log-done 'time)
-
-(add-to-list 'org-capture-templates '("i" "Ideas"
-                                      entry
-                                      (file (elnawe::org/file-path "ideas.org"))
-                                      "* %?\n"))
-(add-to-list 'org-capture-templates '("t" "TODO Item"
-                                      entry
-                                      (file+headline org-index-file "Inbox")
-                                      "* TODO %?\n"))
 #+END_SRC
 
 ** Backup copies
@@ -412,6 +410,7 @@ well known way to maximize the time of your activities.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-pomodoro
+  :after org
   :preface
   (defun elnawe::open-tasks-file ()
     "Opens the tasks file on a new buffer"
@@ -423,6 +422,7 @@ well known way to maximize the time of your activities.
   :bind
   ("C-c t" . elnawe::open-tasks-file)
   :config
+  (setq org-pomodoro-format "%s")
   (add-to-list
    'org-capture-templates
    '("p" "Pomodoro"
@@ -639,7 +639,9 @@ helps me with that.
   (setq js-indent-level 4))
 
 (use-package json-mode
-  :delight json-mode "JSON")
+  :delight json-mode "JSON"
+  :config
+  (setq-local js-indent-level 2))
 
 (use-package ng2-mode
   :delight ng2-mode "Angular"
@@ -1169,17 +1171,17 @@ Setup the actual configuration
  spaceline-separator-dir-right '(right . right))
 
 (spaceline-install
-  '((major-mode :face highlight-face)
-    (elnawe::time-segment)
-    (elnawe::version-control-segment)
-    (elnawe::forecast-segment)
-    (org-pomodoro))
+  '((elnawe::buffer-id-segment :face highlight-face)
+    (major-mode)
+    (line-column)
+    (buffer-position))
   '((anzu :when active)
     (selection-info :when mark-active)
-    (projectile-root)
-    (line-column :priority 13)
-    ((hud buffer-position))
-    (elnawe::buffer-id-segment :face highlight-face :priority 13)))
+    (org-pomodoro)
+    (elnawe::version-control-segment)
+    (elnawe::forecast-segment)
+    (elnawe::time-segment)
+    (projectile-root :face highlight-face)))
 #+END_SRC
 
 **** Theme
