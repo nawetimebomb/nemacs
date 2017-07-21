@@ -217,15 +217,18 @@ I use.
     (set-face-attribute 'help-argument-name nil
                         :foreground zenburn-orange
                         :italic nil)
-    (set-face-attribute 'hl-line nil :background zenburn-bg+1)
+    (set-face-attribute 'hl-line nil
+                        :background zenburn-bg+1)
     (set-face-attribute 'header-line nil
                         :background zenburn-bg-1
                         :box nil)
     (set-face-attribute 'region nil
-                        :background zenburn-yellow-2
-                        :foreground zenburn-bg-1)
+                        :background zenburn-bg+1
+                        :distant-foreground zenburn-orange
+                        :foreground zenburn-orange)
     (set-face-attribute 'vertical-border nil
                         :foreground zenburn-yellow-2)
+
     (mapc
      (lambda (face)
        (when (eq (face-attribute face :background) zenburn-bg)
@@ -652,7 +655,9 @@ helps me with that.
 
 (use-package rjsx-mode
   :delight rjsx-mode "React"
-  :mode ("/swa-ui-app/.*\\.js$"))
+  :mode ("/swa-ui-app/.*\\.js$")
+  :config
+  (setq js-indent-level 4))
 
 (use-package tide)
 
