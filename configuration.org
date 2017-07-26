@@ -612,6 +612,20 @@ helps me with that.
   (dumb-jump-mode 1))
 #+END_SRC
 
+** Kill line or region
+
+Instead of the default =C-w=, this function overrides that feature to
+cut the line where you at if there's no region selected.
+
+#+BEGIN_SRC emacs-lisp
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead"
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+#+END_SRC
+
 ** Languages
 
 *** CSS
