@@ -162,7 +162,8 @@ works well on those boxes!
 #+BEGIN_SRC emacs-lisp
 (when (not window-system)
   (setq-default
-   elnawe/icons-enabled nil))
+   elnawe/icons-enabled nil)
+  (global-hl-line-mode -1))
 #+END_SRC
 
 ** Load =.custom.el=
@@ -640,6 +641,21 @@ cut the line where you at if there's no region selected.
     :ensure nil
     :delight scss-mode "SCSS"
     :mode ("\\.sass\\'" "\\.scss\\'"))
+#+END_SRC
+
+*** HTML
+
+Using HTML mode defined in =sgml-mode.el=
+
+#+BEGIN_SRC emacs-lisp
+(use-package sgml-mode
+  :ensure nil
+  :delight html-mode "HTML"
+  :init
+  (add-hook 'html-mode-hook #'sgml-electric-tag-pair-mode)
+  (add-hook 'html-mode-hook #'sgml-name-8bit-mode)
+  :config
+  (setq sgml-basic-offset 4))
 #+END_SRC
 
 *** JavaScript
