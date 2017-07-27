@@ -228,7 +228,7 @@ I use.
                         :distant-foreground zenburn-orange
                         :foreground zenburn-orange)
     (set-face-attribute 'vertical-border nil
-                        :foreground zenburn-yellow-2)
+                        :foreground zenburn-green-1)
 
     (mapc
      (lambda (face)
@@ -1040,28 +1040,29 @@ progress.
   `(propertize ,STR 'face (list ,@PROPS)))
 
 (defun get-buffer-state ()
-  (cond
-   (buffer-read-only
-    "/")
-   ((buffer-modified-p)
-    "⚑")
-   (t
-    "-")))
+  (concat
+   "["
+   (cond
+    (buffer-read-only "R")
+    ((buffer-modified-p) (with-face "M" '(:foreground "#DCDCCC" :weight bold)))
+    (t " "))
+   "]"))
 
 (setq-default
  mode-line-format
  (list
-  "[" '(:eval (get-buffer-state)) "] "
-  (with-face "%b" '(:weight bold))
-  "  %p %02l,%c"
-  "  (%m)"
-  " %-"))
+  " "
+  '(:eval (get-buffer-state))
+  (with-face " %b" '(:weight bold))
+  "     %p L%02l C%02c"
+  "     (%m) "
+  (projectile-project-name)))
 
 (zenburn-with-color-variables
   (set-face-attribute 'mode-line nil
                       :background zenburn-green-1
                       :box nil
-                      :foreground zenburn-bg-1)
+                      :foreground zenburn-bg-2)
   (set-face-attribute 'mode-line-inactive nil
                       :background zenburn-bg
                       :box nil
