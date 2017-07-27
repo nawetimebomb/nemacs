@@ -306,6 +306,31 @@ directory.
  version-control 'numbered)
 #+END_SRC
 
+** Better major mode names
+
+#+BEGIN_SRC emacs-lisp
+(use-package dim
+  :defer t
+  :config
+  (dim-major-names '((emacs-lisp-mode          "Emacs")
+                     (html-mode                "HTML")
+                     (js2-mode                 "JavaScript")
+                     (json-mode                "JSON")
+                     (lisp-interaction-mode    "Lisp Interaction")
+                     (lisp-mode                "Lisp")
+                     (magit-diff-mode          "Git Diff")
+                     (magit-log-mode           "Git Log")
+                     (magit-status-mode        "Git Status")
+                     (markdown-mode            "Markdown")
+                     (ng2-mode                 "Angular")
+                     (ng2-html-mode            "Angular HTML")
+                     (ng2-ts-mode              "Angular TypeScript")
+                     (org-mode                 "Org")
+                     (rjsx-mode                "React")
+                     (scss-mode                "SCSS")
+                     (typescript-mode          "TypeScript"))))
+#+END_SRC
+
 ** Dim other buffers
 
 Automatically dim my other opened buffers. This help me focus on the one
@@ -639,7 +664,6 @@ cut the line where you at if there's no region selected.
 
   (use-package scss-mode
     :ensure nil
-    :delight scss-mode "SCSS"
     :mode ("\\.sass\\'" "\\.scss\\'"))
 #+END_SRC
 
@@ -650,7 +674,6 @@ Using HTML mode defined in =sgml-mode.el=
 #+BEGIN_SRC emacs-lisp
 (use-package sgml-mode
   :ensure nil
-  :delight html-mode "HTML"
   :init
   (add-hook 'html-mode-hook #'sgml-electric-tag-pair-mode)
   (add-hook 'html-mode-hook #'sgml-name-8bit-mode)
@@ -666,25 +689,18 @@ Using HTML mode defined in =sgml-mode.el=
   (add-hook 'js-mode #'js2-mode))
 
 (use-package js2-mode
-  :delight js2-mode "JavaScript"
   :mode ("\\.js\\'")
   :config
   (setq js-indent-level 4))
 
 (use-package json-mode
-  :delight json-mode "JSON"
   :config
   (setq-local js-indent-level 2))
 
 (use-package ng2-mode
-  :delight ng2-mode "Angular"
-  :mode ("/futbol-club/.*\\.ts" "/futbol-club/.*\\.html")
-  :config
-  (delight 'ng2-ts-mode "Angular TypeScript")
-  (delight 'ng2-html-mode "Angular HTML"))
+  :mode ("/futbol-club/.*\\.ts" "/futbol-club/.*\\.html"))
 
 (use-package rjsx-mode
-  :delight rjsx-mode "React"
   :mode ("/swa-ui-app/.*\\.js$")
   :config
   (setq js-indent-level 4))
@@ -692,7 +708,6 @@ Using HTML mode defined in =sgml-mode.el=
 (use-package tide)
 
 (use-package typescript-mode
-  :delight typescript-mode "TypeScript"
   :init
   (defun setup-tide-mode ()
     (interactive)
@@ -706,23 +721,6 @@ Using HTML mode defined in =sgml-mode.el=
   (setq company-tooltip-align-annotations t))
 #+END_SRC
 
-*** Lisp
-
-Like I said: I use Emacs a lot... And I really mean a lot! Lisp isn't my
-favourite language, though I'm always using it.
-
-#+BEGIN_SRC emacs-lisp
-(use-package emacs-lisp-mode
-  :ensure nil
-  :delight emacs-lisp-mode "Emacs"
-  :config
-  (delight 'lisp-interaction-mode "Lisp Interaction"))
-
-(use-package lisp-mode
-  :ensure nil
-  :delight lisp-mode "Lisp")
-#+END_SRC
-
 *** Markdown
 
 Mostly I use =org-mode=, but sometimes you need to write down your
@@ -730,7 +728,6 @@ README files.
 
 #+BEGIN_SRC emacs-lisp
   (use-package markdown-mode
-    :delight markdown-mode "Markdown"
     :mode ("INSTALL\\'" "LICENSE\\'" "README\\'" "\\.md\\'" "\\.markdown\\'")
     :config
     (setq
@@ -747,7 +744,6 @@ I'm learning though. Also, I'm working with [[Agenda][=org-agenda=]]
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :ensure nil
-  :delight org-mode "Org Mode"
   :init
   (add-hook 'org-mode-hook #'org-sticky-header-mode)
   (add-hook 'org-mode-hook #'org-bullets-mode)
@@ -970,11 +966,6 @@ configuration.
    magit-popup-display-buffer-action '((display-buffer-same-window))
    magit-refs-show-commit-count 'all
    magit-section-show-child-count t)
-  (delight
-   '((magit-diff-mode "Git Diff")
-     (magit-log-mode "Git Log")
-     (magit-popup-mode "Magit Popup")
-     (magit-status-mode "Git Status")))
   (set-face-attribute 'magit-diff-file-heading-highlight nil :background nil)
   (set-face-attribute 'magit-diff-hunk-region nil :inherit 'region)
   (set-face-attribute 'magit-popup-heading nil :height elnawe/font-size-title)
@@ -1038,227 +1029,41 @@ configuration makes navigating through it a little bit easier.
 
 ** Mode-line
 
-This is where I spend most of the time. I love customization and Emacs
-bring me something like this to play. I use =spaceline= to customize my
-mode-line, but I'm positive that in some future I will move back to
-=powerline=.
-
-*** Delight
-
-This package allows me to rename the major/minor modes "lightes", so
-they look more like a compact and descriptive string instead of the
-awful name that they already have (I'm looking at you =js2-mode=).
-*NOTE*: Since this package is installed as main dependency, this piece
-of code is merely for configuration.
-
-#+BEGIN_SRC emacs-lisp
-(use-package delight
-  :ensure nil
-  :config
-  (defadvice powerline-major-mode (around delight-powerline-major-mode activate)
-    (let ((inhibit-mode-name-delight nil)) ad-do-it)))
-#+END_SRC
-
-*** Forecast
-
-Not going outside too much but always know what is happening out there.
-
-#+BEGIN_SRC emacs-lisp
-(use-package forecast
-  :after spaceline
-  :config
-  (setq forecast-rain-symbol "\xf043")
-  (progn
-    (run-at-time elnawe/start-time-seconds nil
-                 (lambda ()
-                   (forecast--load-data (lambda ()
-                                          (forecast--make-buffer "*Weather Forecast*"))))))
-
-  (run-at-time t elnawe/update-time-seconds (lambda ()
-                                              (forecast-refresh))))
-#+END_SRC
-
-*** Icons
-
-A fancy looking mode-line is fancy! *Note*: Weather icons
-[[Define segments][here]]
-
-#+BEGIN_SRC emacs-lisp
-(use-package all-the-icons
-  :init
-  (defun elnawe::ati/get-icon (NAME)
-    "Uses `NAME' to retrieve an icon from `ati/icons-alist'"
-    (cdr
-     (assoc NAME ati/icons-alist)))
-
-  (if (not elnawe/icons-enabled)
-      (setq ati/icons-alist '((clock . "time ")
-                              (git . "git ")
-                              (spotify . "listening ")
-                              (twitter . "twitter ")
-                              (web . "web ")))
-    (setq ati/icons-alist '((clock . "\xf017 ")
-                            (git . "\xe907 ")
-                            (spotify . "\xf1bc")
-                            (twitter . "\xf099 ")
-                            (web . "\xf0c1 ")))))
-#+END_SRC
-
-*** Spaceline
-
-**** Setup
-
-First, download Spaceline if doesn't exist and override
-=mode-line-format=.
-
-#+BEGIN_SRC emacs-lisp
-(use-package spaceline
-  :init
-  (require 'spaceline-config)
-  (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))))
-#+END_SRC
-
-**** Define segments
-
-Useful macro to programatically put faces to my segments.
+Started with =spaceline= which is a nice looking mode-line based on
+=powerline= and extracted from =Spacemacs= but I always wanted to have
+my own mode-line configuration. This is probably an always work in
+progress.
 
 #+BEGIN_SRC emacs-lisp
 (defmacro with-face (STR &rest PROPS)
   "Return STR propertized with PROPS."
   `(propertize ,STR 'face (list ,@PROPS)))
-#+END_SRC
 
-Better buffer-id without mouseover and highlighting. I use the spaceline
-=highlight-face= for this segment.
+(defun get-buffer-state ()
+  (cond
+   (buffer-read-only
+    "/")
+   ((buffer-modified-p)
+    "⚑")
+   (t
+    "-")))
 
-#+BEGIN_SRC emacs-lisp
-(spaceline-define-segment elnawe::buffer-id-segment
-  (buffer-name))
-#+END_SRC
+(setq-default
+ mode-line-format
+ (list
+  "[" '(:eval (get-buffer-state)) "] "
+  (with-face "%b" '(:weight bold))
+  "  %p %02l,%c"
+  "  (%m)"
+  " %-"))
 
-The time in my spaceline is super-important because I mostly use Emacs
-in fullscreen mode.
-
-#+BEGIN_SRC emacs-lisp
-(spaceline-define-segment elnawe::time-segment
-  (concat
-   (with-face (elnawe::ati/get-icon 'clock) '(:foreground "#DCA3A3"))
-   (format-time-string "%H:%M" (current-time))))
-#+END_SRC
-
-Weather in Emacs? Yes, you can do it with =forecast= which is a great
-package. Check also my [[Forecast]] configuration.
-
-#+BEGIN_SRC emacs-lisp
-(setq elnawe/forecast-icons-colors '(("clear-day" "\xf185 " :foreground "#F0DFAF")
-                                     ("clear-night" "\xf186 " :foreground "#6F6F6F")
-                                     ("cloudy" "\xf0c2 " :foreground "#6F6F6F")
-                                     ("fog" "\xf04d " :foreground "#6F6F6F")
-                                     ("partly-cloudy-day" "\xf0c2 " :foreground "#D0BF8F")
-                                     ("partly-cloudy-night" "\xf0c2 " :foreground "#6F6F6F")
-                                     ("rain" "\xf043 " :foreground "#94BFF3")
-                                     ("wind" "\xf1d9 " :foreground "#DCDCCC")))
-
-(defun elnawe::forecast/get-metadata ()
-  "Get a value from `elnawe/forecast-icons-colors' depending on
-what `currently.icon' has (which is the same as current weather
-outside)'"
-  (assoc
-   (forecast--assoca '(currently icon) forecast--data)
-   elnawe/forecast-icons-colors))
-
-(spaceline-define-segment elnawe::forecast-segment
-  "Show the current temperature"
-  (when (bound-and-true-p forecast--buffer)
-    (propertize
-     (concat
-      (with-face
-       (if elnawe/icons-enabled (car (cdr (elnawe::forecast/get-metadata))) (car (elnawe::forecast/get-metadata)))
-       (cdr (cdr (elnawe::forecast/get-metadata))))
-      " "
-      (forecast--temperature-string)))))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(spaceline-define-segment elnawe::version-control-segment
-  "Minimal version control information."
-  (when (fboundp 'magit-get-current-branch)
-    (concat
-     (with-face (elnawe::ati/get-icon 'git) '(:foreground "#DFAF8F"))
-     (magit-get-current-branch)
-     (powerline-raw
-      (when (buffer-file-name)
-        (pcase (vc-state (buffer-file-name))
-          (`up-to-date "")
-          (`edited " *")))))))
-#+END_SRC
-
-**** Configuration
-
-Setup the actual configuration
-
-#+BEGIN_SRC emacs-lisp
-(setq
- powerline-default-separator 'arrow
- powerline-height 25
- spaceline-highlight-face-func 'spaceline-highlight-face-modified
- spaceline-separator-dir-left '(left . left)
- spaceline-separator-dir-right '(right . right))
-
-(spaceline-install
-  '((elnawe::buffer-id-segment :face highlight-face)
-    (major-mode)
-    (line-column)
-    (buffer-position))
-  '((anzu :when active)
-    (selection-info :when mark-active)
-    (org-pomodoro)
-    (elnawe::version-control-segment)
-    (elnawe::forecast-segment)
-    (elnawe::time-segment)
-    (projectile-root :face highlight-face)))
-#+END_SRC
-
-**** Theme
-
-And there's some theme configuration going on.
-
-#+BEGIN_SRC emacs-lisp
 (zenburn-with-color-variables
   (set-face-attribute 'mode-line nil
-                      :background zenburn-bg-1
-                      :box nil
-                      :foreground zenburn-fg)
-  (set-face-attribute 'powerline-active1 nil
-                      :background zenburn-bg-1
-                      :foreground zenburn-fg)
-  (set-face-attribute 'powerline-active2 nil
-                      :background zenburn-bg-05)
-  (set-face-attribute 'mode-line-inactive nil
-                      :background zenburn-bg-2
-                      :box nil
-                      :foreground zenburn-bg+3)
-  (set-face-attribute 'powerline-inactive1 nil
-                      :background zenburn-bg-2
-                      :foreground zenburn-bg+3)
-  (set-face-attribute 'powerline-inactive2 nil
-                      :background zenburn-bg-1)
-  (set-face-attribute 'spaceline-flycheck-error nil
-                      :foreground zenburn-red)
-  (set-face-attribute 'spaceline-flycheck-info nil
-                      :foreground zenburn-blue+1)
-  (set-face-attribute 'spaceline-flycheck-warning nil
-                      :foreground zenburn-orange)
-  (set-face-attribute 'spaceline-highlight-face nil
-                      :background zenburn-yellow
-                      :foreground zenburn-bg-1)
-  (set-face-attribute 'spaceline-modified nil
-                      :background zenburn-red-1
-                      :foreground zenburn-bg-1)
-  (set-face-attribute 'spaceline-read-only nil
-                      :background zenburn-blue-1
-                      :foreground zenburn-bg-1)
-  (set-face-attribute 'spaceline-unmodified nil
                       :background zenburn-green-1
-                      :foreground zenburn-bg-1))
+                      :box nil
+                      :foreground zenburn-bg-1)
+  (set-face-attribute 'mode-line-inactive nil
+                      :background zenburn-bg
+                      :box nil
+                      :foreground zenburn-bg+3))
 #+END_SRC
