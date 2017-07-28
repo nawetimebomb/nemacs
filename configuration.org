@@ -614,10 +614,11 @@ its context. Mostly you can use any kind of expansion with =<C-return>=
   :preface
   (defun elnawe::emmet/try-expand-line (args)
     "Try `emmet-expand-line' if `emmet-mode' is active. Else, does nothing."
-     (interactive "P")
-     (when emmet-mode (emmet-expand-line args)))
+    (interactive "P")
+    (when emmet-mode (emmet-expand-line args)))
   :bind
-  (("<C-return>" . hippie-expand))
+  (("<C-return>" . hippie-expand)
+   ("M-RET" . hippie-expand))
   :config
   (setq-default
    hippie-expand-try-functions-list '(elnawe::emmet/try-expand-line)
@@ -1054,15 +1055,15 @@ progress.
   " "
   '(:eval (get-buffer-state))
   (with-face " %b" '(:weight bold))
-  "     %p L%02l C%02c"
-  "     (%m) "
-  (projectile-project-name)))
+  "  %p L%02l C%02c"
+  "    (%m) "
+  '(:eval (projectile-project-name))))
 
 (zenburn-with-color-variables
   (set-face-attribute 'mode-line nil
                       :background zenburn-green-1
                       :box nil
-                      :foreground zenburn-bg-2)
+                      :foreground zenburn-bg-1)
   (set-face-attribute 'mode-line-inactive nil
                       :background zenburn-bg
                       :box nil
