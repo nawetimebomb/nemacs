@@ -306,31 +306,6 @@ directory.
  version-control 'numbered)
 #+END_SRC
 
-** Better major mode names
-
-#+BEGIN_SRC emacs-lisp
-(use-package dim
-  :defer t
-  :config
-  (dim-major-names '((emacs-lisp-mode          "Emacs")
-                     (html-mode                "HTML")
-                     (js2-mode                 "JavaScript")
-                     (json-mode                "JSON")
-                     (lisp-interaction-mode    "Lisp Interaction")
-                     (lisp-mode                "Lisp")
-                     (magit-diff-mode          "Git Diff")
-                     (magit-log-mode           "Git Log")
-                     (magit-status-mode        "Git Status")
-                     (markdown-mode            "Markdown")
-                     (ng2-mode                 "Angular")
-                     (ng2-html-mode            "Angular HTML")
-                     (ng2-ts-mode              "Angular TypeScript")
-                     (org-mode                 "Org")
-                     (rjsx-mode                "React")
-                     (scss-mode                "SCSS")
-                     (typescript-mode          "TypeScript"))))
-#+END_SRC
-
 ** Dim other buffers
 
 Automatically dim my other opened buffers. This help me focus on the one
