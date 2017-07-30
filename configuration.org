@@ -80,8 +80,8 @@ defaults and they are here:
  select-enable-clipboard t                                 ; Merge system's and Emacs' clipboard
  sentence-end-double-space nil                             ; End sentence when dot and space
  show-trailing-whitespace nil                              ; Display trailing whitespaces
- split-height-threshold nil                                ; Disable vertical splitting
- split-width-threshold 1000                                ; Enable horizontal splitting
+ split-height-threshold 1000                               ; Enable vertical splitting
+ split-width-threshold nil                                 ; Disable horizontal splitting
  tab-width 4                                               ; Set indentation width
  truncate-lines t                                          ; Disable truncate lines
  uniquify-buffer-name-style 'forward                       ; Make buffer names unique
@@ -125,6 +125,11 @@ This is a set of helper functions that are used in this configuration.
 (defun elnawe::get-configurations-folder ()
   "Returns the folder where configuration files are stored"
   (concat (getenv "HOME") "/.emacs.config"))
+
+(defun elnawe::kill-current-buffer ()
+  "Kill current buffer without prompting"
+  (interactive)
+  (kill-buffer (current-buffer)))
 #+END_SRC
 
 ** OS specific configurations
@@ -306,6 +311,33 @@ directory.
  version-control 'numbered)
 #+END_SRC
 
+** Development notes
+
+I found that Emacs + =org-mode= are great for note-taking. I like to
+take notes of my TIL stuff and for things related to development that it
+will be useful to read after a while. More like, memory refreshing
+things.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list
+ 'org-capture-templates
+ '("j" "JavaScript Development Notes"
+   entry
+   (file+headline (elnawe::org/file-path "dev-notes.org") "JavaScript")
+   "
+,* %^{Title}
+%?"))
+
+(add-to-list
+ 'org-capture-templates
+ '("l" "Linux Notes"
+   entry
+   (file+headline (elnawe::org/file-path "dev-notes.org") "JavaScript")
+   "
+,* %^{Title}
+%?"))
+#+END_SRC
+
 ** Dim other buffers
 
 Automatically dim my other opened buffers. This help me focus on the one
@@ -385,6 +417,14 @@ beginning after indentation.
 (use-package disable-mouse
   :init
   (global-disable-mouse-mode))
+#+END_SRC
+
+*** Kill Current Buffer
+
+Assume I want to kill buffer with =C-x k= without asking
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x k") #'elnawe::kill-current-buffer)
 #+END_SRC
 
 *** Vi-like navigation
@@ -508,12 +548,12 @@ I like to keep it always there so I can continue from that point.
 *** Temporal buffers
 
 #+BEGIN_SRC emacs-lisp
-(defun elnawe::window/split-horizontally-for-temp-buffers ()
+(defun elnawe::window/split-vertically-for-temp-buffers ()
   (when (one-window-p t)
-    (split-window-horizontally)))
+    (split-window-vertically)))
 
 (add-hook 'temp-buffer-window-setup-hook
-          'elnawe::window/split-horizontally-for-temp-buffers)
+          'elnawe::window/split-vertically-for-temp-buffers)
 #+END_SRC
 
 *** Undo/redo configurations
