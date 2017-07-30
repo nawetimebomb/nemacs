@@ -61,7 +61,6 @@ defaults and they are here:
 
 #+BEGIN_SRC emacs-lisp
 (setq-default
- confirm-kill-emacs 'yes-or-no-p                           ; Confirm before exit
  cursor-in-non-selected-windows t                          ; Hide cursor in inactive windows
  delete-by-moving-to-trash t                               ; Move file to trash instead of removing it
  display-time-default-load-average nil                     ; Don't display load avereage
@@ -100,6 +99,27 @@ defaults and they are here:
 (tool-bar-mode 0)                                          ; Disable the tool-bar
 (mouse-avoidance-mode 'none)                               ; Avoid mouse colission with point
 (define-key global-map "\C-ci" #'elnawe::open-config-file) ; Binds `C-ci' to open the configuration
+#+END_SRC
+
+** Emacsclient and Job Control
+
+Emacsclient opens a frame that runs over the Daemon instead of creating
+a new instance. Here I just override the way that =C-x C-c= works to
+prompt a question before closing the frame as I do when I use =emacs=.
+
+Also, since I don't use =Job control mode= in my Terminal, i unbind the
+=C-z= and =C-x C-z= command =(suspend-emacs)=.
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe::emacsclient/promt-before-closing-frame ()
+  "Prompts before closing a frame with `C-x C-c' like `emacs' does"
+  (interactive)
+  (if (y-or-n-p "Are you sure you want to exit Emacs? ")
+      (save-buffers-kill-terminal)))
+
+(global-set-key (kbd "C-x C-c") #'elnawe::emacsclient/promt-before-closing-frame)
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "C-x C-z"))
 #+END_SRC
 
 ** Helpers
