@@ -90,12 +90,10 @@ defaults and they are here:
 (delete-selection-mode)                                    ; Replace region when inserting text
 (display-time-mode)                                        ; Enable time-mode in mode-line
 (fset 'yes-or-no-p 'y-or-n-p)                              ; Alias y/n prompts to yes/no
-(fringe-mode 0)                                            ; No fringe!
 (global-auto-revert-mode)                                  ; Refresh buffer if changed outside Emacs
 (global-hl-line-mode)                                      ; Highlight current line
 (global-subword-mode)                                      ; Iterate through camelCase words
 (menu-bar-mode 0)                                          ; Disable the menu bar
-(scroll-bar-mode 0)                                        ; Disable the scroll-bar
 (tool-bar-mode 0)                                          ; Disable the tool-bar
 (mouse-avoidance-mode 'none)                               ; Avoid mouse colission with point
 (define-key global-map "\C-ci" #'elnawe::open-config-file) ; Binds `C-ci' to open the configuration
