@@ -728,8 +728,11 @@ Using HTML mode defined in =sgml-mode.el=
   (setq js-indent-level 4))
 
 (use-package json-mode
-  :config
-  (setq-local js-indent-level 2))
+  :init
+  (add-hook 'json-mode-hook
+            (lambda ()
+              (make-local-variable 'js-indent-level)
+              (setq js-indent-level 2))))
 
 (use-package ng2-mode
   :mode ("/futbol-club/.*\\.ts" "/futbol-club/.*\\.html"))
@@ -902,6 +905,10 @@ searching mechanics.
    anzu-cons-mode-line-p nil)
 
   (zenburn-with-color-variables
+    (set-face-attribute 'anzu-mode-line nil
+                        :foreground zenburn-bg-1)
+    (set-face-attribute 'anzu-mode-line-no-match nil
+                        :foreground zenburn-red-4)
     (set-face-attribute 'anzu-replace-highlight nil
                         :background zenburn-red-4
                         :foreground zenburn-red+1)
@@ -930,6 +937,14 @@ searching mechanics.
     (set-face-attribute 'isearch-lazy-highlight-face nil
                         :background zenburn-blue-5
                         :foreground zenburn-blue)))
+#+END_SRC
+
+** Snippets
+
+I use snippets for blog posting and email sending.
+
+#+BEGIN_SRC emacs-lisp
+(use-package yasnippet)
 #+END_SRC
 
 ** Tree view
@@ -1090,7 +1105,9 @@ progress.
   (with-face " %b" '(:weight bold))
   "  %p L%02l C%02c"
   "    (%m) "
-  '(:eval (projectile-project-name))))
+  '(:eval (projectile-project-name))
+  " "
+  '(:eval (anzu--update-mode-line))))
 
 (zenburn-with-color-variables
   (set-face-attribute 'mode-line nil
