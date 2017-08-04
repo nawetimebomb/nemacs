@@ -708,10 +708,14 @@ cut the line where you at if there's no region selected.
 
 *** Golang
 
-Install =go-mode= if doesn't exist.
+Install =go-mode= if doesn't exist and keybindings.
 
 #+BEGIN_SRC emacs-lisp
-(use-package go-mode)
+(use-package go-mode
+  :bind
+  (("C-c C-d" . godef-describe)
+   ("C-c C-j" . godef-jump)
+   ("C-c C-n" . godef-jump-other-window)))
 #+END_SRC
 
 Define =$GOPATH= and tell Emacs where to find Go binaries.
