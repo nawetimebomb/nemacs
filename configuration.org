@@ -434,40 +434,12 @@ beginning after indentation.
 (global-set-key [remap move-beginning-of-line] #'elnawe::dwin/beginning-of-line)
 #+END_SRC
 
-*** Disable mouse
-
-#+BEGIN_SRC emacs-lisp
-(use-package disable-mouse
-  :init
-  (global-disable-mouse-mode))
-#+END_SRC
-
 *** Kill Current Buffer
 
 Assume I want to kill buffer with =C-x k= without asking
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x k") #'elnawe::kill-current-buffer)
-#+END_SRC
-
-*** Vi-like navigation
-
-I tend to use the terminal a lot and most of the programs you use there
-uses a vi-like navigation. You just get used to it.
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'read-only-mode-hook
-          (lambda ()
-            (define-key view-mode-map "J" #'scroll-up-line)
-            (define-key view-mode-map "K" #'scroll-down-line)
-            (define-key view-mode-map "j" #'next-line)
-            (define-key view-mode-map "k" #'previous-line)
-            (define-key view-mode-map "l" #'right-char)
-            (define-key view-mode-map "h" #'left-char)
-            (define-key view-mode-map "i" #'read-only-mode)))
-
-(define-key global-map [f4] #'read-only-mode)
-(define-key global-map "\M-3" #'read-only-mode)
 #+END_SRC
 
 ** Pomodoro
@@ -608,22 +580,12 @@ bit helpful.
 #+BEGIN_SRC emacs-lisp
 (use-package company
   :init
-  (add-hook 'after-init-hook #'global-company-mode)
+  (global-company-mode)
   :config
   (setq
    company-idle-delay 0.3
    company-minimum-prefix-length 3
    company-tooltip-align-annotations t))
-#+END_SRC
-
-** Auto-indent as you write
-
-Helps me to maintain my code aligned with aggresive indentation.
-
-#+BEGIN_SRC emacs-lisp
-(use-package aggressive-indent
-  :init
-  (aggressive-indent-global-mode))
 #+END_SRC
 
 ** Expanding code
@@ -716,6 +678,8 @@ Install =go-mode= if doesn't exist and keybindings.
   (("C-c C-d" . godef-describe)
    ("C-c C-j" . godef-jump)
    ("C-c C-n" . godef-jump-other-window)))
+
+(use-package company-go)
 #+END_SRC
 
 Define =$GOPATH= and tell Emacs where to find Go binaries.
@@ -893,24 +857,6 @@ configuration to manage this delimiters.
                         :foreground zenburn-red-2)))
 #+END_SRC
 
-Also I use =smartparens= to be sure I don't forget to close 'em! It
-takes some time to be used to it though.
-
-#+BEGIN_SRC emacs-lisp
-(use-package smartparens
-  :bind
-  (("C-c l DEL" . sp-unwrap-sexp)
-   ("C-c l m" . sp-mark-sexp)))
-
-(use-package smartparens-config
-  :ensure nil
-  :after smartparens
-  :init
-  (smartparens-global-mode)
-  (sp-pair "{{" "}}")
-  (sp-pair "[[" "]]"))
-#+END_SRC
-
 ** Project management
 
 I love =projectile= and I think its the best project management tool
@@ -954,7 +900,7 @@ searching mechanics.
 
   (zenburn-with-color-variables
     (set-face-attribute 'anzu-mode-line nil
-                        :foreground zenburn-bg-1)
+                        :foreground zenburn-green)
     (set-face-attribute 'anzu-mode-line-no-match nil
                         :foreground zenburn-red-4)
     (set-face-attribute 'anzu-replace-highlight nil
@@ -1096,13 +1042,13 @@ when saving the file.
 
 ** Word highlighting
 
-Highlight words like `TODO`, `FIXME` or `BUG` when in programming mode.
+Highlight words like `CLEANUP`, `TODO`, `FIXME` or `BUG` when in programming mode.
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook
           (lambda ()
             (font-lock-add-keywords nil
-                                    '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
+                                    '(("\\<\\(FIXME\\|CLEANUP\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
 #+END_SRC
 
 * Major features
@@ -1159,11 +1105,11 @@ progress.
 
 (zenburn-with-color-variables
   (set-face-attribute 'mode-line nil
-                      :background zenburn-green-1
+                      :background zenburn-bg-2
                       :box nil
-                      :foreground zenburn-bg-1)
+                      :foreground zenburn-green-1)
   (set-face-attribute 'mode-line-inactive nil
-                      :background zenburn-bg
+                      :background zenburn-bg+1
                       :box nil
-                      :foreground zenburn-bg+3))
+                      :foreground zenburn-bg-1))
 #+END_SRC
