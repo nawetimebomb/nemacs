@@ -239,8 +239,12 @@ I use.
                         :background zenburn-bg-05
                         :height elnawe/font-size
                         :font elnawe/font-family)
+    (set-face-attribute 'font-lock-comment-face nil
+                        :foreground zenburn-blue-2)
+    (set-face-attribute 'font-lock-comment-delimiter-face nil
+                        :foreground zenburn-blue-2)
     (set-face-attribute 'font-lock-warning-face nil
-                        :foreground zenburn-green+2
+                        :foreground zenburn-blue-2
                         :underline '(:style wave)
                         :weight 'bold)
     (set-face-attribute 'help-argument-name nil
@@ -256,7 +260,7 @@ I use.
                         :distant-foreground zenburn-orange
                         :foreground zenburn-orange)
     (set-face-attribute 'vertical-border nil
-                        :foreground zenburn-green-1)
+                        :foreground zenburn-blue-2)
 
     (mapc
      (lambda (face)
@@ -794,7 +798,6 @@ I'm learning though. Also, I'm working with [[Agenda][=org-agenda=]]
 (use-package org
   :ensure nil
   :init
-  (add-hook 'org-mode-hook #'org-sticky-header-mode)
   (add-hook 'org-mode-hook #'org-bullets-mode)
   :config
   (setq
@@ -813,12 +816,6 @@ I'm learning though. Also, I'm working with [[Agenda][=org-agenda=]]
    org-src-fontify-natively t
    org-src-tab-acts-natively t
    org-src-window-setup 'current-window))
-
-(use-package org-sticky-header
-  :config
-  (setq
-   org-sticky-header-full-path 'full
-   org-sticky-header-outline-path-separator " > "))
 #+END_SRC
 
 ** Multiple cursors
@@ -1042,13 +1039,13 @@ when saving the file.
 
 ** Word highlighting
 
-Highlight words like `CLEANUP`, `TODO`, `FIXME` or `BUG` when in programming mode.
+Highlight words like `TODO`, `FIXME` or `BUG` when in programming mode.
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook
           (lambda ()
             (font-lock-add-keywords nil
-                                    '(("\\<\\(FIXME\\|CLEANUP\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
+                                    '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
 #+END_SRC
 
 * Major features
@@ -1107,7 +1104,7 @@ progress.
   (set-face-attribute 'mode-line nil
                       :background zenburn-bg-2
                       :box nil
-                      :foreground zenburn-green-1)
+                      :foreground zenburn-blue-2)
   (set-face-attribute 'mode-line-inactive nil
                       :background zenburn-bg+1
                       :box nil
