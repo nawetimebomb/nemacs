@@ -37,7 +37,7 @@ the same configuration everywhere.
 ** Custom variables
 
 #+BEGIN_SRC emacs-lisp
-(defvar elnawe/font-family "Monospace-10" "Font used for theming")
+(defvar elnawe/font-family "Monospace-9" "Font used for theming")
 (defvar elnawe/font-size 100 "Default font size")
 (defvar elnawe/font-size-title 150 "Font size used in titles")
 (defvar elnawe/start-time-seconds 20 "Time in seconds to start a mini application")
@@ -1079,9 +1079,9 @@ I have some extra configurations.
                       :foreground zenburn-fg
                       :weight 'normal)
   (set-face-attribute 'font-lock-constant-face nil
-                      :foreground zenburn-cyan)
-  (set-face-attribute 'font-lock-type-face nil
                       :foreground zenburn-green+4)
+  (set-face-attribute 'font-lock-type-face nil
+                      :foreground zenburn-cyan)
   (set-face-attribute 'help-argument-name nil
                       :foreground zenburn-orange
                       :italic nil)
