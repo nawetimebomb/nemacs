@@ -37,7 +37,7 @@ the same configuration everywhere.
 ** Custom variables
 
 #+BEGIN_SRC emacs-lisp
-(defvar elnawe/font-family "DejaVu Sans Mono-12" "Font used for theming")
+(defvar elnawe/font-family "Monospace-10" "Font used for theming")
 (defvar elnawe/font-size 100 "Default font size")
 (defvar elnawe/font-size-title 150 "Font size used in titles")
 (defvar elnawe/start-time-seconds 20 "Time in seconds to start a mini application")
@@ -216,60 +216,6 @@ file separated to maintain privacy.
 (load "~/.elnawe.secrets/.emacs" t)
 #+END_SRC
 
-* Theming
-
-** Zenburn
-
-It's the best thing that happened to me since I started programming. I'm
-just in love with *Zenburn*. By the way, everything I use looks like
-Zenburn. [[https://github.com/bbatsov/zenburn-emacs][This]] is the theme
-I use.
-
-#+BEGIN_SRC emacs-lisp
-(use-package zenburn-theme
-  :init
-  (load-theme 'zenburn t)
-  :config
-  (set-face-attribute 'font-lock-comment-face nil :italic nil)
-
-  (zenburn-with-color-variables
-    (set-face-attribute 'button nil
-                        :foreground zenburn-yellow-2)
-    (set-face-attribute 'default nil
-                        :background zenburn-bg-05
-                        :height elnawe/font-size
-                        :font elnawe/font-family)
-    (set-face-attribute 'font-lock-comment-face nil
-                        :foreground zenburn-blue-2)
-    (set-face-attribute 'font-lock-comment-delimiter-face nil
-                        :foreground zenburn-blue-2)
-    (set-face-attribute 'font-lock-warning-face nil
-                        :foreground zenburn-blue-2
-                        :underline '(:style wave)
-                        :weight 'bold)
-    (set-face-attribute 'help-argument-name nil
-                        :foreground zenburn-orange
-                        :italic nil)
-    (set-face-attribute 'hl-line nil
-                        :background zenburn-bg+1)
-    (set-face-attribute 'header-line nil
-                        :background zenburn-bg-1
-                        :box nil)
-    (set-face-attribute 'region nil
-                        :background zenburn-bg+1
-                        :distant-foreground zenburn-orange
-                        :foreground zenburn-orange)
-    (set-face-attribute 'vertical-border nil
-                        :foreground zenburn-blue-2)
-
-    (mapc
-     (lambda (face)
-       (when (eq (face-attribute face :background) zenburn-bg)
-         (set-face-attribute face nil
-                             :background 'unspecified)))
-     (face-list))))
-#+END_SRC
-
 * Emacs everyday
 
 ** Agenda
@@ -373,11 +319,7 @@ that is being reading/modifying.
 #+BEGIN_SRC emacs-lisp
 (use-package auto-dim-other-buffers
   :init
-  (auto-dim-other-buffers-mode)
-  :config
-  (zenburn-with-color-variables
-    (set-face-attribute 'auto-dim-other-buffers-face nil
-                        :background zenburn-bg-1)))
+  (auto-dim-other-buffers-mode))
 #+END_SRC
 
 ** Fill paragraph automatically
@@ -436,6 +378,12 @@ beginning after indentation.
          (back-to-indentation))))
 
 (global-set-key [remap move-beginning-of-line] #'elnawe::dwin/beginning-of-line)
+#+END_SRC
+
+*** Comment Block
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x ;") #'comment-or-uncomment-region)
 #+END_SRC
 
 *** Kill Current Buffer
@@ -842,16 +790,6 @@ configuration to manage this delimiters.
   :ensure nil
   :init
   (show-paren-mode t))
-
-(use-package rainbow-delimiters
-  :init
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-  :config
-  (zenburn-with-color-variables
-    (set-face-attribute 'rainbow-delimiters-mismatched-face nil
-                        :foreground zenburn-red-2)
-    (set-face-attribute 'rainbow-delimiters-unmatched-face nil
-                        :foreground zenburn-red-2)))
 #+END_SRC
 
 ** Project management
@@ -887,25 +825,13 @@ searching mechanics.
 
 #+BEGIN_SRC emacs-lisp
 (use-package anzu
-  :bind
-  (([remap query-replace] . anzu-query-replace-regexp))
   :init
   (global-anzu-mode)
   :config
   (setq
    anzu-cons-mode-line-p nil)
-
-  (zenburn-with-color-variables
-    (set-face-attribute 'anzu-mode-line nil
-                        :foreground zenburn-green)
-    (set-face-attribute 'anzu-mode-line-no-match nil
-                        :foreground zenburn-red-4)
-    (set-face-attribute 'anzu-replace-highlight nil
-                        :background zenburn-red-4
-                        :foreground zenburn-red+1)
-    (set-face-attribute 'anzu-replace-to nil
-                        :background zenburn-green-1
-                        :foreground zenburn-green+4)))
+  (global-set-key [remap query-replace] 'anzu-query-replace)
+  (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp))
 
 (use-package isearch
   :ensure nil
@@ -920,14 +846,7 @@ searching mechanics.
   (setq
    isearch-allow-scroll t
    lazy-highlight-cleanup nil
-   lazy-highlight-initial-delay 0)
-  (zenburn-with-color-variables
-    (set-face-attribute 'isearch nil
-                        :background zenburn-blue
-                        :foreground zenburn-fg)
-    (set-face-attribute 'isearch-lazy-highlight-face nil
-                        :background zenburn-blue-5
-                        :foreground zenburn-blue)))
+   lazy-highlight-initial-delay 0))
 #+END_SRC
 
 ** Snippets
@@ -964,13 +883,7 @@ to find a file by its folder.
    neo-theme (if (display-graphic-p) 'icons 'arrow)
    neo-vc-integration '(face char)
    neo-window-width 50
-   neo-window-position 'right)
-
-  (zenburn-with-color-variables
-    (set-face-attribute 'neo-vc-edited-face nil
-                        :foreground zenburn-yellow-1)
-    (set-face-attribute 'neo-vc-added-face nil
-                        :foreground zenburn-green-1)))
+   neo-window-position 'right))
 #+END_SRC
 
 ** Version Control
@@ -1010,14 +923,7 @@ configuration.
   (set-face-attribute 'magit-diff-hunk-region nil :inherit 'region)
   (set-face-attribute 'magit-popup-heading nil :height elnawe/font-size-title)
   (set-face-attribute 'magit-section-heading nil :height elnawe/font-size-title)
-  (set-face-attribute 'magit-section-highlight nil :background nil)
-  (zenburn-with-color-variables
-    (set-face-attribute 'magit-diff-added nil
-                        :background nil
-                        :foreground zenburn-green+3)
-    (set-face-attribute 'magit-diff-removed nil
-                        :background nil
-                        :foreground zenburn-red)))
+  (set-face-attribute 'magit-section-highlight nil :background nil))
 #+END_SRC
 
 ** Whitespaces
@@ -1099,14 +1005,131 @@ progress.
   '(:eval (projectile-project-name))
   " "
   '(:eval (anzu--update-mode-line))))
+#+END_SRC
+
+* Theming
+
+** Zenburn
+
+It's the best thing that happened to me since I started programming. I'm
+just in love with *Zenburn*. By the way, everything I use looks like
+Zenburn. [[https://github.com/bbatsov/zenburn-emacs][This]] is the theme
+I use.
+
+#+BEGIN_SRC emacs-lisp
+(use-package zenburn-theme
+  :init
+  (load-theme 'zenburn t)
+  :config
+  (set-face-attribute 'font-lock-comment-face nil :italic nil))
+#+END_SRC
+
+** Personal changes
+
+I have some extra configurations.
+
+#+BEGIN_SRC emacs-lisp
+(setq elnawe::faces-with-default-color '())
+(setq elnawe::faces-with-highlight-color '())
 
 (zenburn-with-color-variables
+  ;; Editor
+  (set-face-attribute 'anzu-mode-line nil
+                      :foreground zenburn-green)
+  (set-face-attribute 'anzu-mode-line-no-match nil
+                      :foreground zenburn-red-4)
+  (set-face-attribute 'anzu-replace-highlight nil
+                      :background zenburn-red-4
+                      :foreground zenburn-red+1)
+  (set-face-attribute 'anzu-replace-to nil
+                      :background zenburn-green-1
+                      :foreground zenburn-green+4)
+  (set-face-attribute 'auto-dim-other-buffers-face nil
+                      :background zenburn-bg-1)
+  (set-face-attribute 'button nil
+                      :foreground zenburn-yellow-2)
+  (set-face-attribute 'isearch nil
+                      :background zenburn-bg-1
+                      :foreground zenburn-fg
+                      :weight 'bold)
+  (set-face-attribute 'region nil
+                      :background zenburn-bg-1
+                      :foreground zenburn-fg
+                      :weight 'bold)
+  (set-face-attribute 'vertical-border nil
+                      :foreground zenburn-fg)
+
+
+  ;; Default text
+  (set-face-attribute 'default nil
+                      :background zenburn-bg-05
+                      :foreground zenburn-orange
+                      :font elnawe/font-family
+                      :height elnawe/font-size)
+
+  ;; Code
+  (set-face-attribute 'font-lock-builtin-face nil
+                      :foreground zenburn-fg
+                      :weight 'normal)
+  (set-face-attribute 'font-lock-preprocessor-face nil
+                      :foreground zenburn-orange)
+  (set-face-attribute 'font-lock-function-name-face nil
+                      :foreground zenburn-orange)
+  (set-face-attribute 'font-lock-keyword-face nil
+                      :foreground zenburn-fg
+                      :weight 'normal)
+  (set-face-attribute 'font-lock-constant-face nil
+                      :foreground zenburn-cyan)
+  (set-face-attribute 'font-lock-type-face nil
+                      :foreground zenburn-green+4)
+  (set-face-attribute 'help-argument-name nil
+                      :foreground zenburn-orange
+                      :italic nil)
+  (set-face-attribute 'font-lock-string-face nil
+                      :foreground "#989898")
+
+  ;; Comments
+  (set-face-attribute 'font-lock-comment-face nil
+                      :foreground zenburn-red-1)
+  (set-face-attribute 'font-lock-comment-delimiter-face nil
+                      :foreground zenburn-red-1)
+  (set-face-attribute 'font-lock-warning-face nil
+                      :foreground zenburn-red
+                      :underline '(:style wave)
+                      :weight 'bold)
+
+  ;; Modeline
   (set-face-attribute 'mode-line nil
                       :background zenburn-bg-2
                       :box nil
-                      :foreground zenburn-blue-2)
+                      :foreground zenburn-orange)
   (set-face-attribute 'mode-line-inactive nil
                       :background zenburn-bg+1
                       :box nil
-                      :foreground zenburn-bg-1))
+                      :foreground zenburn-bg-1)
+
+  ;; Org mode
+  (set-face-attribute 'org-level-1 nil
+                      :foreground zenburn-fg)
+  (set-face-attribute 'org-level-4 nil
+                      :foreground zenburn-fg)
+  (mapc
+   (lambda (face)
+     (when (eq (face-attribute face :background) zenburn-bg)
+       (set-face-attribute face nil
+                           :background 'unspecified)))
+   (face-list)))
+
+(add-hook 'js2-mode-hook
+          (lambda ()
+            (zenburn-with-color-variables
+              (set-face-attribute 'js2-function-call nil
+                                  :foreground zenburn-orange)
+              (set-face-attribute 'js2-object-property nil
+                                  :foreground zenburn-orange))))
+(add-hook 'rjsx-mode-hook
+          (lambda ()
+            (zenburn-with-color-variables
+              (set-face-attribute 'rjsx-attr nil
+                                  :foreground zenburn-fg))))
 #+END_SRC
