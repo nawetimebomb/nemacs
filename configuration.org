@@ -21,7 +21,7 @@ all my new "standards" and also to keep those really clear.
 This section is inteded to have all the things I want =todo= but I do
 not have time to right now.
 
-** Personal information
+** Personal Information
 
 #+BEGIN_SRC emacs-lisp
 (setq
@@ -29,12 +29,12 @@ not have time to right now.
  user-mail-address "nahueljsacchetti@gmail.com")
 #+END_SRC
 
-* Bootstrapping my Emacs
+* Bootstrapping My Emacs
 
 It's nice to have your Emacs /standarided/ and feel that you're using
 the same configuration everywhere.
 
-** Custom variables
+** Custom Variables
 
 #+BEGIN_SRC emacs-lisp
 (defvar elnawe/font-family "Monospace-9" "Font used for theming")
@@ -45,15 +45,15 @@ the same configuration everywhere.
 (defvar elnawe/icons-enabled t "Show/hide special icons. Most of them used in mode-line")
 #+END_SRC
 
-** Make Emacs faster
+** Make Emacs Faster
 
-Collect garbage when focus out your Emacs.
+Collect garbage when focus out your Emacs. At least that's what they say.
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'focus-out-hook #'garbage-collect)
 #+END_SRC
 
-** My better-defaults
+** My Defaults
 
 Since I've been using Emacs I noticed some actual default variables are
 not the best fit for me. I managed to put together a list of my better
@@ -155,7 +155,7 @@ This is a set of helper functions that are used in this configuration.
   (kill-buffer (current-buffer)))
 #+END_SRC
 
-** OS specific configurations
+** OS Specific Configurations
 
 Because I use Emacs everywhere, I need some extra configurations.
 
@@ -172,7 +172,7 @@ Because I use Emacs everywhere, I need some extra configurations.
    ns-use-srgb-colorspace nil))                      ; Using different colorspace for Mac
 #+END_SRC
 
-Intializing env inside Emacs
+Intializing env for Emacs.
 
 #+BEGIN_SRC emacs-lisp
 (use-package exec-path-from-shell
@@ -180,18 +180,16 @@ Intializing env inside Emacs
   :config (exec-path-from-shell-initialize))
 #+END_SRC
 
-*** TOS
+*** Terminal
 
-I'm a pretty big fan of Terminal Operating System and my desktop (and
-one of my laptops) has a clean ArchLinux installed with no visual
-desktop o GUI. These configurations are needed to ensure that my Emacs
-works well on those boxes!
+My terminal Emacs configuration, the one that I use the most, actually.
 
 #+BEGIN_SRC emacs-lisp
 (when (not window-system)
   (setq-default
    elnawe/icons-enabled nil)
-  (global-hl-line-mode -1))
+  (global-hl-line-mode -1)
+  (xterm-mouse-mode))
 #+END_SRC
 
 ** Load =.custom.el=
@@ -218,59 +216,7 @@ file separated to maintain privacy.
 
 * Emacs everyday
 
-** Agenda
-
-When you use Emacs for a while you understand that you can not just edit
-code, create presentations or write quite beautiful tables and lists.
-You can also have a very nice =TODO= list synched all the time with your
-server that acts as your agenda and note-taking. This is actually nice.
-
-*** Directories
-
-#+BEGIN_SRC emacs-lisp
-(setq-default
- org-directory "~/Dropbox/orgs")
-
-(defun elnawe::org/file-path (FILENAME)
-  "Returns the absolute path of a given `FILENAME` with default `org-directory`"
-  (concat (file-name-as-directory org-directory) FILENAME))
-
-(setq
- org-archive-location (concat (elnawe::org/file-path "archive.org") ":: From %s")
- org-index-file (elnawe::org/file-path "index.org"))
-#+END_SRC
-
-*** Keybindings
-
-#+BEGIN_SRC emacs-lisp
-(defun elnawe::org/mark-done-and-archive ()
-  "Mark the state of an org-mode item as `DONE' and archive it"
-  (interactive)
-  (org-todo 'done)
-  (org-archive-subtree))
-
-(define-key global-map "\C-ca" 'org-agenda)
-(define-key global-map "\C-cc" 'org-capture)
-(define-key org-mode-map (kbd "C-c C-x C-s") 'elnawe::org/mark-done-and-archive)
-#+END_SRC
-
-*** New captures
-
-#+BEGIN_SRC emacs-lisp
-(setq
- org-agenda-files (list org-index-file)
- org-capture-templates '(("i" "Ideas"
-                          entry
-                          (file (elnawe::org/file-path "ideas.org"))
-                          "* %?\n")
-                         ("t" "TODO Item"
-                          entry
-                          (file+headline org-index-file "Inbox")
-                          "* TODO %?\n"))
- org-log-done 'time)
-#+END_SRC
-
-** Backup copies
+** Backup Copies
 
 Manage the backup copies. Always keeping them but save them inside Emacs
 directory.
@@ -284,44 +230,6 @@ directory.
  version-control 'numbered)
 #+END_SRC
 
-** Development notes
-
-I found that Emacs + =org-mode= are great for note-taking. I like to
-take notes of my TIL stuff and for things related to development that it
-will be useful to read after a while. More like, memory refreshing
-things.
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list
- 'org-capture-templates
- '("j" "JavaScript Development Notes"
-   entry
-   (file+headline (elnawe::org/file-path "dev-notes.org") "JavaScript")
-   "
-,* %^{Title}
-%?"))
-
-(add-to-list
- 'org-capture-templates
- '("l" "Linux Notes"
-   entry
-   (file+headline (elnawe::org/file-path "dev-notes.org") "JavaScript")
-   "
-,* %^{Title}
-%?"))
-#+END_SRC
-
-** Dim other buffers
-
-Automatically dim my other opened buffers. This help me focus on the one
-that is being reading/modifying.
-
-#+BEGIN_SRC emacs-lisp
-(use-package auto-dim-other-buffers
-  :init
-  (auto-dim-other-buffers-mode))
-#+END_SRC
-
 ** Fill paragraph automatically
 
 When I'm in =text-mode= I want my paragraph to be just the lenght of my
@@ -333,29 +241,6 @@ Emacs allow me to do it automatically!
   :ensure nil
   :init
   (add-hook 'text-mode-hook #'turn-on-auto-fill))
-#+END_SRC
-
-** =ivy-mode= for minibuffer completition
-
-First I used =helm= but it felt slow. Then I moved to the built-in
-=ido-mode= and, though it worked great, I wanted to try =ivy= and after
-searching the Internet I found it very useful!
-
-#+BEGIN_SRC emacs-lisp
-(use-package ivy
-  :init
-  (ivy-mode 1)
-  :config
-  (setq
-   enable-recursive-minibuffers t
-   ivy-count-format "[%d/%d] "
-   ivy-display-style 'fancy
-   ivy-extra-directories nil
-   ivy-use-virtual-buffers t))
-
-(use-package counsel)
-
-(use-package swiper)
 #+END_SRC
 
 ** Navigation
@@ -382,47 +267,18 @@ beginning after indentation.
 
 *** Comment Block
 
+A terminal-emacs fix.
+
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x ;") #'comment-or-uncomment-region)
 #+END_SRC
 
 *** Kill Current Buffer
 
-Assume I want to kill buffer with =C-x k= without asking
+Assume I want to kill buffer with =C-x k= without asking.
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x k") #'elnawe::kill-current-buffer)
-#+END_SRC
-
-** Pomodoro
-
-Time tracking for efficiency in any aspect. The Pomodoro technique is a
-well known way to maximize the time of your activities.
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-pomodoro
-  :after org
-  :preface
-  (defun elnawe::open-tasks-file ()
-    "Opens the tasks file on a new buffer"
-    (interactive)
-    (split-window-below)
-    (balance-windows)
-    (other-window 1)
-    (find-file "~/Dropbox/orgs/tasks.org"))
-  :bind
-  ("C-c t" . elnawe::open-tasks-file)
-  :config
-  (setq org-pomodoro-format "%s")
-  (add-to-list
-   'org-capture-templates
-   '("p" "Pomodoro"
-     entry
-     (file (elnawe::org/file-path "tasks.org"))
-     "
-,* %^{Task description}
-%?"
-     )))
 #+END_SRC
 
 ** Restart Emacs
@@ -470,7 +326,7 @@ I like to keep it always there so I can continue from that point.
    ("C-c m o" . other-window)))
 #+END_SRC
 
-*** Splitting windows
+*** Splitting Windows
 
 #+BEGIN_SRC emacs-lisp
 (defun elnawe::window/create-bottom-and-switch ()
@@ -492,7 +348,7 @@ I like to keep it always there so I can continue from that point.
 (global-set-key (kbd "C-x `") 'ivy-switch-buffer-other-window)
 #+END_SRC
 
-*** Temporal buffers
+*** Temporal Buffers
 
 #+BEGIN_SRC emacs-lisp
 (defun elnawe::window/split-vertically-for-temp-buffers ()
@@ -503,7 +359,7 @@ I like to keep it always there so I can continue from that point.
           'elnawe::window/split-vertically-for-temp-buffers)
 #+END_SRC
 
-*** Undo/redo configurations
+*** Undo/Redo Configurations
 
 Sometimes you close windows or change their layout without meaning to.
 Thanks to Emacs =winner= mode helps me to go back if that happens.
@@ -524,74 +380,7 @@ Thanks to Emacs =winner= mode helps me to go back if that happens.
 I use Emacs for everything, even code. I like to keep it good looking
 but really functional.
 
-** Auto-completition
-
-I'm not a very big fan of auto-complete my words but sometimes it's a
-bit helpful.
-
-#+BEGIN_SRC emacs-lisp
-(use-package company
-  :init
-  (global-company-mode)
-  :config
-  (setq
-   company-idle-delay 0.3
-   company-minimum-prefix-length 3
-   company-tooltip-align-annotations t))
-#+END_SRC
-
-** Expanding code
-
-Using built-in =hippie-exp= package to manage expansions. This is a
-DWIM-like (Do What I Mean) expansion, trying to be smart depending on
-its context. Mostly you can use any kind of expansion with =<C-return>=
-
-#+BEGIN_SRC emacs-lisp
-(use-package emmet-mode
-  :bind
-  ((:map emmet-mode-keymap
-        ("<C-return>" . nil)
-        ("C-M-<left>" . nil)
-        ("C-M-<right>" . nil)
-        ("C-c w" . nil)))
-  :init
-  (add-hook 'css-mode-hook #'emmet-mode)
-  (add-hook 'html-mode-hook #'emmet-mode)
-  (add-hook 'rjsx-mode-hook #'emmet-mode)
-  :config
-  (setq emmet-move-cursor-between-quote t))
-
-(use-package hippie-exp
-  :ensure nil
-  :preface
-  (defun elnawe::emmet/try-expand-line (args)
-    "Try `emmet-expand-line' if `emmet-mode' is active. Else, does nothing."
-    (interactive "P")
-    (when emmet-mode (emmet-expand-line args)))
-  :bind
-  (("<C-return>" . hippie-expand)
-   ("M-RET" . hippie-expand))
-  :config
-  (setq-default
-   hippie-expand-try-functions-list '(elnawe::emmet/try-expand-line)
-   hippie-expand-verbose nil))
-#+END_SRC
-
-** Go to definition
-
-When working on big projects *go to definition* it's a must. =dumb-jump=
-helps me with that.
-
-#+BEGIN_SRC emacs-lisp
-(use-package dumb-jump
-  :bind
-  (("C-c l g" . dumb-jump-go)
-   ("C-c l n" . dumb-jump-go-prefer-external-other-window))
-  :init
-  (dumb-jump-mode 1))
-#+END_SRC
-
-** Kill line or region
+** Kill Line/Region
 
 Instead of the default =C-w=, this function overrides that feature to
 cut the line where you at if there's no region selected.
@@ -622,16 +411,10 @@ cut the line where you at if there's no region selected.
 
 *** Golang
 
-Install =go-mode= if doesn't exist and keybindings.
+Install =go-mode=.
 
 #+BEGIN_SRC emacs-lisp
-(use-package go-mode
-  :bind
-  (("C-c C-d" . godef-describe)
-   ("C-c C-j" . godef-jump)
-   ("C-c C-n" . godef-jump-other-window)))
-
-(use-package company-go)
+(use-package go-mode)
 #+END_SRC
 
 Define =$GOPATH= and tell Emacs where to find Go binaries.
@@ -657,9 +440,6 @@ When working with Go:
 #+BEGIN_SRC emacs-lisp
 (add-hook 'go-mode-hook
           (lambda ()
-            (set (make-local-variable 'company-backends)
-                 '(company-go))
-            (company-mode 1)
             (if (not (string-match "go" compile-command))
                 (set (make-local-variable 'compile-command)
                      "go build -v && go test -v && go vet"))))
@@ -667,7 +447,7 @@ When working with Go:
 
 *** HTML
 
-Using HTML mode defined in =sgml-mode.el=
+Using HTML mode defined in =sgml-mode.el=.
 
 #+BEGIN_SRC emacs-lisp
 (use-package sgml-mode
@@ -713,13 +493,10 @@ Using HTML mode defined in =sgml-mode.el=
   (defun setup-tide-mode ()
     (interactive)
     (tide-setup)
-    (setq flycheck-check-syntax-automatically '(save mode-enabled))
     (eldoc-mode 1)
     (tide-hl-identifier-mode))
   (add-hook 'before-save-hook #'tide-format-before-save)
-  (add-hook 'typescript-mode-hook #'setup-tide-mode)
-  :config
-  (setq company-tooltip-align-annotations t))
+  (add-hook 'typescript-mode-hook #'setup-tide-mode))
 #+END_SRC
 
 *** Markdown
@@ -738,9 +515,7 @@ README files.
 
 *** Org
 
-My whole configuration is written in =org-mode=. I also write all my
-TODO lists in Org. This is a powerful tool and I'm not the best user.
-I'm learning though. Also, I'm working with [[Agenda][=org-agenda=]]
+My whole configuration is written in =org-mode=.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org
@@ -766,7 +541,7 @@ I'm learning though. Also, I'm working with [[Agenda][=org-agenda=]]
    org-src-window-setup 'current-window))
 #+END_SRC
 
-** Multiple cursors
+** Multiple Cursors
 
 I actually like some of the features that modern IDE provides, like
 multiple cursor editing. It's great that Emacs can do that as well!
@@ -778,7 +553,7 @@ multiple cursor editing. It's great that Emacs can do that as well!
    ("C-c l l" . mc/mark-all-words-like-this)))
 #+END_SRC
 
-** Parentheses and delimiters
+** Parentheses and Delimiters
 
 When programming you use a lot of =()= or ={}= so I pulled out a nice
 configuration to manage this delimiters.
@@ -792,31 +567,25 @@ configuration to manage this delimiters.
   (show-paren-mode t))
 #+END_SRC
 
-** Project management
+** Project Management
 
 I love =projectile= and I think its the best project management tool
 you'll ever need in Emacs.
 
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
-  :defer 1
   :init
   (setq-default
    projectile-cache-file (expand-file-name ".projectile-cache" (elnawe::get-configurations-folder))
-   projectile-completition-system 'ivy
    projectile-enable-caching t
    projectile-keymap-prefix (kbd "C-c p")
    projectile-known-projects-file (expand-file-name ".projectile-bookmarks" (elnawe::get-configurations-folder))
    projectile-mode-line '(:eval (projectile-project-name))
    projectile-switch-project-action 'projectile-find-file)
   (projectile-global-mode))
-
-(use-package counsel-projectile
-  :init
-  (counsel-projectile-on))
 #+END_SRC
 
-** Search and replace
+** Search and Replace
 
 Better search and replace with =anzu=. This is a known =vim= package
 that [[https://github.com/syohex/emacs-anzu][syohex]] ported to Emacs.
@@ -849,14 +618,6 @@ searching mechanics.
    lazy-highlight-initial-delay 0))
 #+END_SRC
 
-** Snippets
-
-I use snippets for blog posting and email sending.
-
-#+BEGIN_SRC emacs-lisp
-(use-package yasnippet)
-#+END_SRC
-
 ** Tree view
 
 I don't use this often but it's a good thing to have in hand if I need
@@ -886,50 +647,11 @@ to find a file by its folder.
    neo-window-position 'right))
 #+END_SRC
 
-** Version Control
-
-Magit provides everything I need when working with Version Control, all
-within Emacs. Also, it merges very well with my =mode-line=
-configuration.
-
-#+BEGIN_SRC emacs-lisp
-(use-package magit
-  :preface
-  (defun elnawe::magit/display-buffer-same (buffer)
-    "Display most magit popups in the current buffer."
-    (display-buffer
-     buffer
-     (cond ((and (derived-mode-p 'magit-mode)
-                 (eq (with-current-buffer buffer major-mode) 'magit-status-mode))
-            nil)
-           ((memq (with-current-buffer buffer major-mode)
-                  '(magit-process-mode
-                    magit-revision-mode
-                    magit-diff-mode
-                    magit-stash-mode))
-            nil)
-           (t '(display-buffer-same-window)))))
-  :config
-  (setq
-   magit-display-buffer-function #'elnawe::magit/display-buffer-same
-   magit-diff-highlight-hunk-body nil
-   magit-diff-highlight-hunk-region-functions
-   '(magit-diff-highlight-hunk-region-dim-outside
-     magit-diff-highlight-hunk-region-using-face)
-   magit-popup-display-buffer-action '((display-buffer-same-window))
-   magit-refs-show-commit-count 'all
-   magit-section-show-child-count t)
-  (set-face-attribute 'magit-diff-file-heading-highlight nil :background nil)
-  (set-face-attribute 'magit-diff-hunk-region nil :inherit 'region)
-  (set-face-attribute 'magit-popup-heading nil :height elnawe/font-size-title)
-  (set-face-attribute 'magit-section-heading nil :height elnawe/font-size-title)
-  (set-face-attribute 'magit-section-highlight nil :background nil))
-#+END_SRC
-
 ** Whitespaces
 
 Highlight trailing whitespaces, tabs and empty lines. Also remove them
 when saving the file.
+
 
 #+BEGIN_SRC emacs-lisp
 (use-package whitespace
@@ -943,7 +665,7 @@ when saving the file.
   (setq whitespace-style '(face tab trailing)))
 #+END_SRC
 
-** Word highlighting
+** Word Highlighting
 
 Highlight words like `NOTE`, `TODO`, `FIXME` or `BUG` when in programming mode.
 
@@ -966,14 +688,12 @@ configuration makes navigating through it a little bit easier.
   :ensure nil
   :bind
   (:map help-mode-map
-        ("j" . next-line)
-        ("k" . previous-line)
         ("q" . kill-buffer-and-window)
         ("<" . help-go-back)
         (">" . help-go-forward)))
 #+END_SRC
 
-** Mode-line
+** Mode Line
 
 Started with =spaceline= which is a nice looking mode-line based on
 =powerline= and extracted from =Spacemacs= but I always wanted to have
@@ -990,7 +710,7 @@ progress.
    "["
    (cond
     (buffer-read-only "R")
-    ((buffer-modified-p) (with-face "M" '(:foreground "#DCDCCC" :weight bold)))
+    ((buffer-modified-p) (with-face "M" '(:weight bold)))
     (t " "))
    "]"))
 
@@ -1009,127 +729,15 @@ progress.
 
 * Theming
 
-** Zenburn
+** Custom theme
 
-It's the best thing that happened to me since I started programming. I'm
-just in love with *Zenburn*. By the way, everything I use looks like
-Zenburn. [[https://github.com/bbatsov/zenburn-emacs][This]] is the theme
-I use.
-
-#+BEGIN_SRC emacs-lisp
-(use-package zenburn-theme
-  :init
-  (load-theme 'zenburn t)
-  :config
-  (set-face-attribute 'font-lock-comment-face nil :italic nil))
-#+END_SRC
-
-** Personal changes
-
-I have some extra configurations.
+So, I love *Zenburn* but I've found a pretty good theme out thre that
+doesn't vary a lot from Zenburn and at the same time it looks pretty
+similar of what Jonathan Blow, which looks great. I've a copy of my old
+Zenburn configuration in [[file+emacs:zenburn-configuration.org][here]]
 
 #+BEGIN_SRC emacs-lisp
-(setq elnawe::faces-with-default-color '())
-(setq elnawe::faces-with-highlight-color '())
+(add-to-list 'custom-theme-load-path "~/.emacs.d/theme")
 
-(zenburn-with-color-variables
-  ;; Editor
-  (set-face-attribute 'anzu-mode-line nil
-                      :foreground zenburn-green)
-  (set-face-attribute 'anzu-mode-line-no-match nil
-                      :foreground zenburn-red-4)
-  (set-face-attribute 'anzu-replace-highlight nil
-                      :background zenburn-red-4
-                      :foreground zenburn-red+1)
-  (set-face-attribute 'anzu-replace-to nil
-                      :background zenburn-green-1
-                      :foreground zenburn-green+4)
-  (set-face-attribute 'auto-dim-other-buffers-face nil
-                      :background "#1c1c1c")
-  (set-face-attribute 'button nil
-                      :foreground zenburn-yellow-2)
-  (set-face-attribute 'isearch nil
-                      :background zenburn-bg-1
-                      :foreground zenburn-fg
-                      :weight 'bold)
-  (set-face-attribute 'region nil
-                      :background zenburn-bg-1
-                      :foreground zenburn-fg
-                      :weight 'bold)
-  (set-face-attribute 'vertical-border nil
-                      :foreground zenburn-fg)
-
-
-  ;; Default text
-  (set-face-attribute 'default nil
-                      :background zenburn-bg-05
-                      :foreground zenburn-orange
-                      :font elnawe/font-family
-                      :height elnawe/font-size)
-
-  ;; Code
-  (set-face-attribute 'font-lock-builtin-face nil
-                      :foreground zenburn-fg
-                      :weight 'normal)
-  (set-face-attribute 'font-lock-preprocessor-face nil
-                      :foreground zenburn-orange)
-  (set-face-attribute 'font-lock-function-name-face nil
-                      :foreground zenburn-orange)
-  (set-face-attribute 'font-lock-keyword-face nil
-                      :foreground zenburn-fg
-                      :weight 'normal)
-  (set-face-attribute 'font-lock-constant-face nil
-                      :foreground zenburn-green+4)
-  (set-face-attribute 'font-lock-type-face nil
-                      :foreground zenburn-cyan)
-  (set-face-attribute 'help-argument-name nil
-                      :foreground zenburn-orange
-                      :italic nil)
-  (set-face-attribute 'font-lock-string-face nil
-                      :foreground "#989898")
-
-  ;; Comments
-  (set-face-attribute 'font-lock-comment-face nil
-                      :foreground zenburn-red-1)
-  (set-face-attribute 'font-lock-comment-delimiter-face nil
-                      :foreground zenburn-red-1)
-  (set-face-attribute 'font-lock-warning-face nil
-                      :foreground zenburn-red
-                      :underline '(:style wave)
-                      :weight 'bold)
-
-  ;; Modeline
-  (set-face-attribute 'mode-line nil
-                      :background "#1c1c1c"
-                      :box nil
-                      :foreground "#0087af")
-  (set-face-attribute 'mode-line-inactive nil
-                      :background zenburn-bg+1
-                      :box nil
-                      :foreground zenburn-bg-1)
-
-  ;; Org mode
-  (set-face-attribute 'org-level-1 nil
-                      :foreground zenburn-fg)
-  (set-face-attribute 'org-level-4 nil
-                      :foreground zenburn-fg)
-  (mapc
-   (lambda (face)
-     (when (eq (face-attribute face :background) zenburn-bg)
-       (set-face-attribute face nil
-                           :background 'unspecified)))
-   (face-list)))
-
-(add-hook 'js2-mode-hook
-          (lambda ()
-            (zenburn-with-color-variables
-              (set-face-attribute 'js2-function-call nil
-                                  :foreground zenburn-orange)
-              (set-face-attribute 'js2-object-property nil
-                                  :foreground zenburn-orange))))
-(add-hook 'rjsx-mode-hook
-          (lambda ()
-            (zenburn-with-color-variables
-              (set-face-attribute 'rjsx-attr nil
-                                  :foreground zenburn-fg))))
+(load-theme 'nawe t)
 #+END_SRC
