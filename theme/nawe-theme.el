@@ -74,9 +74,6 @@ https://github.com/pixlark/JonathanBlowEmacsTheme")
 
  '(js2-error ((t (:foreground "red"))))
  '(js2-function-param ((t (:inherit (default)))))
- '(js2-external-variable ((t (:inherit (default)))))
-
-
- )
+ '(js2-external-variable ((t (:inherit (default))))))
 
 (provide-theme 'nawe)

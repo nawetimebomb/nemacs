@@ -2,39 +2,58 @@
 #+AUTHOR: Nahuel Jesús Sacchetti
 
 * About me
-I'm a enthusiastic developer. I love Emacs even though I started to use it recently. I'm currently in love with Elisp as
-well so that's a big point towards using Emacs for almost everything.
 
-* Download this configuration
-Almost everything here has my personal touch. You are always welcome to download it and also if you see fit you can
-submit a pull request. I'm quite special with my configurations but any kind of suggestions are accepted!
+#+BEGIN_QUOTE
+I am an enthusiastic Software Engineer who loves to work in a team,
+sharing knowledge and experience among peers.
+#+END_QUOTE
 
-You can download this configuration as you please. First you will have to install Emacs. I personally use =emacs-plus=
-on my Mac, go ahead and try that out: [[https://github.com/d12frosted/homebrew-emacs-plus][Download emacs-plus]].
-#+BEGIN_SRC
+I started programming when I was 12 years old. I've been working on a
+few open source projects as well as doing freelance. At the age of 23, I
+started a professional career in Web Frontend, though I still prefer
+more logical stuff instead of User Interface.
+
+* Features
+
+- "Stock Emacs".
+- Descritive [[file+emacs:configuration.org][configuration]].
+- Always up-to-date.
+- Fixes the =C-a= to go to indentation if you press twice.
+- A low-contrast theme.
+- Not disruptive when programming, you do all the work.
+- Better defaults are better.
+- Support Terminal and Window System, as well as multiple OS.
+- Designed to work nicely with =emacs --daemon=.
+- Simple and easy to understand mode-line.
+
+* Download This Configuration
+
+My Emacs configuration has some personal touch even though lately I use
+mostly a "stock Emacs". I use Terminal Emacs, so most of the colors are
+adapted to how my terminals render Emacs.
+
+** Download Emacs in Mac
+
+#+BEGIN_SRC bash
 $ brew tap d12frosted/emacs-plus
 $ brew install emacs-plus --without-spacemacs-icon
 #+END_SRC
 
-On my Linux (Ubuntu) I use =kelleyk= repository to install Emacs 25.x.
-#+BEGIN_SRC
-sudo add-apt-repository ppa:kelleyk/emacs
-sudo apt-get update
-sudo apt-get install emacs25
+** Download Emacs in Ubuntu (old version)
+
+#+BEGIN_SRC bash
+$ [sudo] add-apt-repository ppa:kelleyk/emacs
+$ [sudo] apt-get update
+$ [sudo] apt-get install emacs25
 #+END_SRC
 
-* Using Flycheck as linter
-I use =flycheck= package for linting. You should be fine without installing anything but if you want to use its benefits
-you will need to install some binaries.
+** Download Emacs in ArchLinux (the best distro ever)
 
-Flycheck is currently active for:
-- JavaScript
-
-For JavaScript you should install =eslint=
-#+BEGIN_SRC
-npm install -g eslint
+#+BEGIN_SRC bash
+[sudo] pacman -S emacs
 #+END_SRC
 
 * Contributions
-If you see something that can be done in a better way or some configuration that you consider it's missed go ahead and
-create a pull request!
+
+If you see something that can be done in a better way or some
+configuration that you consider it's missed go ahead and submit a PR.
