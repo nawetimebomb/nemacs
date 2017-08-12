@@ -945,13 +945,13 @@ when saving the file.
 
 ** Word highlighting
 
-Highlight words like `TODO`, `FIXME` or `BUG` when in programming mode.
+Highlight words like `NOTE`, `TODO`, `FIXME` or `BUG` when in programming mode.
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook
           (lambda ()
             (font-lock-add-keywords nil
-                                    '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
+                                    '(("\\<\\(FIXME\\|NOTE\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
 #+END_SRC
 
 * Major features
@@ -1045,7 +1045,7 @@ I have some extra configurations.
                       :background zenburn-green-1
                       :foreground zenburn-green+4)
   (set-face-attribute 'auto-dim-other-buffers-face nil
-                      :background zenburn-bg-1)
+                      :background "#1c1c1c")
   (set-face-attribute 'button nil
                       :foreground zenburn-yellow-2)
   (set-face-attribute 'isearch nil
@@ -1100,9 +1100,9 @@ I have some extra configurations.
 
   ;; Modeline
   (set-face-attribute 'mode-line nil
-                      :background zenburn-bg-2
+                      :background "#1c1c1c"
                       :box nil
-                      :foreground zenburn-orange)
+                      :foreground "#0087af")
   (set-face-attribute 'mode-line-inactive nil
                       :background zenburn-bg+1
                       :box nil
