@@ -618,7 +618,7 @@ searching mechanics.
    lazy-highlight-initial-delay 0))
 #+END_SRC
 
-** Tree view
+** Tree View
 
 I don't use this often but it's a good thing to have in hand if I need
 to find a file by its folder.
@@ -710,7 +710,7 @@ progress.
    "["
    (cond
     (buffer-read-only "R")
-    ((buffer-modified-p) (with-face "M" '(:weight bold)))
+    ((buffer-modified-p) (with-face "M" '(:inherit (mode-line-buffer-id))))
     (t " "))
    "]"))
 
@@ -719,7 +719,7 @@ progress.
  (list
   " "
   '(:eval (get-buffer-state))
-  (with-face " %b" '(:weight bold))
+  (with-face " %b" '(:inherit (mode-line-buffer-id)))
   "  %p L%02l C%02c"
   "    (%m) "
   '(:eval (projectile-project-name))
