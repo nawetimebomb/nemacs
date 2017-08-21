@@ -34,17 +34,6 @@ not have time to right now.
 It's nice to have your Emacs /standarided/ and feel that you're using
 the same configuration everywhere.
 
-** Custom Variables
-
-#+BEGIN_SRC emacs-lisp
-(defvar elnawe/font-family "Monospace-9" "Font used for theming")
-(defvar elnawe/font-size 100 "Default font size")
-(defvar elnawe/font-size-title 150 "Font size used in titles")
-(defvar elnawe/start-time-seconds 20 "Time in seconds to start a mini application")
-(defvar elnawe/update-time-seconds 1800 "Time in seconds to update/refresh mini applications")
-(defvar elnawe/icons-enabled t "Show/hide special icons. Most of them used in mode-line")
-#+END_SRC
-
 ** Make Emacs Faster
 
 Collect garbage when focus out your Emacs. At least that's what they say.
@@ -82,7 +71,7 @@ defaults and they are here:
  split-height-threshold 1000                               ; Enable vertical splitting
  split-width-threshold nil                                 ; Disable horizontal splitting
  tab-width 4                                               ; Set indentation width
- truncate-lines t                                          ; Disable truncate lines
+ truncate-lines nil                                        ; Disable truncate lines
  uniquify-buffer-name-style 'forward                       ; Make buffer names unique
  visible-bell nil                                          ; Replace the alarm to an audible one
  window-combination-resize t                               ; Resize window proportionally
@@ -91,7 +80,6 @@ defaults and they are here:
 (display-time-mode)                                        ; Enable time-mode in mode-line
 (fset 'yes-or-no-p 'y-or-n-p)                              ; Alias y/n prompts to yes/no
 (global-auto-revert-mode)                                  ; Refresh buffer if changed outside Emacs
-(global-hl-line-mode)                                      ; Highlight current line
 (global-subword-mode)                                      ; Iterate through camelCase words
 (menu-bar-mode 0)                                          ; Disable the menu bar
 (tool-bar-mode 0)                                          ; Disable the tool-bar
@@ -164,7 +152,6 @@ Because I use Emacs everywhere, I need some extra configurations.
 #+BEGIN_SRC emacs-lisp
 (when (eq system-type 'darwin)
   (setq-default
-   elnawe/font-family "DejaVu Sans Mono-15"          ; Change font-family
    exec-path (append exec-path '("/usr/local/bin"))  ; Add Homebrew path
    ns-command-modifier 'meta                         ; Meta key is Command
    ns-option-modifier nil                            ; I use Alt/Option to expand my keyboard layout
@@ -186,10 +173,15 @@ My terminal Emacs configuration, the one that I use the most, actually.
 
 #+BEGIN_SRC emacs-lisp
 (when (not window-system)
-  (setq-default
-   elnawe/icons-enabled nil)
-  (global-hl-line-mode -1)
   (xterm-mouse-mode))
+#+END_SRC
+
+*** Window System
+
+#+BEGIN_SRC emacs-lisp
+(when window-system
+  (scroll-bar-mode 0)
+  (fringe-mode 0))
 #+END_SRC
 
 ** Load =.custom.el=
@@ -395,6 +387,14 @@ cut the line where you at if there's no region selected.
 #+END_SRC
 
 ** Languages
+
+*** C
+
+#+BEGIN_SRC emacs-lisp
+(setq-default
+ c-basic-offset 4
+ c-default-style "user")
+#+END_SRC
 
 *** CSS
 

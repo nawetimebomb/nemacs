@@ -8,6 +8,8 @@ https://github.com/pixlark/JonathanBlowEmacsTheme")
 (custom-theme-set-faces
  'nawe
  '(default ((t (:inherit nil :stipple nil :background unspecified :foreground unspecified :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "outline" :family "Monospace"))))
+ (when window-system
+   '(default ((t (:inherit (default) :background "#322b32" :foreground "#a9a999" :height 95)))))
  '(bold ((t (:background unspecified :foreground unspecified :weight bold))))
  '(italic ((t (:background unspecified :foreground unspecified :underline nil))))
  '(cursor ((t (:background "#54ff9f" :foreground "#2b2b2b"))))
@@ -21,7 +23,7 @@ https://github.com/pixlark/JonathanBlowEmacsTheme")
  '(region ((t (:background "#00008b" :foreground unspecified))))
  '(shadow ((t (:foreground "grey57"))))
  '(secondary-selection ((t (:foreground "SkyBlue4"))))
- '(trailing-whitespace ((t (:background "#ff0000"))))
+ '(trailing-whitespace ((t (:background "#d9a0a0"))))
 
  '(dired-warning ((t (:inherit (error)))))
 
@@ -37,7 +39,7 @@ https://github.com/pixlark/JonathanBlowEmacsTheme")
  '(font-lock-regexp-grouping-backslash ((t (:inherit (bold)))))
  '(font-lock-regexp-grouping-construct ((t (:inherit (bold)))))
  '(font-lock-string-face ((t (:foreground "#d2b48c"))))
- '(font-lock-type-face ((t (:foreground "#54ff9f"))))
+ '(font-lock-type-face ((t (:foreground "#66cdaa"))))
  '(font-lock-variable-name-face ((t (:inherit (default)))))
  '(font-lock-warning-face ((t (:background nil :foreground "#eee926" :underline nil :weight bold))))
 
