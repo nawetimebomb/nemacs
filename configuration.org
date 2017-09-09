@@ -641,7 +641,7 @@ to find a file by its folder.
    neo-autorefresh t
    neo-force-change-root t
    neo-smart-open t
-   neo-theme (if (display-graphic-p) 'icons 'arrow)
+   neo-theme 'arrow
    neo-vc-integration '(face char)
    neo-window-width 50
    neo-window-position 'right))
