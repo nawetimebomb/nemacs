@@ -478,9 +478,6 @@ Using HTML mode defined in =sgml-mode.el=.
               (make-local-variable 'js-indent-level)
               (setq js-indent-level 2))))
 
-(use-package ng2-mode
-  :mode ("/futbol-club/.*\\.ts" "/futbol-club/.*\\.html"))
-
 (use-package rjsx-mode
   :mode ("/swa-ui-app/.*\\.js$")
   :config
