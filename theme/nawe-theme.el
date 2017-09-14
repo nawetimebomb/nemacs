@@ -9,7 +9,7 @@ https://github.com/pixlark/JonathanBlowEmacsTheme")
  'nawe
  '(default ((t (:inherit nil :stipple nil :background unspecified :foreground unspecified :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "outline" :family "Monospace"))))
  (when window-system
-   '(default ((t (:inherit (default) :background "#322b32" :foreground "#a9a999")))))
+   '(default ((t (:inherit (default) :background "#1f1f2b" :foreground "#a9a999" :font "DejaVu Sans Mono-12" :height 140)))))
  '(bold ((t (:background unspecified :foreground unspecified :weight bold))))
  '(italic ((t (:background unspecified :foreground unspecified :underline nil))))
  '(cursor ((t (:background "#54ff9f" :foreground "#2b2b2b"))))
@@ -67,7 +67,7 @@ https://github.com/pixlark/JonathanBlowEmacsTheme")
  '(anzu-match-3 ((t (:inherit (match)))))
  '(anzu-mode-line ((t (:background unspecified :foreground "#101010" :weight bold))))
 
- '(org-level-1 ((t (:foreground "grey74"))))
+ '(org-level-1 ((t (:foreground "#f0f0f0"))))
  '(org-level-2 ((t (:foreground "#54ff9f"))))
  '(org-level-3 ((t (:foreground "turquoise3"))))
  '(org-level-4 ((t (:foreground "grey54"))))
