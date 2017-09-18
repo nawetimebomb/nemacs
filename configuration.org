@@ -151,7 +151,6 @@ Because I use Emacs everywhere, I need some extra configurations.
 
 #+BEGIN_SRC emacs-lisp
 (when (eq system-type 'darwin)
-  (global-set-key (kbd "C-2") 'set-mark-command)
   (setq-default
    exec-path (append exec-path '("/usr/local/bin"))  ; Add Homebrew path
    ns-command-modifier 'meta                         ; Meta key is Command
@@ -181,6 +180,7 @@ My terminal Emacs configuration, the one that I use the most, actually.
 
 #+BEGIN_SRC emacs-lisp
 (when window-system
+  (global-set-key (kbd "C-2") 'set-mark-command)
   (scroll-bar-mode 0)
   (fringe-mode 0))
 #+END_SRC
