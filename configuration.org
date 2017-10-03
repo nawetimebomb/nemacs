@@ -50,6 +50,7 @@ defaults and they are here:
 
 #+BEGIN_SRC emacs-lisp
 (setq-default
+ completion-cycle-threshold t                              ; Autocomplete in cycle
  cursor-in-non-selected-windows t                          ; Hide cursor in inactive windows
  delete-by-moving-to-trash t                               ; Move file to trash instead of removing it
  display-time-default-load-average nil                     ; Don't display load avereage
