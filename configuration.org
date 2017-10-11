@@ -519,8 +519,6 @@ My whole configuration is written in =org-mode=.
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :ensure nil
-  :init
-  (add-hook 'org-mode-hook #'org-bullets-mode)
   :config
   (setq
    org-descriptive-links nil
