@@ -9,7 +9,7 @@ https://github.com/pixlark/JonathanBlowEmacsTheme")
  'nawe
  '(default ((t (:inherit nil :stipple nil :background unspecified :foreground unspecified :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "outline" :family "Monospace"))))
  (when window-system
-   '(default ((t (:inherit (default) :background "#322b32" :foreground "#a9a999" :font "DejaVu Sans Mono-12" :height 100)))))
+   '(default ((t (:inherit (default) :background "#322b32" :foreground "#a9a999" :font "DejaVu Sans Mono-12" :height 90)))))
  '(bold ((t (:background unspecified :foreground unspecified :weight bold))))
  '(italic ((t (:background unspecified :foreground unspecified :underline nil))))
  '(cursor ((t (:background "#54ff9f" :foreground "#2b2b2b"))))
