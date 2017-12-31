@@ -7,11 +7,11 @@ https://github.com/pixlark/JonathanBlowEmacsTheme")
 
 (custom-theme-set-faces
  'nawe
- '(default ((t (:inherit nil :stipple nil :background unspecified :foreground unspecified :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "outline" :family "Monospace"))))
+ '(default ((t (:inherit nil :stipple nil :background "#322b32" :foreground "#a9a999" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "outline" :family "DejaVu Sans Mono-12"))))
  (when window-system
-   '(default ((t (:inherit (default) :background "#322b32" :foreground "#a9a999" :font "DejaVu Sans Mono-12" :height 90)))))
+   '(default ((t (:inherit (default) :background "#322b32" :Foreground "#a9a999" :font "DejaVu Sans Mono-12" :height 90)))))
  (when (eq system-type 'darwin)
-   '(default ((t (:inherit (default) :font "DejaVu Sans Mono-12" :height 130)))))
+   '(default ((t (:inherit (default) :background "#322b32" :foreground "#a9a999" :font "DejaVu Sans Mono-12" :height 130)))))
  '(bold ((t (:background unspecified :foreground unspecified :weight bold))))
  '(italic ((t (:background unspecified :foreground unspecified :underline nil))))
  '(cursor ((t (:background "#54ff9f" :foreground "#2b2b2b"))))

@@ -411,42 +411,6 @@ cut the line where you at if there's no region selected.
     :mode ("\\.sass\\'" "\\.scss\\'"))
 #+END_SRC
 
-*** Golang
-
-Install =go-mode=.
-
-#+BEGIN_SRC emacs-lisp
-(use-package go-mode)
-#+END_SRC
-
-Define =$GOPATH= and tell Emacs where to find Go binaries.
-
-#+BEGIN_SRC emacs-lisp
-(setenv "GOPATH" (concat (getenv "HOME") "/go"))
-(elnawe::append-to-path (concat (getenv "GOPATH") "/bin"))
-#+END_SRC
-
-Run =goimports= on every file when saving. This formats the file and
-automatically updates the list of imports. This requires =goimports=.
-
-#+BEGIN_SRC emacs-lisp
-(setq gofmt-command "goimports")
-(add-hook 'before-save-hook 'gofmt-before-save)
-#+END_SRC
-
-When working with Go:
-
-- Use =company-mode= with Go backend. This requires =gocode=,
-- Redefine the =compile= command to a Go-specific command.
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'go-mode-hook
-          (lambda ()
-            (if (not (string-match "go" compile-command))
-                (set (make-local-variable 'compile-command)
-                     "go build -v && go test -v && go vet"))))
-#+END_SRC
-
 *** HTML
 
 Using HTML mode defined in =sgml-mode.el=.
@@ -536,6 +500,39 @@ My whole configuration is written in =org-mode=.
    org-src-fontify-natively t
    org-src-tab-acts-natively t
    org-src-window-setup 'current-window))
+#+END_SRC
+
+*** Rust
+
+The Rust mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package rust-mode)
+#+END_SRC
+
+Racer, the Rust helper
+
+#+BEGIN_SRC emacs-lisp
+(use-package racer
+  :config
+  (setq racer-rust-src-path (exec-path-from-shell-copy-env "RUST_SRC_PATH")))
+#+END_SRC
+
+Configuring Emacs to use Racer when programming Rust
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'rust-mode-hook #'eldoc-mode)
+#+END_SRC
+
+Add completition with company
+
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :config
+  (global-company-mode 1)
+  (global-set-key (kbd "TAB") #'company-indent-or-complete-common)
+  (setq company-tooltip-align-annotations t))
 #+END_SRC
 
 ** Multiple Cursors
@@ -728,13 +725,12 @@ progress.
 
 ** Custom theme
 
-So, I love *Zenburn* but I've found a pretty good theme out thre that
-doesn't vary a lot from Zenburn and at the same time it looks pretty
-similar of what Jonathan Blow, which looks great. I've a copy of my old
-Zenburn configuration in [[file+emacs:zenburn-configuration.org][here]]
+The original Rust language theme inspired from
+[[https://doc.rust-lang.org/book/second-edition][The Rust Programming
+Language]] book.
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'custom-theme-load-path "~/.emacs.d/theme")
 
-(load-theme 'nawe t)
+(load-theme 'rust t)
 #+END_SRC
