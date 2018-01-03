@@ -46,6 +46,12 @@
 
  '(font-lock-type-face ((t (:foreground "#b6111e"))))
 
+ '(js2-external-variable ((t (:foreground "#b6111e"))))
+ '(js2-function-param ((t (:foreground "#003b81"))))
+ '(js2-jsdoc-tag ((t (:foreground "#3f3f00" :weight bold))))
+ '(js2-jsdoc-type ((t (:foreground "#b6111e"))))
+ '(js2-jsdoc-value ((t (:foreground "#003b81"))))
+
  '(show-paren-match-face ((t (:background "#8cac8c" :inherit (default)))))
  '(show-paren-mismatch-face ((t (:background "#d9a0a0" :inherit (default)))))
 
