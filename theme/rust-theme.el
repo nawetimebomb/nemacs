@@ -66,13 +66,13 @@
  ;; UI
  '(company-scrollbar-bg ((t (:background "#2a1d19"))))
  '(company-scrollbar-fg ((t (:background "#e69f67"))))
- '(company-tooltip ((t (:height 120 :inherit (mode-line)))))
+ '(company-tooltip ((t (:inherit (mode-line)))))
  '(company-tooltip-annotation ((t (:foreground "#e69f67"))))
  '(company-tooltip-common ((t (:foreground "#e69f67"))))
  '(company-tooltip-selection ((t (:background "#2a1d19" :foreground "#e69f67" :weight bold))))
 
  '(minibuffer-prompt ((t (:foreground "#003b81" :weight bold))))
 
- '(mode-line ((t (:background "#3b2e2a" :box nil :foreground "#c8c9db" :height 120))))
+ '(mode-line ((t (:background "#3b2e2a" :box nil :foreground "#c8c9db"))))
  '(mode-line-buffer-id ((t (:background unspecified :distant-foreground "#c8c9db" :foreground "#e69f67" :weight bold))))
  '(mode-line-inactive ((t (:background "#878777" :inherit (mode-line))))))
