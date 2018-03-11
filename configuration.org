@@ -1,10 +1,12 @@
 #+TITLE: Configuration.org - A literate programming for my Emacs configuration
-#+AUTHOR: Nahuel JesÃºs Sacchetti
+#+AUTHOR: Nahuel Jesús Sacchetti
 #+OPTIONS: toc:3
 
 * Introduction
 
 Welcome to my configuration file for GNU Emacs.
+
+*Last (big) Update:* 03-11-2018
 
 #+BEGIN_QUOTE
 Emacs was originally an extensible text editor written by Richard
@@ -25,7 +27,7 @@ not have time to right now.
 
 #+BEGIN_SRC emacs-lisp
 (setq
- user-full-name "Nahuel JesÃºs Sacchetti"
+ user-full-name "Nahuel Jesús Sacchetti"
  user-mail-address "nahueljsacchetti@gmail.com")
 #+END_SRC
 
@@ -168,22 +170,19 @@ Intializing env for Emacs.
   :config (exec-path-from-shell-initialize))
 #+END_SRC
 
-*** Terminal
-
-My terminal Emacs configuration, the one that I use the most, actually.
+*** Windows
 
 #+BEGIN_SRC emacs-lisp
-(when (not window-system)
-  (xterm-mouse-mode))
-#+END_SRC
-
-*** Window System
-
-#+BEGIN_SRC emacs-lisp
-(when window-system
+(when (eq system-type 'windows-nt)
   (global-set-key (kbd "C-2") 'set-mark-command)
   (scroll-bar-mode 0)
-  (fringe-mode 0))
+  (fringe-mode 0)
+
+  ;; Windows performance tweaks
+  (when (boundp 'w32-pipe-read-delay)
+    (setq w32-pipe-read-delay 0))
+  (when (boundp 'w32-pipe-buffer-size)
+    (setq irony-server-w32-pipe-buffer-size (* 64 1024))))
 #+END_SRC
 
 ** Load =.custom.el=
@@ -390,7 +389,9 @@ cut the line where you at if there's no region selected.
 
 ** Languages
 
-*** C
+*** My hobby
+
+**** C
 
 #+BEGIN_SRC emacs-lisp
 (setq-default
@@ -398,71 +399,39 @@ cut the line where you at if there's no region selected.
  c-default-style "user")
 #+END_SRC
 
-*** CSS
+**** C++
+
+Treat headers (.h) as C++ files.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package css-mode
-    :ensure nil
-    :config
-    (setq-default css-indent-offset 4))
-
-  (use-package scss-mode
-    :ensure nil
-    :mode ("\\.sass\\'" "\\.scss\\'"))
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 #+END_SRC
 
-*** HTML
-
-Using HTML mode defined in =sgml-mode.el=.
+Indentation and code styling configuration.
 
 #+BEGIN_SRC emacs-lisp
-(use-package sgml-mode
-  :ensure nil
-  :init
-  (add-hook 'html-mode-hook #'sgml-electric-tag-pair-mode)
-  (add-hook 'html-mode-hook #'sgml-name-8bit-mode)
-  :config
-  (setq sgml-basic-offset 4))
+(defun elnawe::c++-mode-hook ()
+  (c-set-style "stroustrup")
+  (auto-fill-mode)
+  (c-set-offset 'substatement-open 0)
+  (c-toggle-auto-hungry-state 0))
+
+(add-hook 'c++-mode-hook 'elnawe::c++-mode-hook)
 #+END_SRC
 
-*** JavaScript
+Code completition
 
 #+BEGIN_SRC emacs-lisp
-(use-package js
-  :init
-  (add-hook 'js-mode #'js2-mode))
+;; Need to confirm that clang and cMake are installed before making this a default configuration.
 
-(use-package js2-mode
-  :mode ("\\.js\\'")
-  :config
-  (setq js-indent-level 4))
+;; (use-package irony
+;;   :config
+;;   (add-hook 'c++-mode-hook 'irony-mode))
 
-(use-package json-mode
-  :init
-  (add-hook 'json-mode-hook
-            (lambda ()
-              (make-local-variable 'js-indent-level)
-              (setq js-indent-level 2))))
-
-(use-package rjsx-mode
-  :mode ("/swa-ui-app/.*\\.js$")
-  :config
-  (setq js-indent-level 4))
-
-(use-package tide)
-
-(use-package typescript-mode
-  :init
-  (defun setup-tide-mode ()
-    (interactive)
-    (tide-setup)
-    (eldoc-mode 1)
-    (tide-hl-identifier-mode))
-  (add-hook 'before-save-hook #'tide-format-before-save)
-  (add-hook 'typescript-mode-hook #'setup-tide-mode))
+;; (use-package company-irony)
 #+END_SRC
 
-*** Markdown
+**** Markdown
 
 Mostly I use =org-mode=, but sometimes you need to write down your
 README files.
@@ -476,7 +445,7 @@ README files.
      markdown-split-window-direction 'right))
 #+END_SRC
 
-*** Org
+**** Org
 
 My whole configuration is written in =org-mode=.
 
@@ -502,7 +471,7 @@ My whole configuration is written in =org-mode=.
    org-src-window-setup 'current-window))
 #+END_SRC
 
-*** Rust
+**** Rust
 
 The Rust mode
 
@@ -534,6 +503,75 @@ Add completition with company
   (global-set-key (kbd "TAB") #'company-indent-or-complete-common)
   (setq company-tooltip-align-annotations t))
 #+END_SRC
+
+*** When working...
+
+**** CSS
+
+#+BEGIN_SRC emacs-lisp
+  (use-package css-mode
+    :ensure nil
+    :config
+    (setq-default css-indent-offset 4))
+
+  (use-package scss-mode
+    :ensure nil
+    :mode ("\\.sass\\'" "\\.scss\\'"))
+#+END_SRC
+
+**** HTML
+
+Using HTML mode defined in =sgml-mode.el=.
+
+#+BEGIN_SRC emacs-lisp
+(use-package sgml-mode
+  :ensure nil
+  :init
+  (add-hook 'html-mode-hook #'sgml-electric-tag-pair-mode)
+  (add-hook 'html-mode-hook #'sgml-name-8bit-mode)
+  :config
+  (setq sgml-basic-offset 4))
+#+END_SRC
+
+**** JavaScript
+
+#+BEGIN_SRC emacs-lisp
+(use-package js
+  :init
+  (add-hook 'js-mode #'js2-mode))
+
+(use-package js2-mode
+  :mode ("\\.js\\'")
+  :config
+  (setq js-indent-level 4))
+
+(use-package json-mode
+  :init
+  (add-hook 'json-mode-hook
+            (lambda ()
+              (make-local-variable 'js-indent-level)
+              (setq js-indent-level 2))))
+
+(use-package rjsx-mode
+  :mode ("/fclub-native/.*\\.js$")
+  :config
+  (setq js-indent-level 4))
+
+(use-package tide)
+
+(use-package typescript-mode
+  :init
+  (defun setup-tide-mode ()
+    (interactive)
+    (tide-setup)
+    (eldoc-mode 1)
+    (tide-hl-identifier-mode))
+  (add-hook 'before-save-hook #'tide-format-before-save)
+  (add-hook 'typescript-mode-hook #'setup-tide-mode))
+#+END_SRC
+
+
+
 
 ** Multiple Cursors
 
