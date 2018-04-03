@@ -763,12 +763,11 @@ progress.
 
 ** Custom theme
 
-The original Rust language theme inspired from
-[[https://doc.rust-lang.org/book/second-edition][The Rust Programming
-Language]] book.
+My favorite, the Zenburn theme. This is a custom adaption of the theme
+actually.
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'custom-theme-load-path "~/.emacs.d/theme")
 
-(load-theme 'rust t)
+(load-theme 'zenburn t)
 #+END_SRC
