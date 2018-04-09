@@ -29,8 +29,9 @@
 
  ;; CODING
  '(font-lock-builtin-face ((t (:foreground "#f0f0f0" :weight normal))))
- '(font-lock-keyword-face ((t (:foreground "#f0f0f0" :weight normal))))
+ '(font-lock-keyword-face ((t (:foreground "#d0d0d0" :weight bold))))
  '(font-lock-preprocessor-face ((t (:foreground "#f0f0f0" :weight normal))))
+ '(font-lock-constant-face ((t (:foreground "#f0f0f0" :weight normal))))
 
  '(font-lock-comment-face ((t (:foreground "#7f9f7f"))))
  '(font-lock-comment-delimiter-face ((t (:foreground "#7f9f7f"))))
@@ -39,8 +40,6 @@
 
  '(font-lock-function-name-face ((t (:inherit (default)))))
  '(font-lock-variable-name-face ((t (:inherit (default)))))
-
- '(font-lock-constant-face ((t (:foreground "#003b81" :weight bold))))
 
  '(font-lock-type-face ((t (:foreground "#cc9393"))))
 
@@ -70,12 +69,12 @@
  '(org-warning ((t (:inherit (error)))))
 
  ;; UI
- '(company-scrollbar-bg ((t (:background "#878777"))))
- '(company-scrollbar-fg ((t (:background "#d0bf8b"))))
- '(company-tooltip ((t (:inherit (mode-line)))))
+ '(company-scrollbar-bg ((t (:background "#2f4f2f"))))
+ '(company-scrollbar-fg ((t (:background "#ababaa"))))
+ '(company-tooltip ((t :background "#131313" (:inherit (mode-line)))))
  '(company-tooltip-annotation ((t (:foreground "#93e0e3"))))
  '(company-tooltip-common ((t (:foreground "#e69f67"))))
- '(company-tooltip-selection ((t (:background "#878777" :foreground "#d0bf8f" :weight bold))))
+ '(company-tooltip-selection ((t (:inherit (mode-line) :weight bold))))
 
  '(minibuffer-prompt ((t (:foreground "#7cb8bb" :weight bold))))
 
