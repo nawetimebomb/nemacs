@@ -55,6 +55,8 @@
  '(show-paren-match-face ((t (:background "#8cac8c" :inherit (default)))))
  '(show-paren-mismatch-face ((t (:background "#d9a0a0" :inherit (default)))))
 
+ '(tide-hl-identifier-face ((t (:inherit (highlight)))))
+
  ;; ORG
  '(org-level-1 ((t (:foreground "#003b81" :height 300 :weight bold))))
  '(org-level-2 ((t (:foreground "#512caf" :height 200 :weight bold))))
@@ -75,4 +77,10 @@
 
  '(mode-line ((t (:background "#3b2e2a" :box nil :foreground "#c8c9db"))))
  '(mode-line-buffer-id ((t (:background unspecified :distant-foreground "#c8c9db" :foreground "#e69f67" :weight bold))))
- '(mode-line-inactive ((t (:background "#878777" :inherit (mode-line))))))
+ '(mode-line-inactive ((t (:background "#878777" :inherit (mode-line)))))
+
+ '(neo-dir-link-face ((t :foreground "#003b81")))
+ '(neo-header-face ((t :inherit (default))))
+ '(neo-root-dir-face ((t :inherit (default) :weight bold)))
+ '(neo-vc-edited-face ((t (:foreground "#db7625" :weight bold))))
+ '(neo-vc-up-to-date-face ((t (:inherit (default))))))

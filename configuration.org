@@ -174,6 +174,7 @@ Intializing env for Emacs.
 
 #+BEGIN_SRC emacs-lisp
 (when (eq system-type 'windows-nt)
+  (setq default-buffer-file-coding-system 'utf-8-unix)
   (global-set-key (kbd "C-2") 'set-mark-command)
   (scroll-bar-mode 0)
   (fringe-mode 0)
@@ -771,4 +772,13 @@ actually.
 (add-to-list 'custom-theme-load-path "~/.emacs.d/theme")
 
 (load-theme 'zenburn t)
+#+END_SRC
+
+* Custom Packages
+
+Load custom packages.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/packages")
+(require 'jai-mode)
 #+END_SRC
