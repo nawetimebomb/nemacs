@@ -29,7 +29,7 @@
  display-time-default-load-average nil                     ; Don't display load avereage
  display-time-format "%H:%M"                               ; Format the time string
  fill-column 120                                           ; Width before automatic line breaks
- frame-title-format "Emacs"                                ; Change frame title to "Emacs"
+ frame-title-format "el emacs del nawe"                    ; Change the frame title to be more personal ;)
  help-window-select t                                      ; Focus help windows when opened
  indent-tabs-mode nil                                      ; Use spaces for indentation
  inhibit-startup-screen t                                  ; Disable the startup window
