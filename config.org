@@ -1,0 +1,575 @@
+#+TITLE: Init
+#+AUTHOR: Nahuel Jesús Sacchetti
+
+* Emacs everyday
+
+** Personal Information
+
+#+BEGIN_SRC emacs-lisp
+(setq
+ user-full-name "Nahuel Jesús Sacchetti"
+ user-mail-address "nahueljsacchetti@gmail.com")
+#+END_SRC
+
+** Bootstrap
+
+*** Force garbage collection when focusing out
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'focus-out-hook #'garbage-collect)
+#+END_SRC
+
+*** Set default values for better performance and feeling
+
+#+BEGIN_SRC emacs-lisp
+(setq-default
+ completion-cycle-threshold t                              ; Autocomplete in cycle
+ cursor-in-non-selected-windows t                          ; Hide cursor in inactive windows
+ delete-by-moving-to-trash t                               ; Move file to trash instead of removing it
+ display-time-default-load-average nil                     ; Don't display load avereage
+ display-time-format "%H:%M"                               ; Format the time string
+ fill-column 120                                           ; Width before automatic line breaks
+ frame-title-format "Emacs"                                ; Change frame title to "Emacs"
+ help-window-select t                                      ; Focus help windows when opened
+ indent-tabs-mode nil                                      ; Use spaces for indentation
+ inhibit-startup-screen t                                  ; Disable the startup window
+ initial-scratch-message ""                                ; Empty *scratch* buffer
+ left-margin-width 1 right-margin-width 0                  ; Add left and right margins
+ view-read-only t                                          ; View the readonly files
+ ring-bell-function 'ignore                                ; Ignore any kind of bell notifications
+ scroll-conservatively most-positive-fixnum                ; Always scroll by one line
+ scroll-margin 10                                          ; Add a margin when scrolling vertically
+ select-enable-clipboard t                                 ; Merge system's and Emacs' clipboard
+ sentence-end-double-space nil                             ; End sentence when dot and space
+ show-trailing-whitespace nil                              ; Display trailing whitespaces
+ split-height-threshold 1000                               ; Enable vertical splitting
+ split-width-threshold nil                                 ; Disable horizontal splitting
+ tab-width 4                                               ; Set indentation width
+ truncate-lines nil                                        ; Disable truncate lines
+ uniquify-buffer-name-style 'forward                       ; Make buffer names unique
+ visible-bell nil                                          ; Replace the alarm to an audible one
+ window-combination-resize t                               ; Resize window proportionally
+ x-stretch-cursor t)                                       ; Give cursor glyph width
+(delete-selection-mode)                                    ; Replace region when inserting text
+(display-time-mode)                                        ; Enable time-mode in mode-line
+(fset 'yes-or-no-p 'y-or-n-p)                              ; Alias y/n prompts to yes/no
+(global-auto-revert-mode)                                  ; Refresh buffer if changed outside Emacs
+(global-subword-mode)                                      ; Iterate through camelCase words
+(menu-bar-mode 0)                                          ; Disable the menu bar
+(tool-bar-mode 0)                                          ; Disable the tool-bar
+(mouse-avoidance-mode 'none)                               ; Avoid mouse colission with point
+(define-key global-map "\C-ci" #'elnawe::open-config-file) ; Binds `C-ci' to open the configuration
+#+END_SRC
+
+*** Emacsclient and Job Control
+
+Emacsclient opens a frame that runs over the Daemon instead of creating a new instance. Here I just override the way
+that =C-x C-c= works to prompt a question before closing the frame as I do when I use =emacs=.
+
+Also, since I don't use =Job control mode= in my Terminal, i unbind the =C-z= and =C-x C-z= command =(suspend-emacs)=.
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe::emacsclient/promt-before-closing-frame ()
+  "Prompts before closing a frame with `C-x C-c' like `emacs' does"
+  (interactive)
+  (if (y-or-n-p "Are you sure you want to exit Emacs? ")
+      (save-buffers-kill-terminal)))
+
+(global-set-key (kbd "C-x C-c") #'elnawe::emacsclient/promt-before-closing-frame)
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "C-x C-z"))
+#+END_SRC
+
+*** My helpers
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe::open-config-file ()
+  "Opens the config file `config.org' on a new buffer"
+  (interactive)
+  (find-file "~/.emacs.d/config.org"))
+
+(defun elnawe::get-configurations-folder ()
+  "Returns the folder where configuration files are stored"
+  (concat (getenv "HOME") "/.emacs.config"))
+
+(defun elnawe::kill-current-buffer ()
+  "Kill current buffer without prompting"
+  (interactive)
+  (kill-buffer (current-buffer)))
+#+END_SRC
+
+*** Operating System specific configuration
+
+**** Emacs on Mac
+
+#+BEGIN_SRC emacs-lisp
+(when (eq system-type 'darwin)
+  (setq-default
+   exec-path (append exec-path '("/usr/local/bin"))  ; Add Homebrew path.
+   ns-command-modifier 'meta                         ; Meta key is Command.
+   ns-option-modifier nil                            ; I use Alt/Option to expand my keyboard layout.
+   ns-right-option-modifier 'super                   ; Never use right Alt key so I can use it as Super key.
+   ns-use-srgb-colorspace nil)                       ; Using different colorspace for Mac.
+
+  (use-package exec-path-from-shell
+    :if (memq window-system '(mac ns))
+    :config (exec-path-from-shell-initialize)))      ; Initialize environment for Emacs.
+#+END_SRC
+
+**** Emacs on Windows
+
+#+BEGIN_SRC emacs-lisp
+(when (eq system-type 'windows-nt)
+  (setq
+   default-buffer-file-coding-system 'utf-8-unix     ; Encode file as Unix does.
+   vc-handled-backends nil)                          ; Revoming Git as backend, works faster.
+  (global-set-key (kbd "C-2") 'set-mark-command)     ; Set mark with Ctrl-2.
+  (scroll-bar-mode 0)                                ; Force removal of the scrollbar.
+  (fringe-mode 0)                                    ; Force removal of the fringe.
+
+  ;; Windows performance tweaks
+  (when (boundp 'w32-pipe-read-delay)
+    (setq w32-pipe-read-delay 0))
+  (when (boundp 'w32-pipe-buffer-size)
+    (setq irony-server-w32-pipe-buffer-size (* 64 1024))))
+#+END_SRC
+
+*** Loading the =custom.el= file
+
+Using the customization interface from Emacs will save my changes into a =custom.el= file which is not tracked by Git.
+This let me change specific configurations that aren't here without changing the main configuration that is shared
+between other machines.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+#+END_SRC
+
+*** Loading the =secrets=
+
+This loads a collection of secret and sensible information. I keep this file separated to maintain privacy.
+
+** Functionality changes
+
+*** Fill paragraph automatically on =text-mode=
+
+#+BEGIN_SRC emacs-lisp
+(use-package simple
+  :ensure nil
+  :init
+  (add-hook 'text-mode-hook #'turn-on-auto-fill))
+#+END_SRC
+
+*** Managing the backup copies
+
+#+BEGIN_SRC emacs-lisp
+(setq-default
+ backup-by-copying t
+ backup-directory-alist '(("." . "~/.emacs.config/saves"))
+ delete-old-versions 'never
+ make-backup-files t
+ version-control 'numbered)
+#+END_SRC
+
+*** Navigation
+
+**** A better =move-beginning-of-line= implementation
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe::dwin/beginning-of-line ()
+  "Move point to first non-whitespace character, or beginning of line."
+  (interactive "^")
+  (let ((origin (point)))
+    (beginning-of-line)
+    (and (= origin (point))
+         (back-to-indentation))))
+
+(global-set-key [remap move-beginning-of-line] #'elnawe::dwin/beginning-of-line)
+(global-set-key [remap org-beginning-of-line] #'elnawe::dwin/beginning-of-line)
+#+END_SRC
+
+**** Comment or uncomment blocks
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x ;") #'comment-or-uncomment-region)
+#+END_SRC
+
+**** Force to kill buffer without asking
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x k") #'elnawe::kill-current-buffer)
+#+END_SRC
+
+*** Restarting Emacs without quitting
+
+#+BEGIN_SRC emacs-lisp
+(use-package restart-emacs
+  :bind
+  ("C-x C-M-c" . restart-emacs))
+#+END_SRC
+
+*** Window Management
+
+**** A better splitting windows approach
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe::window/create-bottom-and-switch ()
+  "Creates a new window to the bottom and then switch to it"
+  (interactive)
+  (split-window-below)
+  (balance-windows)
+  (other-window 1))
+
+(defun elnawe::window/create-right-and-switch ()
+  "Creates a new window to the right and then switch to it"
+  (interactive)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
+
+(global-set-key (kbd "C-x 2") 'elnawe::window/create-bottom-and-switch)
+(global-set-key (kbd "C-x 3") 'elnawe::window/create-right-and-switch)
+#+END_SRC
+
+**** Moving through windows easily
+
+#+BEGIN_SRC emacs-lisp
+(use-package windmove
+  :ensure nil
+  :bind
+  (("C-c m h". windmove-left)
+   ("C-c m l". windmove-right)
+   ("C-c m k". windmove-up)
+   ("C-c m j". windmove-down)
+   ("C-c m o" . other-window)))
+#+END_SRC
+
+**** Saving the current desktop
+
+#+BEGIN_SRC emacs-lisp
+(use-package desktop
+  :ensure nil
+  :demand t
+  :config
+  (desktop-save-mode))
+#+END_SRC
+
+**** Temporal buffers management
+
+#+BEGIN_SRC emacs-lisp
+(defun elnawe::window/split-vertically-for-temp-buffers ()
+  (when (one-window-p t)
+    (split-window-vertically)))
+
+(add-hook 'temp-buffer-window-setup-hook
+          'elnawe::window/split-vertically-for-temp-buffers)
+#+END_SRC
+
+**** Undo/redo windows
+
+#+BEGIN_SRC emacs-lisp
+(use-package winner
+  :ensure nil
+  :defer 1
+  :bind
+  (("C-c b M-h" . winner-undo)
+   ("C-c b M-l" . winner-redo))
+  :init
+  (winner-mode))
+#+END_SRC
+
+* Programming
+
+** General settings
+
+*** Highlighting parens
+
+#+BEGIN_SRC emacs-lisp
+(use-package show-paren-mode
+  :ensure nil
+  :init
+  (show-paren-mode t))
+#+END_SRC
+
+*** Improving =C-w=: Kill lige and region
+
+#+BEGIN_SRC emacs-lisp
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead"
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+#+END_SRC
+
+*** Project management
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :init
+  (setq-default
+   projectile-cache-file (expand-file-name ".projectile-cache" (elnawe::get-configurations-folder))
+   projectile-enable-caching t
+   projectile-keymap-prefix (kbd "C-c p")
+   projectile-globally-ignored-directories '("node_modules")
+   projectile-known-projects-file (expand-file-name ".projectile-bookmarks" (elnawe::get-configurations-folder))
+   projectile-mode-line '(:eval (projectile-project-name))
+   projectile-switch-project-action 'projectile-find-file)
+  (projectile-mode))
+#+END_SRC
+
+*** Search and replace
+
+#+BEGIN_SRC emacs-lisp
+(use-package anzu
+  :init
+  (global-anzu-mode)
+  :config
+  (setq
+   anzu-cons-mode-line-p nil)
+  (global-set-key [remap query-replace] 'anzu-query-replace)
+  (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp))
+
+(use-package isearch
+  :ensure nil
+  :bind
+  (:map isearch-mode-map
+        ("M-j" . isearch-ring-advance)
+        ("M-k" . isearch-ring-retreat)
+        :map minibuffer-local-isearch-map
+        ("M-j" . next-history-element)
+        ("M-k" . previous-history-element))
+  :config
+  (setq
+   isearch-allow-scroll t
+   lazy-highlight-cleanup nil
+   lazy-highlight-initial-delay 0))
+#+END_SRC
+
+*** Tree view
+
+#+BEGIN_SRC emacs-lisp
+(use-package neotree
+  :bind
+  (("M-2" . neotree-toggle)
+   :map neotree-mode-map
+   ("<return>" . neotree-enter)
+   ("c" . neotree-create-node)
+   ("d" . neotree-delete-node)o
+   ("j" . neotree-next-line)
+   ("k" . neotree-previous-line)
+   ("r" . neotree-rename-node)
+   ("s" . neotree-dir))
+  :config
+  (setq
+   neo-autorefresh t
+   neo-force-change-root t
+   neo-smart-open t
+   neo-theme 'arrow
+   neo-vc-integration '(face char)
+   neo-window-width 50
+   neo-window-position 'right))
+#+END_SRC
+
+*** Whitespaces
+
+#+BEGIN_SRC emacs-lisp
+(use-package whitespace
+  :demand t
+  :ensure nil
+  :init
+  (add-hook 'before-save-hook #'delete-trailing-whitespace)
+  (add-hook 'prog-mode-hook #'whitespace-turn-on)
+  (add-hook 'text-mode-hook #'whitespace-turn-on)
+  :config
+  (setq whitespace-style '(face tab trailing)))
+#+END_SRC
+
+*** Word highlighting
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (font-lock-add-keywords nil
+                                    '(("\\<\\(FIXME\\|NOTE\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
+#+END_SRC
+
+** Language settings
+
+*** =css-mode=, =scss-mode=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package css-mode
+    :ensure nil
+    :config
+    (setq-default css-indent-offset 4))
+
+  (use-package scss-mode
+    :ensure nil
+    :mode ("\\.sass\\'" "\\.scss\\'" "\\.less\\'"))
+#+END_SRC
+
+*** =html-mode=, =sgml-mode=
+
+#+BEGIN_SRC emacs-lisp
+(use-package sgml-mode
+  :ensure nil
+  :init
+  (add-hook 'html-mode-hook #'sgml-electric-tag-pair-mode)
+  (add-hook 'html-mode-hook #'sgml-name-8bit-mode)
+  :config
+  (setq sgml-basic-offset 4))
+#+END_SRC
+
+*** JavaScript, =js2-mode=, =json-mode=, =typescript-mode=
+
+#+BEGIN_SRC emacs-lisp
+(use-package js
+  :init
+  (add-hook 'js-mode #'js2-mode))
+
+(use-package js2-mode
+  :mode ("\\.js\\'")
+  :config
+  (setq js-indent-level 4))
+
+(use-package json-mode
+  :init
+  (add-hook 'json-mode-hook
+            (lambda ()
+              (make-local-variable 'js-indent-level)
+              (setq js-indent-level 2))))
+
+(use-package rjsx-mode
+  :mode ("/fclub-native/.*\\.js$")
+  :config
+  (setq js-indent-level 4))
+
+(use-package tide)
+
+(use-package typescript-mode
+  :init
+  (defun setup-tide-mode ()
+    (interactive)
+    (tide-setup)
+    (eldoc-mode 1)
+    (tide-hl-identifier-mode))
+  (add-hook 'before-save-hook #'tide-format-before-save)
+  (add-hook 'typescript-mode-hook #'setup-tide-mode))
+#+END_SRC
+
+*** =markdown-mode=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package markdown-mode
+    :mode ("INSTALL\\'" "LICENSE\\'" "README\\'" "\\.md\\'" "\\.markdown\\'")
+    :config
+    (setq
+     markdown-asymmetric-header t
+     markdown-split-window-direction 'right))
+#+END_SRC
+
+*** =org-mode=
+
+#+BEGIN_SRC emacs-lisp
+(use-package org
+  :ensure nil
+  :config
+  (setq
+   org-descriptive-links nil
+   org-ellipsis "\u21b4"
+   org-startup-folded nil
+   org-startup-truncated nil))
+
+(use-package org-src
+  :ensure nil
+  :after org
+  :config
+  (setq
+   org-edit-src-content-indentation 0
+   org-edit-src-persistent-message nil
+   org-src-fontify-natively t
+   org-src-tab-acts-natively t
+   org-src-window-setup 'current-window))
+#+END_SRC
+
+*** =rust-mode=
+
+#+BEGIN_SRC emacs-lisp
+(use-package rust-mode)
+
+(use-package racer
+  :config
+  (setq racer-rust-src-path (exec-path-from-shell-copy-env "RUST_SRC_PATH")))
+
+(use-package company
+  :config
+  (global-company-mode 1)
+  (global-set-key (kbd "TAB") #'company-indent-or-complete-common)
+  (setq company-tooltip-align-annotations t))
+
+(add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'rust-mode-hook #'eldoc-mode)
+#+END_SRC
+
+* Major features
+
+** Help and =help-mode=
+
+#+BEGIN_SRC emacs-lisp
+(use-package help-mode
+  :ensure nil
+  :bind
+  (:map help-mode-map
+        ("q" . kill-buffer-and-window)
+        ("<" . help-go-back)
+        (">" . help-go-forward)))
+#+END_SRC
+
+** Mode Line
+
+#+BEGIN_SRC emacs-lisp
+(load (expand-file-name "my-spaceline-config.el" user-emacs-directory))
+
+;; (defmacro with-face (STR &rest PROPS)
+;;   "Return STR propertized with PROPS."
+;;   `(propertize ,STR 'face (list ,@PROPS)))
+
+;; (defun get-buffer-state ()
+;;   (concat
+;;    "["
+;;    (cond
+;;     (buffer-read-only "R")
+;;     ((buffer-modified-p) (with-face "M" '(:inherit (mode-line-buffer-id))))
+;;     (t " "))
+;;    "]"))
+
+;; (setq-default
+;;  mode-line-format
+;;  (list
+;;   " "
+;;   '(:eval (get-buffer-state))
+;;   (with-face " %b" '(:inherit (mode-line-buffer-id)))
+;;   "  %p L%02l C%02c"
+;;   "    (%m) "
+;;   '(:eval (projectile-project-name))
+;;   " "
+;;   '(:eval (anzu--update-mode-line))))
+#+END_SRC
+
+** Load custom packages
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/packages")
+
+(require 'jai-mode)     ; A custom mode for JAI, the programming language for videogames by Jon Blow.
+#+END_SRC
+
+** My Personal Theme
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'custom-theme-load-path "~/.emacs.d/theme")
+
+(load-theme 'zenburn t)
+#+END_SRC

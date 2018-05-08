@@ -8,15 +8,15 @@
  'zenburn
  '(default ((t (:background "#242424" :box nil :foreground "#ababaa" :font "DejaVu Sans Mono"))))
  '(bold ((t (:background unspecified :foreground unspecified :weight bold))))
- '(cursor ((t (:background "#d0bf8f" :foreground unspecified))))
+ '(cursor ((t (:background "#8faf9f" :foreground unspecified))))
  '(italic ((t (:background unspecified :foreground unspecified :underline nil))))
  '(region ((t (:background "#003b81" :foreground "#f0f0f0"))))
  '(secondary-selection ((t (:background "#e1e1e1"))))
 
- '(trailing-whitespace ((t (:background "#d9a0a0"))))
+ '(whitespace-trailing ((t (:background "#aa3030"))))
 
  '(match ((t (:background "#003b81" :foreground "#f0f0f0"))))
- '(isearch ((t (:weight normal :foreground "#993030" :background "#cc9393"))))
+ '(isearch ((t (:background "#cc9393" :foreground "#993030" :weight normal))))
  '(isearch-fail ((t (:background "#aa3030" :foreground "#c1c1c1" :weight bold))))
  '(lazy-highlight ((t (:inherit (match)))))
  '(next-error ((t (:inherit (region)))))
@@ -25,7 +25,7 @@
  '(anzu-match-1 ((t (:inherit (match)))))
  '(anzu-match-2 ((t (:inherit (match)))))
  '(anzu-match-3 ((t (:inherit (match)))))
- '(anzu-mode-line ((t (:background unspecified :foreground "#101010" :weight bold))))
+ '(anzu-mode-line ((t (:inherit (mode-line) :background unspecified :weight bold))))
 
  ;; CODING
  '(font-lock-builtin-face ((t (:foreground "#f0f0f0" :weight normal))))
@@ -61,10 +61,10 @@
  '(tide--hl-highlight ((t (:background "#7f9f7f"))))
 
  ;; ORG
- '(org-level-1 ((t (:foreground "#dc8cc3" :height 200 :weight bold))))
- '(org-level-2 ((t (:foreground "#7cb8bb" :height 150 :weight bold))))
- '(org-level-3 ((t (:foreground "#cc9393" :height 120 :weight bold))))
- '(org-level-4 ((t (:foreground "#f0dfaf" :weight bold))))
+ '(org-level-1 ((t (:foreground "#dc8cc3" :weight bold))))
+ '(org-level-2 ((t (:foreground "#7cb8bb" :weight bold))))
+ '(org-level-3 ((t (:foreground "#cc9393" :weight bold))))
+ '(org-level-4 ((t (:foreground "#f0dfaf" :weight normal))))
  '(org-hide ((t (:inherit (default) :inverse-video t))))
  '(org-warning ((t (:inherit (error)))))
 
@@ -78,6 +78,21 @@
 
  '(minibuffer-prompt ((t (:foreground "#7cb8bb" :weight bold))))
 
+ ;; This mode-line configuration is used by the spaceline package.
  '(mode-line ((t (:background "#2f4f2f" :box nil :foreground "#ababaa"))))
+ '(powerline-active1 ((t (:background "#505050" :foreground "#121212"))))
+ '(powerline-active2 ((t (:inherit (default)))))
+ '(spaceline-highlight-face ((t (:inherit (mode-line)))))
+ '(spaceline-modified ((t (:background "#aa3030" :inherit (mode-line)))))
+ '(spaceline-unmodified ((t (:inherit (mode-line)))))
+ '(spaceline-read-only ((t (:background "#003b81" :inherit (mode-line)))))
  '(mode-line-buffer-id ((t (:background unspecified :distant-foreground "#000000" :foreground "#ababaa" :weight bold))))
- '(mode-line-inactive ((t (:background "#878777" :foreground "#202020" :inherit (mode-line))))))
+ '(mode-line-inactive ((t (:inherit (powerline-active1)))))
+ '(powerline-inactive1 ((t (:inherit (powerline-active1)))))
+ '(powerline-inactive2 ((t (:inherit (powerline-active1)))))
+
+ '(neo-dir-link-face ((t :foreground "#7cb8bb" :weight bold)))
+ '(neo-header-face ((t :inherit (default))))
+ '(neo-root-dir-face ((t :inherit (default) :weight bold)))
+ '(neo-vc-edited-face ((t (:foreground "#db7625" :weight bold))))
+ '(neo-vc-up-to-date-face ((t (:inherit (default))))))

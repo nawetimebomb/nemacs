@@ -4,14 +4,12 @@
 * About me
 
 #+BEGIN_QUOTE
-I am an enthusiastic Software Engineer who loves to work in a team,
-sharing knowledge and experience among peers.
+I am an enthusiastic Software Engineer who loves to work in a team, sharing knowledge and experience among peers.
 #+END_QUOTE
 
-I started programming when I was 12 years old. I've been working on a
-few open source projects as well as doing freelance. At the age of 23, I
-started a professional career in Web Frontend, though I still prefer
-more logical stuff instead of User Interface.
+I started programming when I was 12 years old. I've been working on a few open source projects as well as doing
+freelance. At the age of 23, I started a professional career in Web Frontend, though I still prefer more logical stuff
+instead of User Interface.
 
 * Features
 
@@ -28,9 +26,8 @@ more logical stuff instead of User Interface.
 
 * Download This Configuration
 
-My Emacs configuration has some personal touch even though lately I use
-mostly a "stock Emacs". I use Terminal Emacs, so most of the colors are
-adapted to how my terminals render Emacs.
+My Emacs configuration has some personal touch even though lately I use mostly a "stock Emacs". I use Terminal Emacs, so
+most of the colors are adapted to how my terminals render Emacs.
 
 ** Download Emacs in Mac
 
@@ -55,5 +52,5 @@ $ [sudo] apt-get install emacs25
 
 * Contributions
 
-If you see something that can be done in a better way or some
-configuration that you consider it's missed go ahead and submit a PR.
+If you see something that can be done in a better way or some configuration that you consider it's missed go ahead and
+submit a PR.

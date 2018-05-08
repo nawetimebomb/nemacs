@@ -1,5 +1,6 @@
 .DS_Store
 configuration.el
+config.el
 elpa
 .custom.el
 .emacs.desktop*
