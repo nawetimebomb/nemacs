@@ -356,7 +356,7 @@ This loads a collection of secret and sensible information. I keep this file sep
    :map neotree-mode-map
    ("<return>" . neotree-enter)
    ("c" . neotree-create-node)
-   ("d" . neotree-delete-node)o
+   ("d" . neotree-delete-node)
    ("j" . neotree-next-line)
    ("k" . neotree-previous-line)
    ("r" . neotree-rename-node)
@@ -366,10 +366,10 @@ This loads a collection of secret and sensible information. I keep this file sep
    neo-autorefresh t
    neo-force-change-root t
    neo-smart-open t
-   neo-theme 'arrow
+   neo-theme (if (display-graphic-p) 'classic 'arrow)
    neo-vc-integration '(face char)
    neo-window-width 50
-   neo-window-position 'right))
+   neo-window-position 'left))
 #+END_SRC
 
 *** Whitespaces
