@@ -27,6 +27,7 @@
     (spaceline-install
       '((elnawe::buffer-state-and-id :face highlight-face)
         (projectile-root :face powerline-active1)
+        (org-clock)
         (selection-info :when mark-active :face powerline-active1)
         (anzu :when active :face powerline-active1))
       '((hud buffer-position :face powerline-active1)

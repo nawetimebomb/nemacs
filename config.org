@@ -473,25 +473,7 @@ This loads a collection of secret and sensible information. I keep this file sep
 *** =org-mode=
 
 #+BEGIN_SRC emacs-lisp
-(use-package org
-  :ensure nil
-  :config
-  (setq
-   org-descriptive-links nil
-   org-ellipsis "\u21b4"
-   org-startup-folded nil
-   org-startup-truncated nil))
-
-(use-package org-src
-  :ensure nil
-  :after org
-  :config
-  (setq
-   org-edit-src-content-indentation 0
-   org-edit-src-persistent-message nil
-   org-src-fontify-natively t
-   org-src-tab-acts-natively t
-   org-src-window-setup 'current-window))
+(load (expand-file-name "my-org-config.el" user-emacs-directory))
 #+END_SRC
 
 *** =rust-mode=
@@ -531,31 +513,6 @@ This loads a collection of secret and sensible information. I keep this file sep
 
 #+BEGIN_SRC emacs-lisp
 (load (expand-file-name "my-spaceline-config.el" user-emacs-directory))
-
-;; (defmacro with-face (STR &rest PROPS)
-;;   "Return STR propertized with PROPS."
-;;   `(propertize ,STR 'face (list ,@PROPS)))
-
-;; (defun get-buffer-state ()
-;;   (concat
-;;    "["
-;;    (cond
-;;     (buffer-read-only "R")
-;;     ((buffer-modified-p) (with-face "M" '(:inherit (mode-line-buffer-id))))
-;;     (t " "))
-;;    "]"))
-
-;; (setq-default
-;;  mode-line-format
-;;  (list
-;;   " "
-;;   '(:eval (get-buffer-state))
-;;   (with-face " %b" '(:inherit (mode-line-buffer-id)))
-;;   "  %p L%02l C%02c"
-;;   "    (%m) "
-;;   '(:eval (projectile-project-name))
-;;   " "
-;;   '(:eval (anzu--update-mode-line))))
 #+END_SRC
 
 ** Load custom packages
@@ -571,5 +528,5 @@ This loads a collection of secret and sensible information. I keep this file sep
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'custom-theme-load-path "~/.emacs.d/theme")
 
-(load-theme 'zenburn t)
+(load-theme 'monochrome-light t)
 #+END_SRC

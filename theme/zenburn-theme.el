@@ -12,6 +12,7 @@
  '(italic ((t (:background unspecified :foreground unspecified :underline nil))))
  '(region ((t (:background "#003b81" :foreground "#f0f0f0"))))
  '(secondary-selection ((t (:background "#e1e1e1"))))
+ '(highlight ((t (:background "#3f3f3f"))))
 
  '(whitespace-trailing ((t (:background "#aa3030"))))
 
@@ -25,7 +26,7 @@
  '(anzu-match-1 ((t (:inherit (match)))))
  '(anzu-match-2 ((t (:inherit (match)))))
  '(anzu-match-3 ((t (:inherit (match)))))
- '(anzu-mode-line ((t (:inherit (mode-line) :background unspecified :weight bold))))
+ '(anzu-mode-line ((t (:background unspecified :weight bold))))
 
  ;; CODING
  '(font-lock-builtin-face ((t (:foreground "#f0f0f0" :weight normal))))
@@ -61,11 +62,17 @@
  '(tide--hl-highlight ((t (:background "#7f9f7f"))))
 
  ;; ORG
- '(org-level-1 ((t (:foreground "#dc8cc3" :weight bold))))
- '(org-level-2 ((t (:foreground "#7cb8bb" :weight bold))))
- '(org-level-3 ((t (:foreground "#cc9393" :weight bold))))
- '(org-level-4 ((t (:foreground "#f0dfaf" :weight normal))))
+ '(org-date ((t (:foreground "#f0dfaf"))))
+ '(org-headline-done ((t (:foreground unspecified :strike-through t))))
  '(org-hide ((t (:inherit (default) :inverse-video t))))
+ '(org-level-1 ((t (:background "#131313" :foreground "#f0f0f0" :weight bold))))
+ '(org-level-2 ((t (:foreground "#d0d0d0" :weight bold))))
+ '(org-level-3 ((t (:foreground "#aaaaaa" :weight bold))))
+ '(org-level-4 ((t (:foreground "#999999" :weight bold))))
+ '(org-link ((t (:background unspecified :foreground "#7f9f7f"))))
+ '(org-property-value ((t (:foreground "#aaaaaa"))))
+ '(org-special-keyword ((t (:foreground "#bde0f3"))))
+ '(org-tag ((t (:background "#131313"))))
  '(org-warning ((t (:inherit (error)))))
 
  ;; UI
