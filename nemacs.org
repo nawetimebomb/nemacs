@@ -231,6 +231,11 @@ If `STRICT-P', return nil if no project was found, otherwise return `default-dir
          (back-to-indentation))))
 (global-set-key [remap move-beginning-of-line] #'nemacs-move-beginning-of-line)
 (global-set-key [remap org-beginning-of-line] #'nemacs-move-beginning-of-line)
+
+(defun open-configuration-file ()
+  "An interactive function to open the configuration file from any buffer."
+  (interactive)
+  (find-file (expand-file-name "nemacs.org" user-emacs-directory)))
 #+END_SRC
 
 ** Core Settings
@@ -755,6 +760,11 @@ Use shared system clipboard.
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm
+  :bind
+  (:map helm-map
+        ("<tab>" . 'helm-execute-persistent-action)
+        ("C-i" . 'helm-execute-persistent-action)
+        ("C-z" . 'helm-select-action))
   :config
   (setq helm-split-window-inside-p t                ; open helm buffer inside current window.
         helm-move-to-line-cycle-in-source t          ; cycle buffer when reaching top or bottom.
@@ -825,6 +835,9 @@ The excellent project management tool.
 
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
+  :bind
+  (([remap projectile-find-file] . helm-projectile)
+   ([remap helm-projectile-find-file] . helm-projectile))
   :config
   (setq projectile-cache-file (expand-file-name "projectile-cache" nemacs-cache-dir)
         projectile-enable-caching t
