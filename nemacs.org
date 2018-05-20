@@ -744,6 +744,17 @@ Use shared system clipboard.
   (global-anzu-mode +1))
 #+END_SRC
 
+*** Flycheck
+
+Syntax checking and highlighting.
+
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :config
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+  (global-flycheck-mode))
+#+END_SRC
+
 *** Helm
 
 #+BEGIN_SRC emacs-lisp
@@ -781,6 +792,8 @@ Use shared system clipboard.
 (use-package helm-projectile
   :config
   (helm-projectile-on))
+
+(use-package helm-ag)
 #+END_SRC
 
 *** NeoTree
@@ -865,7 +878,7 @@ The excellent project management tool.
           spaceline-separator-dir-left '(left . left)
           spaceline-separator-dir-right '(right . right))
 
-    (spaceline-define-segment elnawe::buffer-state-and-id
+    (spaceline-define-segment nemacs-buffer-state-and-id
       "Shows the buffer state (modified, saved, etc) and the buffer id"
       (concat
        "%l:%c "
@@ -876,18 +889,34 @@ The excellent project management tool.
            "- "))
        (buffer-name)))
 
-    (spaceline-define-segment elnawe::time
+    (spaceline-define-segment nemacs-flycheck-info
+      "Shows the flycheck information, warning and error messages."
+      (when flycheck-current-errors
+        (propertize (format "%s errors" (length flycheck-current-errors))
+                    'mouse-face 'mode-line-highlight
+                    'help-echo "Click to check current errors."
+                    'local-map (let ((map (make-sparse-keymap)))
+                                 (define-key map [mode-line down-mouse-1] #'list-flycheck-errors)
+                                 map))))
+
+    (spaceline-define-segment nemacs-major-mode
+      "A simplistic major mode indicator."
+      (format-mode-line mode-name))
+
+    (spaceline-define-segment nemacs-time
+      "Shows a formatted time string."
       (format-time-string "%H:%M" (current-time)))
 
     (spaceline-install
-      '((elnawe::buffer-state-and-id :face highlight-face)
+      '((nemacs-buffer-state-and-id :face highlight-face)
         (projectile-root :face powerline-active1)
         (org-clock)
         (selection-info :when mark-active :face powerline-active1)
         (anzu :when active :face powerline-active1))
-      '((hud buffer-position :face powerline-active1)
-        (elnawe::time :face powerline-active1)
-        (major-mode :face highlight-face)))))
+      '((nemacs-flycheck-info :face powerline-active1)
+        (hud buffer-position :face powerline-active1)
+        (nemacs-time :face powerline-active1)
+        (nemacs-major-mode :face highlight-face)))))
 #+END_SRC
 
 ** Programming
