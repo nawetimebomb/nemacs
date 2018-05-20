@@ -1,14 +1,3 @@
 .DS_Store
-configuration.el
-config.el
-elpa
-.custom.el
-.emacs.desktop*
-recentf
-auto-save-list
-.mc-lists.el
-bookmarks
-games
-tramp
-server
-request
+.local
+nemacs.el

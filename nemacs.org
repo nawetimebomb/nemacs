@@ -1,0 +1,925 @@
+#+TITLE: NEMACS
+#+AUTHOR: Nahuel Jesus Sacchetti
+
+* Configuration
+
+** About This File
+
+This is my Emacs configuration file, I call it *Nemacs*. NOTE: Heavily inspired in [[https://github.com/gilbertw1/bmacs/][Bmacs]].
+
+** Personal Information
+
+#+BEGIN_SRC emacs-lisp
+(setq user-full-name "Nahuel Jesus Sacchetti"
+      user-mail-address "nahueljsacchetti@gmail.com"
+      auth-sources (list (expand-file-name "~/.authinfo.gpg")))
+#+END_SRC
+
+** Variables
+
+*** Font
+
+This is my main font and it overrides any theme font.
+
+#+BEGIN_SRC emacs-lisp
+(defvar nemacs-font (font-spec :family "Envy Code R" :size 14))
+#+END_SRC
+
+*** Directories
+
+Defines a number of directories that I use.
+
+#+BEGIN_SRC emacs-lisp
+(eval-and-compile
+  (defvar nemacs-emacs-dir (expand-file-name user-emacs-directory)
+    "The path of .emacs.d.")
+
+  (defvar nemacs-local-dir (concat nemacs-emacs-dir ".local/")
+    "Root directory for my local Emacs files.")
+
+  (defvar nemacs-etc-dir (concat nemacs-local-dir "etc/")
+    "Local directory for non-volatile storage. They ussually are not deleted. Use this for dependencies like servers or config files.")
+
+  (defvar nemacs-cache-dir (concat nemacs-local-dir "cache/")
+    "Local directory for volatile storage. Deleted when `nemacs/reset' is called. Use this for transient files that are generated on the fly like caches and temporary files.")
+
+  (defvar nemacs-packages-dir (concat nemacs-local-dir "packages/")
+    "Where `package.el' and my local plugins are installed.")
+
+  (dolist (dir (list nemacs-local-dir nemacs-etc-dir nemacs-cache-dir (expand-file-name "elpa" nemacs-packages-dir)))
+    (unless (file-directory-p dir)
+      (make-directory dir t))))
+#+END_SRC
+
+*** Hooks
+
+#+BEGIN_SRC emacs-lisp
+(defvar nemacs-post-init-hook nil
+  "A list of hooks that runs after Nemacs initialization is complete and after `nemacs-init-hook'.")
+
+(defvar nemacs-escape-hook nil
+  "A hook that runs after `C-g' is pressed. Triggers `nemacs-escape'.")
+#+END_SRC
+
+*** Large File Handling
+
+#+BEGIN_SRC emacs-lisp
+(defvar nemacs-large-file-size 1
+  "Size (in MB) above which the user will be prompted to open the file literally to avoid performance issues. Opening literally means that no major or minor modes are active and the buffer is read-only.")
+
+(defvar nemacs-large-file-modes-list
+  '(archive-mode tar-mode jka-compr git-commit-mode image-mode doc-view-mode
+                 doc-view-mode-maybe ebrowse-tree-mode pdf-view-mode)
+  "Major modes that `nemacs/check-large-file' will ignore")
+#+END_SRC
+
+*** Misc
+
+#+BEGIN_SRC emacs-lisp
+(defvar nemacs-popups '()
+  "A list of popup matches that determine if a popup can be escaped")
+#+END_SRC
+
+** Security Settings
+
+Verify outgoing SSL connections.
+
+#+BEGIN_SRC emacs-lisp
+(setq gnutls-verify-error t
+      tls-checktrust gnutls-verify-error
+      tls-program (list "gnutls-cli --x509cafile %t -p %p %h"
+                        ;; compatibility fallbacks
+                        "gnutls-cli -p %p %h"
+                        "openssl s_client -connect %h:%p -no_ssl2 -no_ssl3 -ign_eof")
+      nsm-settings-file (expand-file-name "network-security.data" nemacs-cache-dir))
+#+END_SRC
+
+** Emacs Initialization
+
+*** Initialization Settings
+
+Increase garbage collection threshold to decrease the load time. Resetting this value after initialization.
+
+#+BEGIN_SRC emacs-lisp
+(eval-and-compile
+  (setq gc-cons-threshold 402653184
+        gc-cons-percentage 0.6))
+
+(add-hook 'nemacs-post-init-hook #'(lambda () (setq gc-cons-threshold 16777216
+                                                    gc-cons-percentage 0.1)))
+#+END_SRC
+
+Increase the =max-lisp-eval-depth= and =max-specpdl-size= to prevent exceeding recursion limits.
+
+#+BEGIN_SRC emacs-lisp
+(setq max-lisp-eval-depth 50000
+      max-specpdl-size 10000)
+#+END_SRC
+
+Disable double-buffering to prevent stuttering.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
+#+END_SRC
+
+Disable certain byte compiler warnings to cut down the noise.
+
+#+BEGIN_SRC emacs-lisp
+(setq byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
+#+END_SRC
+
+*** Initialize and Add Package Sources
+
+Tell =use-package= to always defer loading unless explicitly told otherwhise. Lazy loading packages when they are used
+speeds up initialization significantly.
+
+#+BEGIN_SRC emacs-lisp
+(setq use-package-always-defer t
+      use-package-verbose t)
+#+END_SRC
+
+Using a custom directory to save packages so we need to set =package-user-dir=. We're also setting =load-path= manually
+to avoid calling =(package-initialize)= for performance reasons. We need to set =package--init-file-ensured= to tell
+=package.el= to not automatically call it on our behalf. Additionally we're setting =package-enable-at-startup=, so
+packages will not automatically be loaded for us since =use-package= will be handling that.
+
+#+BEGIN_SRC emacs-lisp
+(eval-and-compile
+  (setq package-user-dir (expand-file-name "elpa" nemacs-packages-dir)))
+
+(setq load-prefer-newer noninteractive
+      package--init-file-ensured t
+      package-enable-at-startup nil)
+#+END_SRC
+
+We're going to load path ourselves now.
+
+#+BEGIN_SRC emacs-lisp
+(eval-and-compile
+  (setq load-path (append load-path (directory-files package-user-dir t "^[^.]" t))))
+#+END_SRC
+
+Next we require =package.el= and add our additional package archives: =melpa= and =org=. Afterwards we need to
+initialize our packages and then ensure that =use-package= is installed, which we promptly install if it's missing.
+Finally we load =use-package= and tell it to always install any missing packages.
+
+Note that this entire block is wrapped in =evan-when-compile=. The effect of this is to perform all of the package
+initialization during compilation so that when byte compiled, all of this time consuming code is skipped. This can be
+done because the result of byte compiling =use-package= statements results in the macro being fully expanded at which
+point =use-package= isn't actually required any longer.
+
+Since the code is automatically compiled during runtime, if the configuration hasn't already been previously compiled
+manually then all of the package initialization will still take place at startup.
+
+#+BEGIN_SRC emacs-lisp
+(eval-when-compile
+  (require 'package)
+
+  (unless (assoc-default "melpa" package-archives)
+    (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
+  (unless (assoc-default "melpa-stable" package-archives)
+    (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t))
+  (unless (assoc-default "org" package-archives)
+    (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t))
+
+  (package-initialize)
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+  (require 'use-package)
+  (setq use-package-always-ensure t))
+#+END_SRC
+
+*** Libraries
+
+#+BEGIN_SRC emacs-lisp
+(use-package async :demand t)
+(use-package f :demand t)
+(use-package subr-x :demand t :ensure nil)
+(eval-when-compile (require 'cl-lib))
+#+END_SRC
+
+** Helper Functions
+
+#+BEGIN_SRC emacs-lisp
+(defun nemacs-project-root ()
+  "Get the root path of the project.
+If `STRICT-P', return nil if no project was found, otherwise return `default-directory'."
+  (let (projectile-require-project-root)
+    (projectile-project-root)))
+
+(defun nemacs-escape ()
+  "Runs the `nemacs-escape-hook'."
+  (interactive)
+  (cond ((minibuffer-window-active-p (minibuffer-window))
+         ;; quit the minibuffer if open.
+         (abort-recursive-edit))
+        ;; Run all escape hooks. If any returns non-nil, then stop there.
+        ((run-hook-with-args-until-success 'nemacs-escape-hook))
+        ;; don't abort macros
+        ((or defining-kbd-macro executing-kbd-macro) nil)
+        ;; runs the default quit.
+        (t (keyboard-quit))))
+(global-set-key [remap keyboard-quit] #'nemacs-escape)
+
+(defun nemacs-move-beginning-of-line ()
+  "Move point to first non-whitespace character, or a beginning of line."
+  (interactive "^")
+  (let ((origin (point)))
+    (beginning-of-line)
+    (and (= origin (point))
+         (back-to-indentation))))
+(global-set-key [remap move-beginning-of-line] #'nemacs-move-beginning-of-line)
+(global-set-key [remap org-beginning-of-line] #'nemacs-move-beginning-of-line)
+#+END_SRC
+
+** Core Settings
+
+*** Charset
+
+Set UTF-8 as the default coding system.
+
+#+BEGIN_SRC emacs-lisp
+(when (fboundp 'set-chartset-priority)
+  (set-charset-priority 'unicode))
+
+(prefer-coding-system                    'utf-8)
+(set-terminal-coding-system              'utf-8)
+(set-keyboard-coding-system              'utf-8)
+(set-selection-coding-system             'utf-8)
+(setq locale-coding-system               'utf-8)
+(setq-default buffer-file-coding-system  'utf-8)
+#+END_SRC
+
+*** Backups
+
+No backup files.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default auto-save-default nil
+              create-lockfiles nil
+              make-backup-files nil)
+#+END_SRC
+
+*** Saving Desktop
+
+Always save the buffers and open on previous state. This can increase load time if I have to load lots of buffers.
+
+#+BEGIN_SRC emacs-lisp
+(setq desktop-dirname nemacs-cache-dir           ; folder where the desktop file will be saved/loaded.
+      desktop-base-file-name "emacs.desktop"     ; name of the desktop file.
+      desktop-base-lock-name "lock"              ; name of the lock base file.
+      desktop-path (list desktop-dirname)        ; list of folders to search a desktop file.
+      desktop-save t                             ; should save desktop?
+      desktop-files-not-to-save "^$"             ; reload tramp paths.
+      desktop-load-locked-desktop nil            ; don't load the desktop if it's locked by another instance.
+      desktop-auto-save-timeout 30)              ; timeout to auto-save.
+
+(desktop-save-mode +1)
+#+END_SRC
+
+*** UI
+
+**** Defaults
+
+#+BEGIN_SRC emacs-lisp
+(setq-default
+ bidi-display-reordering nil                     ; disable bidirectional text for performance boost.
+ blink-matching-paren nil                        ; don't blink--too distracting.
+ cursor-in-non-selected-windows nil              ; hide cursors in other windows.
+ delete-by-moving-to-trash t                     ; move file to trash instead of removing it.
+ display-time-format "%H:%M"                     ; format the time string.
+ frame-inhibit-implied-resize t                  ; prevent frames from automatically resizing themselves.
+ frame-title-format "NEMACS"                     ; the frame name.
+ highlight-nonselected-windows nil               ; don't highlight selections in other windows.
+ fringe-indicator-alist (delq
+                         (assq 'continuation fringe-indicator-alist)
+                         fringe-indicator-alist) ; remove continuation arrow on the right fringe.
+ indicate-buffer-boundaries nil                  ; don't indicate beginning and end of buffer in fringe.
+ indicate-empty-lines nil                        ; don't indicate empty lines in fringe.
+ max-mini-window-height 0.3                      ; maximum height for resizing mini windows.
+ mode-line-default-help-echo nil                 ; disable mode-line mouseovers.
+ mouse-yank-at-point t                           ; middle-click paste at point, not at click.
+ resize-mini-windows 'grow-only                  ; minibuffer resizing.
+ show-help-function nil                          ; hide :help-echo text.
+ split-height-threshold nil                      ; ensures split to the right.
+ split-width-threshold 160                       ; favor the vertical split.
+ uniquify-buffer-name-style 'forward             ; unix style when creating unique buffer names.
+ use-dialog-box nil                              ; avoid GUI dialogs.
+ visible-cursor nil                              ; don't make cursor 'very visible'
+ x-stretch-cursor t                              ; add wide glyph under cursor.
+
+ jit-lock-defer-time nil                         ; defer jit font locking to improve performance.
+ jit-lock-stealth-nice 0.5                       ; pause time between fontify chunks.
+ jit-lock-stealth-verbose nil                    ; silence stealth fontification.
+
+ pos-tip-interval-border-width 6                 ; increase pos-tip width.
+ pos-tip-border-width 1                          ; define border width.
+
+ ring-bell-function #'ignore                     ; don't beep.
+ visible-bell nil)                               ; don't blink.
+
+(fset #'yes-or-no-p #'y-or-n-p)                  ; y/n instead of yes/no.
+#+END_SRC
+
+**** Toolbar
+
+Disable tooltips, menu-bar and scroll bar.
+
+#+BEGIN_SRC emacs-lisp
+(tooltip-mode -1)
+(menu-bar-mode -1)
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+#+END_SRC
+
+*** Editor
+
+**** Bookmarks
+
+Automatically save bookmarks after every chage.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default bookmark-save-flag 1)
+#+END_SRC
+
+**** Buffer Handling
+
+#+BEGIN_SRC emacs-lisp
+(defun nemacs-kill-current-buffer ()
+  "Kill current buffer without prompting"
+  (interactive)
+  (kill-buffer (current-buffer)))
+
+(global-set-key [remap kill-buffer] #'nemacs-kill-current-buffer)
+#+END_SRC
+
+**** Formatting
+
+#+BEGIN_SRC emacs-lisp
+(setq-default
+ fill-column 120      ; set line-wrapping column to 120.
+ word-wrap t          ; enable word wrapping at nearest space.
+ truncate-lines nil)  ; disable truncate lines.
+#+END_SRC
+
+**** Large File Handling
+
+#+BEGIN_SRC emacs-lisp
+(defun nemacs/check-large-file ()
+  "Check if the buffer's file is large (see `nemacs-large-file-size'). If so, ask for confirmation to open it literally (read-only, disable undo and in fundamental-mode) for performance sake."
+  (let* ((filename (buffer-file-name))
+         (size (nth 7 (file-attributes filename))))
+    (when (and (not (memq major-mode nemacs-large-file-modes-list))
+               size (> size (* 1024 1024 nemacs-large-file-size))
+               (y-or-n-p
+                (format (concat "%s is a large file, open literally to "
+                                "avoid performance issues?")
+                        (file-relative-name filename))))
+      (setq buffer-read-only t)
+      (buffer-disable-undo)
+      (fundamental-mode))))
+
+(add-hook 'find-file-hook #'nemacs/check-large-file)
+#+END_SRC
+
+**** Misc
+
+#+BEGIN_SRC emacs-lisp
+(global-auto-revert-mode +1)              ; refresh buffer if changed outside Emacs.
+(global-subword-mode +1)                  ; iterate through camelCase words.
+(delete-selection-mode +1)                ; replaces region with inserted text.
+(show-paren-mode +1)                      ; highlight parens.
+
+;; set mark with C-2
+(global-set-key (kbd "C-2") #'set-mark-command)
+
+;; highlight FIXME, NOTE, TODO and BUG.
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (font-lock-add-keywords nil
+                                    '(("\\<\\(FIXME\\|NOTE\\|TODO\\|BUG\\)"
+                                       1 font-lock-warning-face t)))))
+#+END_SRC
+
+**** Scrolling
+
+#+BEGIN_SRC emacs-lisp
+(setq-default
+ scroll-conservatively 1001             ; always scroll to the point no matter how far away (don't recenter).
+ scroll-margin 0                        ; don't automatically scroll to retain a margin.
+ scroll-preserve-screen-position t)     ; preserve point location on screen when scrolling.
+#+END_SRC
+
+**** Whitespace
+
+#+BEGIN_SRC emacs-lisp
+;; indentation
+(setq-default
+ indent-tabs-mode nil           ; spaces over tabs.
+ require-final-newline t        ; ensure newline exists at eof.
+ tab-always-indent t            ; always indent line when pressing TAB.
+ tab-width 4                    ; default tab width to 4 characters.
+ tabify-regexp "^\t* [ \t]+")   ; only tabify initial whitespace when converting to tabifying.
+
+;; whitespace-mode
+(setq-default
+ whitespace-line-column fill-column
+ whitespace-style '(face tab trailing))
+
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
+#+END_SRC
+
+**** Window Management
+
+A set of helpers to better manage the windows in Emacs.
+
+#+BEGIN_SRC emacs-lisp
+(defun nemacs-create-window-bottom-and-switch ()
+  "Creates a new window to the bottom and then switch to it"
+  (interactive)
+  (split-window-below)
+  (balance-windows)
+  (other-window 1))
+
+(defun nemacs-create-window-right-and-switch ()
+  "Creates a new window to the right and then switch to it"
+  (interactive)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
+
+(global-set-key [remap split-window-below] #'nemacs-create-window-bottom-and-switch)
+(global-set-key [remap split-window-right] #'nemacs-create-window-right-and-switch)
+#+END_SRC
+
+*** Theme
+
+#+BEGIN_SRC emacs-lisp
+(load-theme 'monochrome-dark t)
+#+END_SRC
+
+*** Font
+
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'default nil :font nemacs-font)
+#+END_SRC
+
+*** Help
+
+When opening a help window, move the focus to it.
+
+#+BEGIN_SRC emacs-lisp
+(setq help-window-select t)
+#+END_SRC
+
+*** Exiting Emacs
+
+=Are you sure?= prompt when exiting Emacs. Standarize regular Emacs and  =emacsclient= behavior. Also unset job control
+for =Terminal Nemacs=.
+
+#+BEGIN_SRC emacs-lisp
+(defun nemacs-prompt-before-exiting-emacs ()
+  "Prompts before closing the frame with `C-x C-c'. Standarizes `emacs' and `emacsclient'."
+  (interactive)
+  (if (y-or-n-p ">>> Quit Nemacs? ")
+      (save-buffers-kill-terminal)
+    (message "Aborted.")))
+
+(global-set-key [remap save-buffers-kill-terminal] #'nemacs-prompt-before-exiting-emacs)
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "C-x C-z"))
+#+END_SRC
+
+*** Various Settings
+
+Other settings of varying importance.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default
+ ad-redefinition-action 'accept          ; silence advised function warnings.
+ apropos-do-all t                        ; make `apropos' more useful.
+ compilation-always-kill t               ; kill compilation process before starting another.
+ compilation-ask-about-save nil          ; save all buffers on `compile'.
+ compilation-scroll-output t             ; scroll to end of compilation output.
+ confirm-nonexistent-file-or-buffer nil  ; don't ask about nonexistent files or buffers.
+ idle-update-delay 2                     ; update ui less often (performance).
+ warning-minimum-level :error            ; don't show warnings only errors.
+ ;; keep the point out of the minibuffer.
+ minibuffer-prompt-properties '(read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)
+ ;; change default directory for the recent files cache.
+ recentf-save-file (expand-file-name "recentf" nemacs-cache-dir))
+#+END_SRC
+
+*** File Locations
+
+Define various file locations.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default
+ bookmark-default-file     (concat nemacs-etc-dir "bookmarks")
+ abbrev-file-name          (concat nemacs-local-dir "abbrev.el")
+ auto-save-list-file-name  (concat nemacs-cache-dir "autosave")
+ pcache-directory          (concat nemacs-cache-dir "pcache"))
+#+END_SRC
+
+*** Operating System Specific
+
+Setting variables to easily determine operating system.
+
+#+BEGIN_SRC emacs-lisp
+(setq IS-LINUX    (eq system-type 'gnu/linux)
+      IS-MAC      (eq system-type 'darwin)
+      IS-WINDOWS  (eq system-type 'windows-nt))
+#+END_SRC
+
+**** Common Clipboard
+
+Use shared system clipboard.
+
+#+BEGIN_SRC emacs-lisp
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
+      select-enable-clipboard t
+      select-enable-primary t)
+#+END_SRC
+
+**** Linux
+
+#+BEGIN_SRC emacs-lisp
+(when IS-LINUX
+  (setq x-gtx-use-system-tooltips nil)) ; don't use gtk tooltips.
+#+END_SRC
+
+**** Mac
+
+#+BEGIN_SRC emacs-lisp
+(when IS-MAC
+  (setq mac-command-notifier 'meta          ; Meta is the Command key.
+        mac-option-modifier 'alt            ; Option is equal to Alt.
+        mac-redisplay-dont-reset-vscroll t  ; better trackpad scroll.
+        mac-mouse-wheel-smooth-scroll nil   ; remove smooth scroll.
+        mouse-wheel-progressive-speed nil   ; don't accelerate scrolling
+        ns-use-native-fullscreen nil        ; remove native fullscreen in Mac.
+        ns-pop-up-frames nil)               ; don't open files from workspace in new frame.
+
+  (cond ((display-graphic-p)
+         ;; A known problem with GUI Emacs on MacOS: it runs in an isolated
+         ;; environment, so envvars will be wrong. That includes the PATH
+         ;; Emacs picks up. `exec-path-from-shell' fixes this. This is slow
+         ;; and benefits greatly from compilation.
+         (setq exec-path
+               (or (eval-when-compile
+                     (when (require 'exec-path-from-shell nil t)
+                       (setq exec-path-from-shell-check-startup-files nil
+                             exec-path-from-shell-arguments (delete "-i" exec-path-from-shell-arguments))
+                       (nconc exec-path-from-shell-variables '("GOPATH" "GOROOT" "PYTHONPATH"))
+                       (exec-path-from-shell-initialize)
+                       exec-path))
+                   exec-path)))
+        (t
+         (when (require 'osx-clipboard nil t)
+           (osx-clipboard-mode +1)))))
+#+END_SRC
+
+**** Windows
+
+#+BEGIN_SRC emacs-lisp
+(when IS-WINDOWS
+  (setq vc-handled-backends nil)          ; removes any version control backend.
+
+  ;; performance tweaks
+  (when (boundp 'w32-pipe-read-delay)
+    (setq w32-pipe-read-delay 0))
+  (when (boundp 'w32-pipe-buffer-size)
+    (setq irony-server-w32-pipe-buffer-size (* 64 1024))))
+#+END_SRC
+
+** Org
+
+#+BEGIN_SRC emacs-lisp
+(defun nemacs-get-org-file (filename)
+  "Gets Org notes file that's shared between different devices"
+  (if (eq system-type 'windows-nt)
+      (expand-file-name (concat "c:/Users/" user-login-name "/Notes/" filename ".org"))
+    (concat "~/Notes/" filename ".org")))
+
+(defun nemacs-prompt-to-clock-in ()
+  "Prompt if you want to clock-in with the task tag or name"
+  (interactive)
+  (let ((task-info (or
+                    (nth 5 (org-heading-components))   ;; Shows the tag or JIRA issue id.
+                    (nth 4 (org-heading-components))   ;; Shows the task name.
+                    )))
+     (if (y-or-n-p (concat "Start time for task: " task-info))
+         (org-clock-in))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package org
+  :bind
+  (:map org-mode-map
+        ("C-c d" . org-todo)
+        ("C-c st" . nemacs-prompt-to-clock-in))
+  :config
+  ;; Variables
+  (defvar org-journal-file (nemacs-get-org-file "journal"))
+  (defvar org-meetings-file (nemacs-get-org-file "meetings"))
+  (defvar org-tasks-file (nemacs-get-org-file "tasks"))
+
+  ;; Fontify
+  (setq
+   org-fontify-done-headline t
+   org-fontify-whole-heading-line t)
+
+  ;; Agenda
+  (setq
+   org-agenda-files (list org-tasks-file org-meetings-file)
+   org-deadline-warning-days 7
+   org-default-notes-file org-tasks-file
+   org-descriptive-links nil
+   org-ellipsis "\u21b4"
+   org-image-actual-width nil
+   org-log-done 'time
+   org-startup-folded nil
+   org-startup-truncated nil
+   org-support-shift-select 'always)
+
+  ;; Tasks
+  (setq org-todo-keywords
+        '((sequence "TODO" "INPROGRESS" "|" "DONE")
+          (list "URGENT" "CANCELED" "MEETING"))
+        org-todo-keyword-faces nil
+        org-capture-templates '(("t" "Add a Todo"
+                                 entry (file org-tasks-file)
+                                 "* TODO %? \nSCHEDULED: %T" :kill-buffer t)
+                                ("j" "Add entry to the journal"
+                                 item (file+datetree org-journal-file)
+                                 "%u %?" :kill-buffer t)
+                                ("m" "Add meeting notes"
+                                 entry (file org-meetings-file)
+                                 "* MEETING %^{Title} %^g \n Meeting with: %^{Meeting with}\n%?" :kill-buffer t)
+                                ("c" "Close clocked task and add description. Useful for JIRA"
+                                 plain (clock)
+                                 "%?" :jump-to-captured t))
+        org-agenda-custom-commands '(("n" "Agenda and all Todo's"
+                                      ((agenda "")
+                                       (alltodo "")))))
+
+  ;; Keybindings
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cc" 'org-capture)
+  (global-set-key "\C-ct" (lambda () (interactive) (org-capture nil "t")))
+  (global-set-key "\C-cu" (lambda () (interactive) (org-capture nil "u"))))
+
+(use-package org-src
+  :ensure nil ; built-in
+  :after org
+  :config
+  (setq
+   org-edit-src-content-indentation 0
+   org-edit-src-persistent-message nil
+   org-src-fontify-natively t
+   org-src-preserve-indentation t
+   org-src-tab-acts-natively t
+   org-src-window-setup 'current-window))
+
+(use-package org-jira
+  :bind
+  (("C-c j" . org-jira-get-issue))
+  :config
+  (setq jiralib-url "https://jira.itx.com"))
+#+END_SRC
+
+** Packages
+
+*** All The Icons
+
+#+BEGIN_SRC emacs-lisp
+(use-package all-the-icons
+  :commands (all-the-icons-octicon
+             all-the-icons-faicon
+             all-the-icons-fileicon
+             all-the-icons-wicon
+             all-the-icons-material
+             all-the-icons-alltheicon
+             all-the-icons-install-fonts)
+  :init
+  (defun nemacs-disable-all-the-icons-in-tty (orig-fn &rest args)
+    (when (display-graphic-p)
+      (apply orig-fn args)))
+
+  ;; all-the-icons doesn't work in the terminal, so we "disable" it.
+  (dolist (fn '(all-the-icons-octicon all-the-icons-material
+                 all-the-icons-faicon all-the-icons-fileicon
+                 all-the-icons-wicon all-the-icons-alltheicon))
+     (advice-add fn :around #'nemacs-disable-all-the-icons-in-tty)))
+#+END_SRC
+
+*** Anzu
+
+#+BEGIN_SRC emacs-lisp
+(use-package anzu
+  :bind
+  (([remap query-replace] . anzu-query-replace)
+   ([remap query-replace-regexp] . anzu-query-replace-regexp))
+  :commands (anzu-query-replace anzu-query-replace-regexp)
+  :config
+  (setq anzu-cons-mode-line-p nil)
+  (global-anzu-mode +1))
+#+END_SRC
+
+*** Helm
+
+#+BEGIN_SRC emacs-lisp
+(defun nemacs-helm-hide-minibuffer-maybe ()
+  "Hide minibuffer in Helm session if we use the header line as the input field."
+  (when (with-helm-buffer helm-echo-input-in-header-line)
+    (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+      (overlay-put ov 'window (selected-window))
+      (overlay-put ov 'face
+                   (let ((bg-color (face-background 'default nil)))
+                     `(:background ,bg-color :foreground ,bg-color)))
+      (setq-local cursor-type nil))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm
+  :config
+  (setq helm-split-window-in-side-p t                ; open helm buffer inside current window.
+        helm-move-to-line-cycle-in-source t          ; cycle buffer when reaching top or bottom.
+        helm-ff-file-name-history-use-recentf t      ; mark recent files.
+        helm-echo-input-in-header-line t)            ; use header line to input.
+
+  (add-hook 'helm-minibuffer-set-up-hook #'nemacs-helm-hide-minibuffer-maybe)
+
+  (global-set-key [remap execute-extended-command] #'helm-M-x)
+  (global-set-key [remap find-file] #'helm-find-files)
+  (global-set-key [remap switch-to-buffer] #'helm-mini)
+  (helm-mode +1))
+
+(use-package helm-projectile
+  :config
+  (helm-projectile-on))
+#+END_SRC
+
+*** NeoTree
+
+#+BEGIN_SRC emacs-lisp
+(use-package neotree
+  :commands (neotree-show
+             neotree-hide
+             neotree-toggle
+             neotree-dir
+             neotree-find
+             neo-global--with-buffer
+             neo-global--window-exists-p)
+  :bind
+  (("M-2" . neotree-toggle)
+   :map neotree-mode-map
+   ("<return>" . neotree-enter)
+   ("c"        . neotree-create-node)
+   ("d"        . neotree-delete-node)
+   ("r"        . neotree-rename-node)
+   ("s"        . neotree-dir))
+  :config
+  (setq neo-create-file-auto-open nil
+        neo-auto-indent-point nil
+        neo-autorefresh nil
+        neo-mode-line-type 'none
+        neo-window-width 32
+        neo-show-updir-line nil
+        neo-theme (if (display-graphic-p) 'icons 'classic)
+        neo-banner-message nil
+        neo-confirm-create-file #'off-p
+        neo-confirm-create-directory #'off-p
+        neo-show-hidden-files nil
+        neo-keymap-style 'concise
+        neo-hidden-regexp-list '(
+                                 ;; version control folders
+                                 "^\\.\\(git\\|hg\\|svn\\)$"
+                                 ;; compiled files
+                                 "\\.\\(pyc\\|o\\|elc\\|lock\\|css.map\\)$"
+                                 ;; generated files, caches or local pkgs
+                                 "^\\(node_modules\\|vendor\\|.\\(project\\|cask\\|yardoc\\|sass-cache\\)\\)$"
+                                 ;; org-mode folders
+                                 "^\\.\\(sync\\|export\\|attach\\)$"
+                                 "~$"
+                                 "^#.*#$"))
+  (add-hook 'nemacs-escape-hook #'neotree-hide))
+#+END_SRC
+
+*** Projectile
+
+The excellent project management tool.
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :config
+  (setq projectile-cache-file (expand-file-name "projectile-cache" nemacs-cache-dir)
+        projectile-enable-caching t
+        projectile-keymap-prefix (kbd "C-c p")
+        projectile-globally-ignored-directories '(".git" "node_modules")
+        projectile-globally-ignored-file-suffixes '(".")
+        projectile-known-projects-file (expand-file-name "projectile-bookmarks" nemacs-cache-dir)
+        projectile-mode-line '(:eval (projectile-project-name))
+        projectile-switch-project-action 'projectile-find-file)
+  (projectile-mode))
+#+END_SRC
+
+*** Spaceline
+
+#+BEGIN_SRC emacs-lisp
+(use-package spaceline
+  :init
+  (progn
+    (require 'spaceline-config)
+    (spaceline-emacs-theme)
+    (spaceline-helm-mode)
+    (setq powerline-default-separator 'chamfer
+          powerline-height 19
+          spaceline-highlight-face-func 'spaceline-highlight-face-modified
+          spaceline-separator-dir-left '(left . left)
+          spaceline-separator-dir-right '(right . right))
+
+    (spaceline-define-segment elnawe::buffer-state-and-id
+      "Shows the buffer state (modified, saved, etc) and the buffer id"
+      (concat
+       "%l:%c "
+       (if buffer-read-only
+           "= "
+         (if (buffer-modified-p)
+             "* "
+           "- "))
+       (buffer-name)))
+
+    (spaceline-define-segment elnawe::time
+      (format-time-string "%H:%M" (current-time)))
+
+    (spaceline-install
+      '((elnawe::buffer-state-and-id :face highlight-face)
+        (projectile-root :face powerline-active1)
+        (org-clock)
+        (selection-info :when mark-active :face powerline-active1)
+        (anzu :when active :face powerline-active1))
+      '((hud buffer-position :face powerline-active1)
+        (elnawe::time :face powerline-active1)
+        (major-mode :face highlight-face)))))
+#+END_SRC
+
+** Programming
+
+*** JavaScript
+
+A mix between JavaScript, React JSX and TypeScript.
+
+#+BEGIN_SRC emacs-lisp
+(defun nemacs-setup-tide-mode ()
+  "Setup the Tide server to work with TypeScript."
+  (interactive)
+  (tide-setup)
+  (eldoc-mode 1)
+  (tide-hl-identifier-mode))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package js2-mode
+  :mode ("\\.js\\'")
+  :config
+  (setq js-indent-level 4))
+
+(use-package json-mode
+  :config
+  ;; set 2 spaces indentation.
+  ;; `json-mode' uses the same variable that `js-mode' and `js2-mode' are using to indent.
+  ;; so we hook this setting to the `json-mode' so JavaScript files are not affected.
+  (add-hook 'json-mode-hook (lambda ()
+                              (make-local-variable 'js-indent-level)
+                              (setq js-indent-level 2))))
+
+(use-package rjsx-mode
+  :mode ("\\.jsx\\'")
+  :config
+  (setq js-indent-level 4))
+
+(use-package tide)
+(use-package typescript-mode
+  :config
+  (add-hook 'typescript-mode-hook #'nemacs-setup-tide-mode))
+#+END_SRC
+
+*** Web
+
+HTML and CSS for frontend development. I mixed them both here because they are mostly related.
+
+#+BEGIN_SRC emacs-lisp
+(use-package smgl-mode
+  :ensure nil ; built-in
+  :config
+  (setq smgl-basic-offset 4))
+
+(use-package scss-mode
+  :ensure nil ; built-in
+  :mode ("\\.less\\'" "\\.sass\\'" "\\.scss\\'")
+  :config
+  (setq css-indent-offset 4))
+#+END_SRC
