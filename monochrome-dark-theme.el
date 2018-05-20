@@ -76,14 +76,14 @@
    `(trailing-whitespace                              ((t (:background ,color-10))))
    `(vertical-border                                  ((t (:foreground ,color-7 :background ,color-4))))
    ;; powerline
-   `(powerline-active1                                ((t (:background ,color-7 :foreground ,color-12))))
+   `(powerline-active1                                ((t (:background ,color-6 :foreground ,color-12))))
    `(powerline-active2                                ((t (:inherit (powerline-active1)))))
    `(spaceline-highlight-face                         ((t (:inherit (mode-line)))))
    `(spaceline-modified                               ((t (:background ,color-14 :foreground ,color-2 :weight bold))))
    `(spaceline-unmodified                             ((t (:background ,color-9 :foreground ,color-2))))
    `(spaceline-read-only                              ((t (:inherit powerline-active1))))
-   `(powerline-inactive1                              ((t (:background ,color-6 :foreground ,color-10))))
-   `(powerline-inactive2                              ((t (:background ,color-6 :foreground ,color-10))))
+   `(powerline-inactive1                              ((t (:background ,color-6 :foreground ,color-9))))
+   `(powerline-inactive2                              ((t (:background ,color-6 :foreground ,color-9))))
    ;; font lock
    `(font-lock-builtin-face                           ((t (:foreground ,color-13 :weight bold))))
    `(font-lock-comment-face                           ((t (:foreground ,color-9 ))))
@@ -637,11 +637,6 @@
    `(p4-diff-ins-face                                 ((t :inherit diff-added)))
    ;; perspective
    `(persp-selected-face                              ((t (:foreground ,color-11 :inherit mode-line))))
-   ;; powerline
-   ;; `(powerline-active1                                ((t (:background ,color-6 :foreground ,color-11 :box nil :inherit mode-line ))))
-   ;; `(powerline-active2                                ((t (:background ,color-3 :foreground ,color-10 :box nil :inherit mode-line ))))
-   ;; `(powerline-inactive1                              ((t (:background ,color-3 :foreground ,color-8 :inherit mode-line-inactive))))
-   ;; `(powerline-inactive2                              ((t (:background ,color-2 :foreground ,color-8 :inherit mode-line-inactive))))
    ;; proofgeneral
    `(proof-active-area-face                           ((t (:underline t))))
    `(proof-boring-face                                ((t (:foreground ,color-13 :background ,color-7))))

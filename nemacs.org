@@ -512,7 +512,9 @@ Other settings of varying importance.
  ;; change default directory for the recent files cache.
  recentf-save-file (expand-file-name "recentf" nemacs-cache-dir)
  ;; change the request cache storage directory.
- request-storage-directory (concat nemacs-cache-dir "request"))
+ request-storage-directory (concat nemacs-cache-dir "request")
+ ;; change the `emacsclient' server auth directory
+ server-auth-dir (concat "server" nemacs-etc-dir))
 
 ;; load the custom file if exists.
 (when (file-exists-p custom-file)
@@ -754,7 +756,7 @@ Use shared system clipboard.
 #+BEGIN_SRC emacs-lisp
 (use-package helm
   :config
-  (setq helm-split-window-in-side-p t                ; open helm buffer inside current window.
+  (setq helm-split-window-inside-p t                ; open helm buffer inside current window.
         helm-move-to-line-cycle-in-source t          ; cycle buffer when reaching top or bottom.
         helm-ff-file-name-history-use-recentf t      ; mark recent files.
         helm-echo-input-in-header-line t)            ; use header line to input.
@@ -921,14 +923,11 @@ A mix between JavaScript, React JSX and TypeScript.
 HTML and CSS for frontend development. I mixed them both here because they are mostly related.
 
 #+BEGIN_SRC emacs-lisp
-(use-package smgl-mode
-  :ensure nil ; built-in
-  :config
-  (setq smgl-basic-offset 4))
-
-(use-package scss-mode
-  :ensure nil ; built-in
-  :mode ("\\.less\\'" "\\.sass\\'" "\\.scss\\'")
-  :config
-  (setq css-indent-offset 4))
+(setq css-indent-offset 4
+      smgl-basic-offset 4
+      auto-mode-alist (append
+                       '(("\\.less\\'" . scss-mode)
+                         ("\\.sass\\'" . scss-mode)
+                         ("\\.scss\\'" . scss-mode))
+                       auto-mode-alist))
 #+END_SRC
