@@ -510,7 +510,9 @@ Other settings of varying importance.
  ;; keep the point out of the minibuffer.
  minibuffer-prompt-properties '(read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)
  ;; change default directory for the recent files cache.
- recentf-save-file (expand-file-name "recentf" nemacs-cache-dir))
+ recentf-save-file (expand-file-name "recentf" nemacs-cache-dir)
+ ;; change the request cache storage directory.
+ request-storage-directory (concat nemacs-cache-dir "request"))
 
 ;; load the custom file if exists.
 (when (file-exists-p custom-file)
@@ -693,7 +695,8 @@ Use shared system clipboard.
   :bind
   (("C-c j" . org-jira-get-issue))
   :config
-  (setq jiralib-url "https://jira.itx.com"))
+  (setq jiralib-url "https://jira.itx.com"
+        org-jira-working-dir nemacs-cache-dir))
 #+END_SRC
 
 ** Packages
