@@ -844,7 +844,7 @@ The excellent project management tool.
     (require 'spaceline-config)
     (spaceline-emacs-theme)
     (spaceline-helm-mode)
-    (setq powerline-default-separator 'chamfer
+    (setq powerline-default-separator 'arrow
           powerline-height 19
           spaceline-highlight-face-func 'spaceline-highlight-face-modified
           spaceline-separator-dir-left '(left . left)
