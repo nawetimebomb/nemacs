@@ -859,7 +859,7 @@ The excellent project management tool.
         projectile-globally-ignored-file-suffixes '(".")
         projectile-known-projects-file (expand-file-name "projectile-bookmarks" nemacs-cache-dir)
         projectile-mode-line '(:eval (projectile-project-name))
-        projectile-switch-project-action 'projectile-find-file)
+        projectile-switch-project-action 'helm-projectile)
   (projectile-mode))
 #+END_SRC
 
@@ -938,7 +938,9 @@ A mix between JavaScript, React JSX and TypeScript.
 (use-package js2-mode
   :mode ("\\.js\\'")
   :config
-  (setq js-indent-level 4))
+  (setq js-indent-level 4
+        js2-mode-show-parse-errors nil
+        js2-mode-show-strict-warnings nil))
 
 (use-package json-mode
   :config
