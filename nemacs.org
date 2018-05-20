@@ -503,12 +503,18 @@ Other settings of varying importance.
  compilation-ask-about-save nil          ; save all buffers on `compile'.
  compilation-scroll-output t             ; scroll to end of compilation output.
  confirm-nonexistent-file-or-buffer nil  ; don't ask about nonexistent files or buffers.
+ ;; change the custom file, don't change init.el.
+ custom-file (expand-file-name ".custom.el" nemacs-etc-dir)
  idle-update-delay 2                     ; update ui less often (performance).
  warning-minimum-level :error            ; don't show warnings only errors.
  ;; keep the point out of the minibuffer.
  minibuffer-prompt-properties '(read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)
  ;; change default directory for the recent files cache.
  recentf-save-file (expand-file-name "recentf" nemacs-cache-dir))
+
+;; load the custom file if exists.
+(when (file-exists-p custom-file)
+  (load custom-file))
 #+END_SRC
 
 *** File Locations
