@@ -891,13 +891,14 @@ The excellent project management tool.
 
     (spaceline-define-segment nemacs-flycheck-info
       "Shows the flycheck information, warning and error messages."
-      (when flycheck-current-errors
-        (propertize (format "%s errors" (length flycheck-current-errors))
-                    'mouse-face 'mode-line-highlight
-                    'help-echo "Click to check current errors."
-                    'local-map (let ((map (make-sparse-keymap)))
-                                 (define-key map [mode-line down-mouse-1] #'list-flycheck-errors)
-                                 map))))
+      (when (boundp 'flycheck-current-errors)
+        (when flycheck-current-errors
+          (propertize (format "%s errors" (length flycheck-current-errors))
+                      'mouse-face 'mode-line-highlight
+                      'help-echo "Click to check current errors."
+                      'local-map (let ((map (make-sparse-keymap)))
+                                   (define-key map [mode-line down-mouse-1] #'list-flycheck-errors)
+                                   map)))))
 
     (spaceline-define-segment nemacs-major-mode
       "A simplistic major mode indicator."
