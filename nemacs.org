@@ -611,6 +611,8 @@ Use shared system clipboard.
 
 ** Org
 
+*** Helper Functions
+
 #+BEGIN_SRC emacs-lisp
 (defun nemacs-get-org-file (filename)
   "Gets Org notes file that's shared between different devices."
@@ -618,77 +620,90 @@ Use shared system clipboard.
       (expand-file-name (concat "c:/Users/" user-login-name "/Notes/" filename ".org"))
     (concat "~/Notes/" filename ".org")))
 
-(defun nemacs-prompt-to-clock-in ()
-  "Prompt if you want to clock-in with the task tag or name."
+(defun nemacs-org-mark-done-and-archive ()
+  "Mark a task as `DONE' and then archive it."
   (interactive)
-  (let ((task-info (or
-                    (nth 5 (org-heading-components))   ;; Shows the tag or JIRA issue id.
-                    (nth 4 (org-heading-components))   ;; Shows the task name.
-                    )))
-     (if (y-or-n-p (concat "Start time for task: " task-info))
-         (org-clock-in))))
+  (org-todo 'done)
+  (org-archive-subtree))
 
-(defun nemacs-add-created-property-to-capture ()
-  "Adds a `:created:' property inside the `:PROPERTIES:' drawer."
+(defun nemacs-dashboard ()
+  "Opens my Inbox file in the right side and my Agenda in the left side."
   (interactive)
-  (org-set-property "created" (concat "<" (format-time-string "%F %a %H:%M") ">")))
+  (org-agenda :keys "n")
+  (delete-other-windows)
+  (split-window-right)
+  (find-file nemacs-org-inbox-file))
 #+END_SRC
+
+*** Variables
+
+#+BEGIN_SRC emacs-lisp
+(setq nemacs-org-journal-file (nemacs-get-org-file "journal")
+      nemacs-org-inbox-file (nemacs-get-org-file "inbox"))
+#+END_SRC
+
+*** Initial Configuration
 
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :bind
-  (("C-c a" . (lambda () (interactive) (org-agenda nil "n")))
+  (("C-c a" . (lambda () (interactive) (org-agenda :keys "n")))
    ("C-c c" . org-capture)
-   ("C-c t" . (lambda () (interactive) (org-capture nil "t")))
-   ("C-c m" . (lambda () (interactive) (org-capture nil "m")))
+   ("C-c t" . (lambda () (interactive) (org-capture :keys "t")))
+   ("C-c m" . (lambda () (interactive) (org-capture :keys "m")))
+   ("C-c d" . nemacs-dashboard)
    :map org-mode-map
-        ("C-c d" . org-todo)
-        ("C-c st" . nemacs-prompt-to-clock-in))
-  :config
-  ;; Variables
-  (setq nemacs-org-journal-file (nemacs-get-org-file "journal")
-        nemacs-org-inbox-file (nemacs-get-org-file "inbox"))
+        ("C-c st" . nemacs-prompt-to-clock-in)
+        ("C-c C-x C-s" . nemacs-org-mark-done-and-archive)))
+#+END_SRC
 
-  ;; Fontify
-  (setq
-   org-fontify-done-headline t
-   org-fontify-whole-heading-line t)
+*** Setting Files and Agenda
 
-  ;; Agenda
-  (setq
-   org-agenda-files (list nemacs-org-inbox-file nemacs-org-journal-file)
-   org-deadline-warning-days 7
-   org-default-notes-file nemacs-org-inbox-file
-   org-descriptive-links nil
-   org-ellipsis "\u21b4"
-   org-image-actual-width nil
-   org-log-done 'time
-   org-startup-folded nil
-   org-startup-truncated nil
-   org-support-shift-select 'always)
+#+BEGIN_SRC emacs-lisp
+(setq
+ org-fontify-done-headline t
+ org-fontify-whole-heading-line t)
 
-  ;; Tasks
-  (setq org-todo-keywords
-        '((sequence "TODO" "INPROGRESS" "|" "DONE")
-          (list "URGENT" "CANCELED" "MEETING" "EMACS"))
-        org-todo-keyword-faces nil
-        org-capture-templates '(("t" "Add a Todo"
-                                 entry (file+headline nemacs-org-inbox-file "Tasks")
-                                 "** TODO %?" :kill-buffer t)
-                                ("m" "Add meeting notes"
-                                 entry (file+headline nemacs-org-inbox-file "Meetings")
-                                 "** MEETING %^{Title} %^{attendees}p %^{location}p \n%?" :jump-to-captured t)
-                                ("e" "Add Emacs-related note"
-                                 entry (file+headline nemacs-org-inbox-file "My Emacs")
-                                 "** EMACS %?" :kill-buffer t)
-                                ("j" "Add entry to the journal"
-                                 item (file+datetree nemacs-org-journal-file)
-                                 "%?" :kill-buffer t))
-        org-agenda-custom-commands '(("n" "Agenda and all Todo's"
-                                      ((agenda "")
-                                       (alltodo "")))))
-    (add-hook 'org-capture-before-finalize-hook #'nemacs-add-created-property-to-capture))
+(setq
+ org-agenda-files (list nemacs-org-inbox-file nemacs-org-journal-file)
+ org-deadline-warning-days 7
+ org-default-notes-file nemacs-org-inbox-file
+ org-descriptive-links nil
+ org-ellipsis "\u21b4"
+ org-image-actual-width nil
+ org-log-done 'time
+ org-startup-folded nil
+ org-startup-truncated nil
+ org-support-shift-select 'always)
+#+END_SRC
 
+*** Org Capture
+
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-keywords
+      '((sequence "TODO" "|" "DONE")
+        (list "CANCELED" "MEETING"))
+      org-todo-keyword-faces nil
+      org-capture-templates '(("t" "Add a Todo"
+                               entry (file+headline nemacs-org-inbox-file "Tasks")
+                               "** TODO %?" :kill-buffer t :empty-lines-before 1)
+                              ("m" "Add meeting notes"
+                               entry (file+headline nemacs-org-inbox-file "Meetings")
+                               "** MEETING %U %^{Title} %^{attendees}p %^{location}p \n%?" :jump-to-captured t :empty-lines-before 1)
+                              ("e" "Add Emacs-related note"
+                               entry (file+headline nemacs-org-inbox-file "My Emacs")
+                               "** %? :EMACS:" :kill-buffer t :empty-lines-before 1)
+                              ("j" "Add entry to the journal"
+                               item (file+datetree nemacs-org-journal-file)
+                               "%?" :kill-buffer t))
+      org-agenda-custom-commands '(("n" "Agenda and all Todo's"
+                                    ((agenda "")
+                                     (alltodo "")))))
+#+END_SRC
+
+*** Org Src
+
+#+BEGIN_SRC emacs-lisp
 (use-package org-src
   :ensure nil ; built-in
   :after org
@@ -700,7 +715,11 @@ Use shared system clipboard.
    org-src-preserve-indentation t
    org-src-tab-acts-natively t
    org-src-window-setup 'current-window))
+#+END_SRC
 
+*** Org Jira
+
+#+BEGIN_SRC emacs-lisp
 (use-package org-jira
   :bind
   (("C-c j" . org-jira-get-issue))
