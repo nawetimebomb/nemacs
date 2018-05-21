@@ -739,9 +739,10 @@ Use shared system clipboard.
   (([remap query-replace] . anzu-query-replace)
    ([remap query-replace-regexp] . anzu-query-replace-regexp))
   :commands (anzu-query-replace anzu-query-replace-regexp)
+  :init
+  (global-anzu-mode)
   :config
-  (setq anzu-cons-mode-line-p nil)
-  (global-anzu-mode +1))
+  (setq anzu-cons-mode-line-p nil))
 #+END_SRC
 
 *** Flycheck
@@ -750,9 +751,10 @@ Syntax checking and highlighting.
 
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
+  :init
+  (global-flycheck-mode)
   :config
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-  (global-flycheck-mode))
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 #+END_SRC
 
 *** Helm
@@ -776,6 +778,8 @@ Syntax checking and highlighting.
         ("<tab>" . 'helm-execute-persistent-action)
         ("C-i" . 'helm-execute-persistent-action)
         ("C-z" . 'helm-select-action))
+  :init
+  (helm-mode)
   :config
   (setq helm-split-window-inside-p t                ; open helm buffer inside current window.
         helm-move-to-line-cycle-in-source t          ; cycle buffer when reaching top or bottom.
@@ -786,11 +790,10 @@ Syntax checking and highlighting.
 
   (global-set-key [remap execute-extended-command] #'helm-M-x)
   (global-set-key [remap find-file] #'helm-find-files)
-  (global-set-key [remap switch-to-buffer] #'helm-mini)
-  (helm-mode))
+  (global-set-key [remap switch-to-buffer] #'helm-mini))
 
 (use-package helm-projectile
-  :config
+  :init
   (helm-projectile-on))
 
 (use-package helm-ag)
@@ -851,6 +854,8 @@ The excellent project management tool.
   :bind
   (([remap projectile-find-file] . helm-projectile)
    ([remap helm-projectile-find-file] . helm-projectile))
+  :init
+  (projectile-mode)
   :config
   (setq projectile-cache-file (expand-file-name "projectile-cache" nemacs-cache-dir)
         projectile-enable-caching t
@@ -859,8 +864,7 @@ The excellent project management tool.
         projectile-globally-ignored-file-suffixes '(".")
         projectile-known-projects-file (expand-file-name "projectile-bookmarks" nemacs-cache-dir)
         projectile-mode-line '(:eval (projectile-project-name))
-        projectile-switch-project-action 'helm-projectile)
-  (projectile-mode))
+        projectile-switch-project-action 'helm-projectile))
 #+END_SRC
 
 *** Spaceline
