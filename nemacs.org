@@ -658,8 +658,7 @@ Use shared system clipboard.
 (setq nemacs-org-archive-file (nemacs-get-org-file "archive")
       nemacs-org-inbox-file (nemacs-get-org-file "inbox")
       nemacs-org-meetings-file (nemacs-get-org-file "meetings")
-      nemacs-org-someday-file (nemacs-get-org-file "someday")
-      nemacs-org-timebomb-file (nemacs-get-org-file "timebomb"))
+      nemacs-org-someday-file (nemacs-get-org-file "someday"))
 #+END_SRC
 
 *** Initial Configuration
@@ -669,6 +668,7 @@ Use shared system clipboard.
   :bind
   (("C-c a" . org-agenda)
    ("C-c c" . org-capture)
+   ("C-c l" . org-store-link)
    ("C-c t" . (lambda () (interactive) (org-capture :keys "t")))
    ("C-c d" . nemacs-dashboard)
    :map org-mode-map
@@ -687,7 +687,7 @@ Use shared system clipboard.
  org-fontify-whole-heading-line t)
 
 (setq
- org-agenda-files (list nemacs-org-inbox-file nemacs-org-timebomb-file)
+ org-agenda-files (list nemacs-org-inbox-file)
  org-archive-location (concat nemacs-org-archive-file "::datetree/")
  org-deadline-warning-days 7
  org-default-notes-file nemacs-org-inbox-file
@@ -717,11 +717,11 @@ Use shared system clipboard.
                                entry (file nemacs-org-inbox-file)
                                "* TODO %i%?" :kill-buffer t)
                               ("T" "Timebomb! Something that has a clear deadline or schedule"
-                               entry (file nemacs-org-timebomb-file)
-                               "* %i%? \n" :kill-buffer t)
-                              ("m" "Add meeting notes"
+                               entry (file nemacs-org-inbox-file)
+                               "* TODO %i%? \nSCHEDULED: %^t" :kill-buffer t)
+                              ("m" "Start a clock for a meeting and log notes."
                                entry (file nemacs-org-meetings-file)
-                               "* MEETING %U %^{Title} %^{attendees}p %^{location}p \n%?" :jump-to-captured t)))
+                               "* MEETING %U %^{Title} %^{attendees}p %^{location}p \n%?" :clock-in t :jump-to-captured t)))
 #+END_SRC
 
 *** Org Refile
