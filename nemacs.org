@@ -231,7 +231,6 @@ If `STRICT-P', return nil if no project was found, otherwise return `default-dir
          (back-to-indentation))))
 (global-set-key [remap move-beginning-of-line] #'nemacs-move-beginning-of-line)
 (global-set-key [remap org-beginning-of-line] #'nemacs-move-beginning-of-line)
-
 (defun open-configuration-file ()
   "An interactive function to open the configuration file from any buffer."
   (interactive)
@@ -638,8 +637,10 @@ Use shared system clipboard.
 *** Variables
 
 #+BEGIN_SRC emacs-lisp
-(setq nemacs-org-journal-file (nemacs-get-org-file "journal")
-      nemacs-org-inbox-file (nemacs-get-org-file "inbox"))
+(setq nemacs-org-inbox-file (nemacs-get-org-file "inbox")
+      nemacs-org-meetings-file (nemacs-get-org-file "meetings")
+      nemacs-org-someday-file (nemacs-get-org-file "someday")
+      nemacs-org-timebomb-file (nemacs-get-org-file "timebomb"))
 #+END_SRC
 
 *** Initial Configuration
@@ -647,13 +648,10 @@ Use shared system clipboard.
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :bind
-  (("C-c a" . (lambda () (interactive) (org-agenda :keys "n")))
+  (("C-c a" . org-agenda)
    ("C-c c" . org-capture)
-   ("C-c t" . (lambda () (interactive) (org-capture :keys "t")))
-   ("C-c m" . (lambda () (interactive) (org-capture :keys "m")))
    ("C-c d" . nemacs-dashboard)
    :map org-mode-map
-        ("C-c st" . nemacs-prompt-to-clock-in)
         ("C-c C-x C-s" . nemacs-org-mark-done-and-archive)))
 #+END_SRC
 
@@ -665,7 +663,7 @@ Use shared system clipboard.
  org-fontify-whole-heading-line t)
 
 (setq
- org-agenda-files (list nemacs-org-inbox-file nemacs-org-journal-file)
+ org-agenda-files (list nemacs-org-inbox-file nemacs-org-timebomb-file)
  org-deadline-warning-days 7
  org-default-notes-file nemacs-org-inbox-file
  org-descriptive-links nil
@@ -674,31 +672,35 @@ Use shared system clipboard.
  org-log-done 'time
  org-startup-folded nil
  org-startup-truncated nil
- org-support-shift-select 'always)
+ org-support-shift-select 'always
+ org-tags-column -120)
 #+END_SRC
 
 *** Org Capture
 
 #+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
-      '((sequence "TODO" "|" "DONE")
-        (list "CANCELED" "MEETING"))
-      org-todo-keyword-faces nil
-      org-capture-templates '(("t" "Add a Todo"
-                               entry (file+headline nemacs-org-inbox-file "Tasks")
-                               "** TODO %?" :kill-buffer t :empty-lines-before 1)
+      '((sequence "TODO" "WAITING" "|" "DONE" "CANCELED"))
+      org-capture-templates '(("t" "Add a Todo in the Inbox"
+                               entry (file nemacs-org-inbox-file)
+                               "* TODO %i%?" :kill-buffer t)
+                              ("T" "Timebomb! Something that has a clear deadline or schedule"
+                               entry (file nemacs-org-timebomb-file)
+                               "* %i%? \n %U" :kill-buffer t)
                               ("m" "Add meeting notes"
-                               entry (file+headline nemacs-org-inbox-file "Meetings")
-                               "** MEETING %U %^{Title} %^{attendees}p %^{location}p \n%?" :jump-to-captured t :empty-lines-before 1)
-                              ("e" "Add Emacs-related note"
-                               entry (file+headline nemacs-org-inbox-file "My Emacs")
-                               "** %? :EMACS:" :kill-buffer t :empty-lines-before 1)
-                              ("j" "Add entry to the journal"
-                               item (file+datetree nemacs-org-journal-file)
-                               "%?" :kill-buffer t))
+                               entry (file nemacs-org-meetings-file)
+                               "* MEETING %U %^{Title} %^{attendees}p %^{location}p \n%?" :jump-to-captured t))
       org-agenda-custom-commands '(("n" "Agenda and all Todo's"
                                     ((agenda "")
                                      (alltodo "")))))
+#+END_SRC
+
+*** Org Refile
+
+#+BEGIN_SRC emacs-lisp
+(setq org-refile-targets '((nemacs-org-inbox-file :maxlevel . 3)
+                           (nemacs-org-timebomb-file :maxlevel . 2)
+                           (nemacs-org-someday-file :maxlevel . 1)))
 #+END_SRC
 
 *** Org Src
