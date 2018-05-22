@@ -415,6 +415,21 @@ Automatically save bookmarks after every chage.
  scroll-preserve-screen-position t)     ; preserve point location on screen when scrolling.
 #+END_SRC
 
+**** Spelling
+
+Check the spelling when writing on any text buffer (like =org-mode=). Note: Needs [[https://hunspell.github.io/][Hunspell]] to work.
+
+#+BEGIN_SRC emacs-lisp
+(cond
+ ((executable-find "hunspell")
+  (setq ispell-program-name "hunspell"
+        ispell-dictionary "en_US"
+        ispell-local-dictionary "en_US"
+        ispell-local-dictionary-alist
+        '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
+  (add-hook 'text-mode-hook #'flyspell-mode)))
+#+END_SRC
+
 **** Whitespace
 
 #+BEGIN_SRC emacs-lisp
@@ -671,7 +686,7 @@ Use shared system clipboard.
  org-archive-location (concat nemacs-org-archive-file "::datetree/")
  org-deadline-warning-days 7
  org-default-notes-file nemacs-org-inbox-file
- org-descriptive-links nil
+ org-descriptive-links t
  org-ellipsis "\u21b4"
  org-image-actual-width nil
  org-log-done 'time
