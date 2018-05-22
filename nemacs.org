@@ -683,7 +683,9 @@ Use shared system clipboard.
 (setq
  org-agenda-custom-commands
  '(("e" "Emacs related tasks" tags-todo "emacs"
-    ((org-agenda-overriding-header "Emacs")))))
+    ((org-agenda-overriding-header "Emacs")))
+   ("w" "Emacs related tasks" tags-todo "work"
+    ((org-agenda-overriding-header "Work")))))
 #+END_SRC
 
 *** Org Capture
@@ -696,7 +698,7 @@ Use shared system clipboard.
                                "* TODO %i%?" :kill-buffer t)
                               ("T" "Timebomb! Something that has a clear deadline or schedule"
                                entry (file nemacs-org-timebomb-file)
-                               "* %i%? \n %U" :kill-buffer t)
+                               "* %i%? \n" :kill-buffer t)
                               ("m" "Add meeting notes"
                                entry (file nemacs-org-meetings-file)
                                "* MEETING %U %^{Title} %^{attendees}p %^{location}p \n%?" :jump-to-captured t)))
