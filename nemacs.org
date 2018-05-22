@@ -361,6 +361,7 @@ Automatically save bookmarks after every chage.
 **** Formatting
 
 #+BEGIN_SRC emacs-lisp
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
 (setq-default
  fill-column 120      ; set line-wrapping column to 120.
  word-wrap t          ; enable word wrapping at nearest space.
@@ -647,8 +648,6 @@ Use shared system clipboard.
   (org-agenda :keys "a")
   (delete-other-windows)
   (split-window-right)
-  (find-file nemacs-org-timebomb-file)
-  (split-window-below)
   (find-file nemacs-org-inbox-file))
 #+END_SRC
 
