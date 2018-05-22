@@ -422,12 +422,13 @@ Check the spelling when writing on any text buffer (like =org-mode=). Note: Need
 #+BEGIN_SRC emacs-lisp
 (cond
  ((executable-find "hunspell")
-  (setq ispell-program-name "hunspell"
-        ispell-dictionary "en_US"
-        ispell-local-dictionary "en_US"
-        ispell-local-dictionary-alist
-        '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
-  (add-hook 'text-mode-hook #'flyspell-mode)))
+  (add-hook 'after-init-hook (lambda ()
+                               (setq ispell-program-name "hunspell"
+                                     ispell-dictionary "en_US"
+                                     ispell-local-dictionary "en_US"
+                                     ispell-local-dictionary-alist
+                                     '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
+                               (add-hook 'text-mode-hook #'flyspell-mode)))))
 #+END_SRC
 
 **** Whitespace
@@ -671,7 +672,11 @@ Use shared system clipboard.
    ("C-c t" . (lambda () (interactive) (org-capture :keys "t")))
    ("C-c d" . nemacs-dashboard)
    :map org-mode-map
-        ("C-c C-x C-s" . nemacs-org-mark-done-and-archive)))
+   ("C-c C-x C-s" . nemacs-org-mark-done-and-archive)))
+
+(use-package org-bullets
+  :init
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
 
 *** Setting Files and Agenda
