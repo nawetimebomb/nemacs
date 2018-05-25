@@ -585,7 +585,7 @@ Use shared system clipboard.
 
 #+BEGIN_SRC emacs-lisp
 (when IS-MAC
-  (setq mac-command-notifier 'meta          ; Meta is the Command key.
+  (setq mac-command-modifier 'meta          ; Meta is the Command key.
         mac-option-modifier 'alt            ; Option is equal to Alt.
         mac-redisplay-dont-reset-vscroll t  ; better trackpad scroll.
         mac-mouse-wheel-smooth-scroll nil   ; remove smooth scroll.
@@ -687,6 +687,7 @@ Use shared system clipboard.
 
 (setq
  org-agenda-files (list nemacs-org-inbox-file)
+ org-agenda-start-on-weekday 0
  org-archive-location (concat nemacs-org-archive-file "::datetree/")
  org-deadline-warning-days 7
  org-default-notes-file nemacs-org-inbox-file
@@ -698,6 +699,14 @@ Use shared system clipboard.
  org-startup-truncated nil
  org-support-shift-select 'always
  org-tags-column -120)
+
+(setq org-tag-persistent-alist
+      '(("@emacs" . ?e)
+        ("@errands" . ?e)
+        ("@girlfriend" . ?g)
+        ("@outdoors" . ?o)
+        ("@weekend" . ?z)
+        ("@work" . ?w)))
 
 (setq
  org-agenda-custom-commands
@@ -711,7 +720,7 @@ Use shared system clipboard.
 
 #+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
-      '((sequence "TODO" "WAITING" "|" "DONE" "CANCELED"))
+      '((sequence "TODO(t)" "WAITING(w@)" "|" "DONE(d)" "CANCELED(c)"))
       org-capture-templates '(("t" "Add a Todo in the Inbox"
                                entry (file nemacs-org-inbox-file)
                                "* TODO %i%?" :kill-buffer t)
