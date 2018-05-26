@@ -625,6 +625,15 @@ Use shared system clipboard.
     (setq irony-server-w32-pipe-buffer-size (* 64 1024))))
 #+END_SRC
 
+*** Load Secrets
+
+#+BEGIN_SRC emacs-lisp
+(defvar nemacs-secrets-file (expand-file-name "secrets.el" "~/elisp"))
+
+(when (file-exists-p nemacs-secrets-file)
+  (load nemacs-secrets-file))
+#+END_SRC
+
 ** Org
 
 *** Helper Functions
@@ -655,6 +664,7 @@ Use shared system clipboard.
 
 #+BEGIN_SRC emacs-lisp
 (setq nemacs-org-archive-file (nemacs-get-org-file "archive")
+      nemacs-org-calendar-file (expand-file-name "my-calendar.org" "~/Notes/references/calendar")
       nemacs-org-inbox-file (nemacs-get-org-file "inbox")
       nemacs-org-meetings-file (nemacs-get-org-file "meetings")
       nemacs-org-someday-file (nemacs-get-org-file "someday"))
@@ -686,19 +696,26 @@ Use shared system clipboard.
  org-fontify-whole-heading-line t)
 
 (setq
- org-agenda-files (list nemacs-org-inbox-file)
+ org-agenda-files (list nemacs-org-inbox-file nemacs-org-calendar-file)
  org-agenda-start-on-weekday 0
  org-archive-location (concat nemacs-org-archive-file "::datetree/")
+ org-clock-in-resume t
  org-deadline-warning-days 7
  org-default-notes-file nemacs-org-inbox-file
  org-descriptive-links t
+ org-drawers (quote ("PROPERTIES" "LOGBOOK"))
+ org-clock-into-drawer t
+ org-clock-out-remove-zero-time-clocks t
+ org-clock-out-when-done t
+ org-clock-persist t
+ org-clock-persist-query-resume nil
  org-ellipsis "\u21b4"
  org-image-actual-width nil
  org-log-done 'time
  org-startup-folded nil
  org-startup-truncated nil
  org-support-shift-select 'always
- org-tags-column -120)
+ org-tags-column 10)
 
 (setq org-tag-persistent-alist
       '(("@emacs" . ?e)
@@ -720,7 +737,7 @@ Use shared system clipboard.
 
 #+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "WAITING(w@)" "|" "DONE(d)" "CANCELED(c)"))
+      '((sequence "TODO(t)" "CURRENT(y)" "WAITING(w@)" "|" "DONE(d)" "CANCELED(c)"))
       org-capture-templates '(("t" "Add a Todo in the Inbox"
                                entry (file nemacs-org-inbox-file)
                                "* TODO %i%?" :kill-buffer t)
@@ -730,6 +747,17 @@ Use shared system clipboard.
                               ("m" "Start a clock for a meeting and log notes."
                                entry (file nemacs-org-meetings-file)
                                "* MEETING %U %^{Title} %^{attendees}p %^{location}p \n%?" :clock-in t :jump-to-captured t)))
+#+END_SRC
+
+*** Org Link
+
+Create an =ID= when using the =org-store-link=. This changes the behavior of traditional links in Org so if I refile an
+entry, the link doesn't break.
+
+#+BEGIN_SRC emacs-lisp
+(require 'org-id)
+(setq org-id-files '((expand-file-name "org-id-locations" "~/Notes/references"))
+      org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 #+END_SRC
 
 *** Org Refile
@@ -770,6 +798,14 @@ Use shared system clipboard.
         org-jira-working-dir nemacs-cache-dir))
 #+END_SRC
 
+*** Org Calendar
+
+I have my calendar synced with Org mode. However, the configuration is being loaded from a =secrets.el= which is shared
+between selected systems.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-gcal)
+#+END_SRC
 ** Packages
 
 *** All The Icons
