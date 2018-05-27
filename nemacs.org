@@ -656,8 +656,8 @@ A couple of helper functions and variables to organize my agenda easily.
   "Mark a task as `DONE' and then archive it.
 If it was already `DONE', keeps that state and doesn't change the `CLOSED' timestamp."
   (interactive)
-  (let ((is-done (nth 2 (org-heading-components))))
-    (when (not is-done)
+  (let ((task-status (nth 2 (org-heading-components))))
+    (when (not (eq task-status "DONE"))
       (org-todo 'done))
     (org-archive-subtree)))
 
@@ -781,7 +781,7 @@ Main configuration for my Agenda. Starting with the keybindings.
 (global-set-key (kbd "C-c d") #'nemacs-dashboard)
 (global-set-key (kbd "C-c l") #'org-store-link)
 
-(define-key 'org-mode-map [remap org-archive-subtree-default] #'nemacs-org-mark-done-and-archive)
+(define-key org-mode-map [remap org-archive-subtree-default] #'nemacs-org-mark-done-and-archive)
 #+END_SRC
 
 Now the big settings. I separated those by different headers which are explained below.
