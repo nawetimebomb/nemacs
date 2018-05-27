@@ -46,6 +46,9 @@ Defines a number of directories that I use.
   (defvar nemacs-packages-dir (concat nemacs-local-dir "packages/")
     "Where `package.el' and my local plugins are installed.")
 
+  (defvar nemacs-notes-dir "~/Notes"
+    "Notes directory where all the shared org files are stored.")
+
   (dolist (dir (list nemacs-local-dir nemacs-etc-dir nemacs-cache-dir (expand-file-name "elpa" nemacs-packages-dir)))
     (unless (file-directory-p dir)
       (make-directory dir t))))
@@ -634,110 +637,183 @@ Use shared system clipboard.
   (load nemacs-secrets-file))
 #+END_SRC
 
-** Org
+** Agenda
 
-*** Helper Functions
+I've been using Emacs for almost one year now. I learned that doing things by yourself is the best way to go and
+although I'm still using some packages, I'm trying to configure things my way. There's a lot of custom code below and
+I'm proud of it!
+
+*** Helpers
+
+A couple of helper functions and variables to organize my agenda easily.
 
 #+BEGIN_SRC emacs-lisp
 (defun nemacs-get-org-file (filename)
-  "Gets Org notes file that's shared between different devices."
-  (if IS-WINDOWS
-      (expand-file-name (concat "c:/Users/" user-login-name "/Notes/" filename ".org"))
-    (concat "~/Notes/" filename ".org")))
+  "Get the Org notes file that's shared between different devices. Concat the `filename' with the directory"
+  (expand-file-name filename nemacs-notes-dir))
 
 (defun nemacs-org-mark-done-and-archive ()
-  "Mark a task as `DONE' and then archive it."
+  "Mark a task as `DONE' and then archive it.
+If it was already `DONE', keeps that state and doesn't change the `CLOSED' timestamp."
   (interactive)
-  (org-todo 'done)
-  (org-archive-subtree))
+  (let ((is-done (nth 2 (org-heading-components))))
+    (when (not is-done)
+      (org-todo 'done))
+    (org-archive-subtree)))
 
 (defun nemacs-dashboard ()
-  "Opens my Inbox file in the right side and my Agenda in the left side."
+  "Open my Inbox file on the right side and my Agenda on the left side."
   (interactive)
   (org-agenda :keys "a")
   (delete-other-windows)
   (split-window-right)
   (find-file nemacs-org-inbox-file))
+
+(setq nemacs-org-archive-file (nemacs-get-org-file "archive.org")
+      nemacs-org-calendar-file (nemacs-get-org-file "references/calendar/my-calendar.org")
+      nemacs-org-inbox-file (nemacs-get-org-file "inbox.org")
+      nemacs-org-meetings-file (nemacs-get-org-file "meetings.org")
+      nemacs-org-someday-file (nemacs-get-org-file "someday.org"))
 #+END_SRC
 
-*** Variables
+*** Prompt Capture Setup
+
+Default =org-capture= is very good, but I want to integrate my =capture= with other things so I don't need to
+configure unnecessary keybindings. This code below is a customized copy of =org-mks= with a personal touch to run any
+lambda function. *Warning:* Lisp is contagious.
 
 #+BEGIN_SRC emacs-lisp
-(setq nemacs-org-archive-file (nemacs-get-org-file "archive")
-      nemacs-org-calendar-file (expand-file-name "my-calendar.org" "~/Notes/references/calendar")
-      nemacs-org-inbox-file (nemacs-get-org-file "inbox")
-      nemacs-org-meetings-file (nemacs-get-org-file "meetings")
-      nemacs-org-someday-file (nemacs-get-org-file "someday"))
+(defvar nemacs-capture-templates '()
+  "List of possible capture keys.
+It's automatically filled with `org-capture-templates' but can append more values.
+Expects a triplet with `key', `description' and `a callback function'.")
+
+(defun nemacs--read-key (allowed-keys prompt)
+  "Read the `prompt' in minibuffer and tries to match it with the `allowed-keys'.
+If the pressed key is in `allowed-keys', returns the key.
+If the pressed key is not in `allowed-keys', shows an error message and tries again."
+  (let* ((key (char-to-string
+               (pcase (read-char-exclusive prompt)
+                 ((or ?\s ?\t ?\r) ?\t)
+                 (char char)))))
+    (if (member key allowed-keys)
+        key
+      (message "Invalid key: `%s'" key)
+      (sit-for 1)
+      (nemacs--read-key allowed-keys prompt))))
+
+(defun nemacs-create-prompt-buffer (table title &optional prompt)
+  "Create a prompt buffer with the given `table', `title' and `prompt' message.
+`table' parameter should be a list of tuplets (at least) with the `key' in car and the `description' in cdr.
+`title' parameter is used as the header of this temporal buffer.
+`prompt' parameter is the message that will appear in the minibuffer. Default is 'Select:'.
+This function returns returns the item in the `table' list."
+  (save-window-excursion
+    (let ((inhibit-quit t)
+          (buffer (org-switch-to-buffer-other-window "*Nemacs Select*"))
+          (prompt (or prompt "Select: "))
+          current)
+      (unwind-protect
+          (catch 'exit
+            (while t
+              (erase-buffer)
+              (insert title "\n\n")
+              (let ((des-keys nil)
+                    (allowed-keys '("\C-g" "q"))
+                    (tab-alternatives '("\s" "\t" "\r"))
+                    (cursor-type nil))
+                ;; Populate buffer
+                (let ((re (format "\\`%s\\(.\\)\\'"
+                                  (if current (regexp-quote current) "")))
+                      (prefix (if current (concat current " ") "")))
+                  (dolist (entry table)
+                    (pcase entry
+                      ;; Description
+                      (`(,(and key (pred (string-match re))) ,desc)
+                       (let ((k (match-string 1 key)))
+                         (push k des-keys)
+                         ;; Keys ending in tab, space or RET are equivalent
+                         (if (member k tab-alternatives)
+                             (push "\t" allowed-keys)
+                           (push k allowed-keys))
+                         (insert prefix "[" k "]" "..." "  " desc "..." "\n")))
+                      ;; Usable Entry
+                      (`(,(and key (pred (string-match re))) ,desc . ,_)
+                       (let ((k (match-string 1 key)))
+                         (insert prefix "[" k "]" "     " desc "\n")
+                         (push k allowed-keys)))
+                      (_ nil))))
+                ;; Shows "q" "exit"
+                (insert "\n------------------------------\n\n")
+                (insert "[q]      Exit capture mode\n")
+                ;; Display UI
+                (goto-char (point-min))
+                (unless (pos-visible-in-window-p (point-max))
+                  (org-fit-window-to-buffer))
+                (let ((pressed (nemacs--read-key allowed-keys prompt)))
+                  (setq current (concat current pressed))
+                  (cond
+                   ((equal pressed "\C-g") (user-error "Abort"))
+                   ((equal pressed "q") (user-error "Abort"))
+                   ((member pressed des-keys))
+                   ((let ((entry (assoc current table)))
+                      (and entry (throw 'exit entry)))))))))
+        (when buffer (kill-buffer buffer))))))
+
+(defun nemacs-capture (&optional keys)
+  "Interactive function similar to `org-capture' but with a personal touch.
+Launch the `nemacs-create-prompt-buffer' function and execute the `callback' of the selection."
+  (interactive)
+  (let ((selected-action
+         (nemacs-create-prompt-buffer nemacs-capture-templates
+                               "NEMACS CAPTURE\n==============\nSelect a capture template:"
+                               "Template key: ")))
+    (funcall (car (cddr selected-action)))))
 #+END_SRC
 
-*** Initial Configuration
+*** Configuration
+
+Main configuration for my Agenda. Starting with the keybindings.
 
 #+BEGIN_SRC emacs-lisp
-(use-package org
-  :bind
-  (("C-c a" . org-agenda)
-   ("C-c c" . org-capture)
-   ("C-c l" . org-store-link)
-   ("C-c t" . (lambda () (interactive) (org-capture :keys "t")))
-   ("C-c d" . nemacs-dashboard)
-   :map org-mode-map
-   ("C-c C-x C-s" . nemacs-org-mark-done-and-archive)))
+(global-set-key (kbd "C-c a") #'org-agenda)
+(global-set-key (kbd "C-c c") #'nemacs-capture)
+(global-set-key (kbd "C-c d") #'nemacs-dashboard)
+(global-set-key (kbd "C-c l") #'org-store-link)
 
-(use-package org-bullets
-  :init
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+(define-key 'org-mode-map [remap org-archive-subtree-default] #'nemacs-org-mark-done-and-archive)
 #+END_SRC
 
-*** Setting Files and Agenda
+Now the big settings. I separated those by different headers which are explained below.
+
+- Defaults: A list of variables with better defaults for my setup.
+- Capture: The capture configuration with better =org-todo= keys and templates.
+- Refile: A bunch of configurations to the refiling.
+- Tags: Better tags with completition for context.
 
 #+BEGIN_SRC emacs-lisp
-(setq
- org-fontify-done-headline t
- org-fontify-whole-heading-line t)
+(require 'org-id)
 
-(setq
- org-agenda-files (list nemacs-org-inbox-file nemacs-org-calendar-file)
- org-agenda-start-on-weekday 0
- org-archive-location (concat nemacs-org-archive-file "::datetree/")
- org-clock-in-resume t
- org-deadline-warning-days 7
- org-default-notes-file nemacs-org-inbox-file
- org-descriptive-links t
- org-drawers (quote ("PROPERTIES" "LOGBOOK"))
- org-clock-into-drawer t
- org-clock-out-remove-zero-time-clocks t
- org-clock-out-when-done t
- org-clock-persist t
- org-clock-persist-query-resume nil
- org-ellipsis "\u21b4"
- org-image-actual-width nil
- org-log-done 'time
- org-startup-folded nil
- org-startup-truncated nil
- org-support-shift-select 'always
- org-tags-column 10)
+;; Defaults
+(setq org-agenda-files (list nemacs-org-inbox-file nemacs-org-calendar-file)
+      org-agenda-start-on-weekday 0
+      org-archive-location (concat nemacs-org-archive-file "::* From %s")
+      org-clock-in-resume t
+      org-clock-into-drawer t
+      org-clock-out-remove-zero-time-clocks t
+      org-clock-out-when-done t
+      org-clock-persist t
+      org-clock-persist-query-resume nil
+      org-deadline-warning-days 7
+      org-default-notes-file nemacs-org-inbox-file
+      org-drawers '("PROPERTIES" "LOGBOOK")
+      org-id-files '((expand-file-name "org-id-locations" "~/Notes/references"))
+      org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id
+      org-log-done 'time
+      org-tags-column -80)
 
-(setq org-tag-persistent-alist
-      '(("@emacs" . ?e)
-        ("@errands" . ?e)
-        ("@girlfriend" . ?g)
-        ("@outdoors" . ?o)
-        ("@weekend" . ?z)
-        ("@work" . ?w)))
-
-(setq
- org-agenda-custom-commands
- '(("e" "Emacs related tasks" tags-todo "emacs"
-    ((org-agenda-overriding-header "Emacs")))
-   ("w" "Emacs related tasks" tags-todo "work"
-    ((org-agenda-overriding-header "Work")))))
-#+END_SRC
-
-*** Org Capture
-
-#+BEGIN_SRC emacs-lisp
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "CURRENT(y)" "WAITING(w@)" "|" "DONE(d)" "CANCELED(c)"))
+;; Capture
+(setq org-todo-keywords '((sequence "TODO(t)" "CURRENT(y)" "WAITING(w@)" "|" "DONE(d)" "CANCELED(c)"))
       org-capture-templates '(("t" "Add a Todo in the Inbox"
                                entry (file nemacs-org-inbox-file)
                                "* TODO %i%?" :kill-buffer t)
@@ -747,55 +823,82 @@ Use shared system clipboard.
                               ("m" "Start a clock for a meeting and log notes."
                                entry (file nemacs-org-meetings-file)
                                "* MEETING %U %^{Title} %^{attendees}p %^{location}p \n%?" :clock-in t :jump-to-captured t)))
-#+END_SRC
-
-*** Org Link
-
-Create an =ID= when using the =org-store-link=. This changes the behavior of traditional links in Org so if I refile an
-entry, the link doesn't break.
-
-#+BEGIN_SRC emacs-lisp
-(require 'org-id)
-(setq org-id-files '((expand-file-name "org-id-locations" "~/Notes/references"))
-      org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
-#+END_SRC
-
-*** Org Refile
-
-#+BEGIN_SRC emacs-lisp
+;; Refile
 (setq org-refile-use-outline-path 'file
       org-outline-path-complete-in-steps nil
       org-refile-allow-creating-parent-nodes 'confirm
       org-refile-targets '((nemacs-org-inbox-file :maxlevel . 2)
-                           (nemacs-org-timebomb-file :maxlevel . 2)
                            (nemacs-org-someday-file :maxlevel . 1)))
+
+;; Tags
+(setq org-tag-persistent-alist '(("@emacs" . ?e)
+                                 ("@errands" . ?e)
+                                 ("@girlfriend" . ?g)
+                                 ("@outdoors" . ?o)
+                                 ("@weekend" . ?z)
+                                 ("@work" . ?w)))
+#+END_SRC
+
+Finally, populating the =nemacs-capture-templates= with the =org-capture-templates=.
+
+#+BEGIN_SRC emacs-lisp
+(dolist (element (reverse org-capture-templates))
+  (let ((key (car element))
+        (description (car (cdr element))))
+    (push
+     (list key description `(lambda () (org-capture :keys ,key))) nemacs-capture-templates)))
+#+END_SRC
+
+*** Org Bullets
+
+Adding the =org-bullets= package to replace the traditional * with a fancy-looking ASCII bullet. I might replace this
+with a custom function in the future.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+  :init
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+END_SRC
+
+** Org
+
+Other =org= related configuration that is not related to the Agenda. Here I'm setting up some defaults and configuring
+other org-related packages that I use.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-descriptive-links t
+      org-ellipsis "\u21b4"
+      org-fontify-done-headline t
+      org-fontify-whole-heading-line t
+      org-image-actual-width nil
+      org-startup-folded nil
+      org-startup-truncated nil
+      org-support-shift-select 'always)
 #+END_SRC
 
 *** Org Src
 
+My main configuration file uses =org-mode= and I usually use this code inside the text feature for emails and more.
+
 #+BEGIN_SRC emacs-lisp
-(use-package org-src
-  :ensure nil ; built-in
-  :after org
-  :config
-  (setq
-   org-edit-src-content-indentation 0
-   org-edit-src-persistent-message nil
-   org-src-fontify-natively t
-   org-src-preserve-indentation t
-   org-src-tab-acts-natively t
-   org-src-window-setup 'current-window))
+(setq org-edit-src-content-indentation 0
+      org-edit-src-persistent-message nil
+      org-src-fontify-natively t
+      org-src-preserve-indentation t
+      org-src-tab-acts-natively t
+      org-src-window-setup 'current-window)
 #+END_SRC
 
 *** Org Jira
+
+Accessing JIRA from Org makes JIRA better.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-jira
   :bind
   (("C-c j" . org-jira-get-issue))
   :config
-  (setq jiralib-url "https://jira.itx.com"
-        org-jira-working-dir nemacs-cache-dir))
+  (setq org-jira-working-dir nemacs-cache-dir))
 #+END_SRC
 
 *** Org Calendar
@@ -806,6 +909,7 @@ between selected systems.
 #+BEGIN_SRC emacs-lisp
 (use-package org-gcal)
 #+END_SRC
+
 ** Packages
 
 *** All The Icons
