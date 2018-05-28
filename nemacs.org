@@ -673,6 +673,7 @@ If it was already `DONE', keeps that state and doesn't change the `CLOSED' times
       nemacs-org-calendar-file (nemacs-get-org-file "references/calendar/my-calendar.org")
       nemacs-org-inbox-file (nemacs-get-org-file "inbox.org")
       nemacs-org-meetings-file (nemacs-get-org-file "meetings.org")
+      nemacs-org-project-file (nemacs-get-org-file "project.org")
       nemacs-org-someday-file (nemacs-get-org-file "someday.org"))
 #+END_SRC
 
@@ -822,12 +823,16 @@ Now the big settings. I separated those by different headers which are explained
                                "* TODO %i%? \nSCHEDULED: %^t" :kill-buffer t)
                               ("m" "Start a clock for a meeting and log notes."
                                entry (file nemacs-org-meetings-file)
-                               "* MEETING %U %^{Title} %^{attendees}p %^{location}p \n%?" :clock-in t :jump-to-captured t)))
+                               "* MEETING %U %^{Title} %^{attendees}p %^{location}p \n%?" :clock-in t :jump-to-captured t)
+                              ("p" "Current project task"
+                               entry (file+headline nemacs-org-project-file "Tasks")
+                               "* TODO %i%?" :kill-buffer t)))
 ;; Refile
 (setq org-refile-use-outline-path 'file
       org-outline-path-complete-in-steps nil
       org-refile-allow-creating-parent-nodes 'confirm
       org-refile-targets '((nemacs-org-inbox-file :maxlevel . 2)
+                           (nemacs-org-project-file :maxlevel . 2)
                            (nemacs-org-someday-file :maxlevel . 1)))
 
 ;; Tags
