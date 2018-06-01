@@ -670,7 +670,6 @@ If it was already `DONE', keeps that state and doesn't change the `CLOSED' times
   (find-file nemacs-org-inbox-file))
 
 (setq nemacs-org-archive-file (nemacs-get-org-file "archive.org")
-      nemacs-org-calendar-file (nemacs-get-org-file "references/calendar/my-calendar.org")
       nemacs-org-inbox-file (nemacs-get-org-file "inbox.org")
       nemacs-org-meetings-file (nemacs-get-org-file "meetings.org")
       nemacs-org-project-file (nemacs-get-org-file "project.org")
@@ -796,7 +795,7 @@ Now the big settings. I separated those by different headers which are explained
 (require 'org-id)
 
 ;; Defaults
-(setq org-agenda-files (list nemacs-org-inbox-file nemacs-org-calendar-file)
+(setq org-agenda-files (list nemacs-org-inbox-file)
       org-agenda-start-on-weekday 0
       org-archive-location (concat nemacs-org-archive-file "::* From %s")
       org-clock-in-resume t
@@ -906,15 +905,6 @@ Accessing JIRA from Org makes JIRA better.
   (("C-c j" . org-jira-get-issue))
   :config
   (setq org-jira-working-dir nemacs-cache-dir))
-#+END_SRC
-
-*** Org Calendar
-
-I have my calendar synced with Org mode. However, the configuration is being loaded from a =secrets.el= which is shared
-between selected systems.
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-gcal)
 #+END_SRC
 
 ** Packages
