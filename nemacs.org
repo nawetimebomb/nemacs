@@ -850,8 +850,10 @@ Finally, populating the =nemacs-capture-templates= with the =org-capture-templat
 (dolist (element (reverse org-capture-templates))
   (let ((key (car element))
         (description (car (cdr element))))
-    (push
-     (list key description `(lambda () (org-capture :keys ,key))) nemacs-capture-templates)))
+    (setq-local capture-entry (list key description `(lambda () (org-capture :keys ,key))))
+    (when (not (member capture-entry nemacs-capture-templates))
+      (push
+        capture-entry nemacs-capture-templates))))
 #+END_SRC
 
 *** Org Bullets
