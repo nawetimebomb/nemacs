@@ -1109,6 +1109,11 @@ The excellent project management tool.
                                    (define-key map [mode-line down-mouse-1] #'list-flycheck-errors)
                                    map)))))
 
+    (spaceline-define-segment nemacs-unread-emails
+      "Show the number of unread emails from mu4e"
+      (when mu4e-alert-mode-line
+        mu4e-alert-mode-line))
+
     (spaceline-define-segment nemacs-major-mode
       "A simplistic major mode indicator."
       (format-mode-line mode-name))
@@ -1124,6 +1129,7 @@ The excellent project management tool.
         (selection-info :when mark-active :face powerline-active1)
         (anzu :when active :face powerline-active1))
       '((nemacs-flycheck-info :face powerline-active1)
+        (nemacs-unread-emails :face powerline-active1)
         (hud buffer-position :face powerline-active1)
         (nemacs-time :face powerline-active1)
         (nemacs-major-mode :face highlight-face)))))
