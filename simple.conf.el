@@ -85,6 +85,7 @@
       (save-buffers-kill-terminal)
     (message "Good. You should never do it.")))
 (global-set-key [remap save-buffers-kill-emacs] #'nemacs-prompt-before-exiting-emacs)
+(global-set-key [remap save-buffers-kill-terminal] #'nemacs-prompt-before-exiting-emacs)
 (global-set-key [remap suspend-frame] #'ignore)
 
 (defun nemacs-startup ()
