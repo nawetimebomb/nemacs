@@ -8,7 +8,9 @@
 (package-initialize)
 
 (dolist (package '(helm
+                   helm-projectile
                    js2-mode
+                   projectile
                    ))
 
   (unless (package-installed-p package)

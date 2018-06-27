@@ -36,10 +36,6 @@
       initial-scratch-message nil
       mode-line-format nil)
 
-(setq user-full-name "Nahuel Jesus Sacchetti"
-      user-mail-address "nahueljsacchetti@gmail.com"
-      auth-sources (list (expand-file-name "~/.authinfo.gpg")))
-
 ;; Define important variables
 (eval-and-compile
   (defvar nemacs-emacs-dir (expand-file-name user-emacs-directory)
@@ -56,6 +52,9 @@
 
   (defvar nemacs-packages-dir (concat nemacs-local-dir "packages/")
     "Where `package.el' and my local plugins are installed.")
+
+  (defvar nemacs-lisp-dir (concat nemacs-emacs-dir "lisp/")
+    "Directory with NEMACS's interesting code")
 
   (defvar nemacs-notes-dir "~/Notes"
     "Notes directory where all the shared org files are stored.")
@@ -78,7 +77,7 @@
               blink-matching-paren nil
               buffer-file-coding-system  'utf-8
               cursor-in-non-selected-windows nil
-              custom-file (expand-file-name (concat nemacs-etc-dir "custom.el"))
+              custom-file (expand-file-name "custom.el" nemacs-etc-dir)
               create-lockfiles nil
               delete-by-moving-to-trash t
               display-time-format "%H:%M"
@@ -127,18 +126,20 @@
 (fset #'yes-or-no-p #'y-or-n-p)
 (tooltip-mode -1)
 (menu-bar-mode -1)
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (show-paren-mode t)
 (global-auto-revert-mode t)
 (global-subword-mode t)
 (delete-selection-mode t)
 (column-number-mode t)
-(load-file custom-file)
+(when (file-exists-p custom-file) (load-file custom-file))
 (set-frame-font "Envy Code R 11")
 (load-theme 'monochrome-dark)
 
 ;; Initialization
+(add-to-list 'load-path nemacs-lisp-dir)
+
 (eval-and-compile
   (setq gc-cons-threshold 402653184
         gc-cons-percentage 0.6)
@@ -172,29 +173,35 @@
                                        1 font-lock-warning-face t)))))
 
 ;; Do something after init
-(add-hook 'after-init-hook #'(lambda ()
-                               ;; Reset defaults
-                               (setq gc-cons-threshold 16777216
-                                     gc-cons-percentage 0.1)
-                               (setq-default mode-line-format
-                                             '("%e"
-                                               mode-line-front-space
-                                               mode-line-client
-                                               mode-line-modified
-                                               " "
-                                               mode-line-directory
-                                               mode-line-buffer-identification
-                                               " "
-                                               mode-line-position
-                                               (flycheck-mode flycheck-mode-line)
-                                               " "
-                                               mode-line-modes
-                                               mode-line-misc-info
-                                               mode-line-end-spaces))
+(add-hook 'after-init-hook
+          #'(lambda ()
+              ;; Reset defaults
+              (setq gc-cons-threshold 16777216
+                    gc-cons-percentage 0.1)
+              (setq-default mode-line-format
+                            '("%e"
+                              mode-line-front-space
+                              mode-line-client
+                              mode-line-modified
+                              " "
+                              mode-line-directory
+                              mode-line-buffer-identification
+                              " "
+                              mode-line-position
+                              (flycheck-mode flycheck-mode-line)
+                              " "
+                              mode-line-modes
+                              mode-line-misc-info
+                              mode-line-end-spaces))
 
-                               ;; Packages Settings
-                               (helm-mode)
+              ;; Nemacs Lisp
+              (require 'nemacs-keybindings)
 
-                               ;; Run the startup page
-                               ;;(nemacs-startup)
-                               ))
+              ;; Packages Settings
+              (helm-mode)
+              (projectile-mode)
+
+              ;; Run the startup page
+              ;;(nemacs-startup)
+              (message (emacs-init-time))
+              ))
