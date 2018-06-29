@@ -94,6 +94,6 @@
   (require 'org)
   (org-agenda :keys "a")
   (delete-other-windows)
-  (split-window-below)
+  (split-window-right)
   (notmuch))
 (global-set-key (kbd "C-c d") #'nemacs-startup)

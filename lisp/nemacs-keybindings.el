@@ -17,6 +17,4 @@
 
 ;;; Code:
 
-(global-set-key (kbd "C-c m") #'notmuch)
-
 (provide 'nemacs-keybindings)

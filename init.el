@@ -178,6 +178,7 @@
               ;; Reset defaults
               (setq gc-cons-threshold 16777216
                     gc-cons-percentage 0.1)
+
               (setq-default mode-line-format
                             '("%e"
                               mode-line-front-space
@@ -194,6 +195,7 @@
                               mode-line-misc-info
                               mode-line-end-spaces))
 
+
               ;; Nemacs Lisp
               (require 'nemacs-keybindings)
 
@@ -203,5 +205,4 @@
 
               ;; Run the startup page
               (nemacs-startup)
-              (message (emacs-init-time))
-              ))
+              (message (emacs-init-time))))

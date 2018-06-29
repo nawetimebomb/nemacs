@@ -8,6 +8,7 @@
 (package-initialize)
 
 (dolist (package '(helm
+                   helm-notmuch
                    helm-projectile
                    js2-mode
                    notmuch
