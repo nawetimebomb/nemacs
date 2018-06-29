@@ -94,6 +94,6 @@
   (require 'org)
   (org-agenda :keys "a")
   (delete-other-windows)
-  (split-window-right)
-  (find-file nemacs-org-inbox-file))
+  (split-window-below)
+  (notmuch))
 (global-set-key (kbd "C-c d") #'nemacs-startup)

@@ -10,6 +10,8 @@
 (dolist (package '(helm
                    helm-projectile
                    js2-mode
+                   notmuch
+                   org-plus-contrib
                    projectile
                    ))
 

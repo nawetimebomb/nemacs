@@ -202,6 +202,6 @@
               (projectile-mode)
 
               ;; Run the startup page
-              ;;(nemacs-startup)
+              (nemacs-startup)
               (message (emacs-init-time))
               ))

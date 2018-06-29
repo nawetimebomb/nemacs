@@ -18,5 +18,5 @@
 (global-set-key [remap execute-extended-command] #'helm-M-x)
 (global-set-key [remap find-file] #'helm-find-files)
 (global-set-key [remap switch-to-buffer] #'helm-mini)
-(define-key helm-map (kbd "<tab>") #'helm-ff-RET)
-(define-key helm-map (kbd "C-z") #'help-select-action)
+(define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
+(define-key helm-map (kbd "C-z") #'helm-select-action)

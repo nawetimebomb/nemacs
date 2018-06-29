@@ -87,6 +87,8 @@ If it was already `DONE', keeps that state and doesn't change the `CLOSED' times
       org-src-tab-acts-natively t
       org-src-window-setup 'current-window)
 
+(require 'org-notmuch)
+
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)
 (global-set-key (kbd "C-c l") #'org-store-link)
