@@ -3,7 +3,7 @@
 
 (defvar smtp-accounts
   '((ssl "nahueljsacchetti@gmail.com" "smtp.gmail.com" 25 "nahueljsacchetti@gmail.com" nil)
-    (ssl "nsacchetti@itx.com" "smtp.office365.com" 587 "nsacchetti" nil)))
+    (ssl "nsacchetti@itx.com" "smtp.office365.com" 587 "nsacchetti@itx.com" nil)))
 
 (defun set-smtp (mech server port user password)
   (setq smtpmail-smtp-server server
@@ -67,11 +67,13 @@
       notmuch-search-oldest-first nil
       notmuch-saved-searches '((:name "inbox" :query "tag:inbox" :key "i")
                                (:name "unread" :query "tag:unread" :key "u")
-                               (:name "flagged" :query "tag:flagged" :key "f")))
+                               (:name "flagged" :query "tag:flagged" :key "f")
+                               (:name "sent" :query "tag:sent" :key "t")
+                               (:name "deleted" :query "tag:deleted")))
 
 (global-set-key (kbd "C-c m") #'notmuch)
 (global-set-key (kbd "C-x h") #'helm-notmuch)
-(global-set-key (kbd "C-x m") #'notmuch-mua-new-mail)
+(global-set-key (kbd "C-x m") (lambda () (interactive) (notmuch-mua-new-mail t)))
 (define-key notmuch-search-mode-map "g" 'notmuch-poll-and-refresh-this-buffer)
 (define-key notmuch-hello-mode-map "g" 'notmuch-poll-and-refresh-this-buffer)
 (define-key notmuch-search-mode-map "d"
@@ -100,10 +102,18 @@
     (interactive)
     (notmuch-hello-search "tag:unread")))
 
-(defun nemacs-new-mail-whole-window ()
+(defun nemacs-new-mail-whole-frame (account)
   "Creates new email with `notmuch' but closes other windows before"
   (interactive)
   (delete-other-windows)
   (notmuch)
-  (notmuch-mua-new-mail))
-(global-set-key (kbd "C-x M-m") #'nemacs-new-mail-whole-window)
+  (setq user-mail-address account
+        smtpmail-mail-address account
+        notmuch-always-prompt-for-sender nil)
+  (notmuch-mua-new-mail nil))
+
+(defun nemacs-show-unread-messages ()
+  "Opens the unread messages in the whole frame"
+  (interactive)
+  (delete-other-windows)
+  (notmuch-hello-search "tag:unread"))
