@@ -16,6 +16,7 @@
                    notmuch
                    org-plus-contrib
                    projectile
+                   w3m
                    ))
 
   (unless (package-installed-p package)

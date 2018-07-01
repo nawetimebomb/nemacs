@@ -59,6 +59,9 @@
   (defvar nemacs-notes-dir "~/Notes"
     "Notes directory where all the shared org files are stored.")
 
+  (defvar nemacs-gnus-dir "~/Gnus"
+    "Default Gnus directory.")
+
   (dolist (dir (list nemacs-local-dir nemacs-etc-dir nemacs-cache-dir (expand-file-name "elpa" nemacs-packages-dir)))
     (unless (file-directory-p dir)
       (make-directory dir t))))
@@ -207,5 +210,4 @@
               (projectile-mode)
 
               ;; Run the startup page
-              (nemacs-startup)
               (message (emacs-init-time))))
