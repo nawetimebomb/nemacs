@@ -17,4 +17,16 @@
 
 ;;; Code:
 
-(provide 'nemacs-keybindings)
+;; elfeed
+(global-set-key (kbd "C-x w") #'elfeed)
+
+;; gnus
+(global-set-key (kbd "C-x g") #'gnus)
+
+;; notmuch
+(global-set-key (kbd "C-x m") #'notmuch)
+(global-set-key (kbd "C-x h") #'helm-notmuch)
+(global-set-key (kbd "C-x M-m") #'notmuch-mua-new-mail)
+
+
+(provide 'nemacs-global-keybindings)

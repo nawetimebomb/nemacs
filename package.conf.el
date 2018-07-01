@@ -7,7 +7,9 @@
 
 (package-initialize)
 
-(dolist (package '(helm
+(dolist (package '(anzu
+                   elfeed
+                   helm
                    helm-notmuch
                    helm-projectile
                    js2-mode

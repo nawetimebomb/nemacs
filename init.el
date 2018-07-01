@@ -71,6 +71,9 @@
                  doc-view-mode-maybe ebrowse-tree-mode pdf-view-mode)
   "Major modes that `nemacs/check-large-file' will ignore")
 
+(defvar nemacs-open-clean nil
+  "If non-nill, opens `NEMACS' without running the `after-init-hook'.")
+
 ;; Default Settings
 (setq-default auto-save-default nil
               bidi-display-reordering nil
@@ -172,7 +175,6 @@
                                     '(("\\<\\(FIXME\\|NOTE\\|TODO\\|BUG\\)"
                                        1 font-lock-warning-face t)))))
 
-;; Do something after init
 (add-hook 'after-init-hook
           #'(lambda ()
               ;; Reset defaults
@@ -197,10 +199,11 @@
 
 
               ;; Nemacs Lisp
-              (require 'nemacs-keybindings)
+              (require 'nemacs-global-keybindings)
 
               ;; Packages Settings
               (helm-mode)
+              (global-anzu-mode)
               (projectile-mode)
 
               ;; Run the startup page
