@@ -145,6 +145,7 @@
 (global-subword-mode t)
 (delete-selection-mode t)
 (column-number-mode t)
+(flyspell-mode t)
 (when (file-exists-p custom-file) (load-file custom-file))
 (set-frame-font "Envy Code R 12")
 
