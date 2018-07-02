@@ -10,6 +10,7 @@
 (dolist (package '(anzu
                    helm
                    helm-projectile
+                   gnus-select-account
                    js2-mode
                    org-plus-contrib
                    projectile

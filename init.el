@@ -56,11 +56,14 @@
   (defvar nemacs-lisp-dir (concat nemacs-emacs-dir "lisp/")
     "Directory with NEMACS's interesting code")
 
+  (defvar nemacs-themes-dir (concat nemacs-emacs-dir "themes/")
+    "The custom themes directory.")
+
   (defvar nemacs-notes-dir "~/Notes"
     "Notes directory where all the shared org files are stored.")
 
   (defvar nemacs-gnus-dir "~/Gnus"
-    "Default Gnus directory.")
+    "Default GNUs directory.")
 
   (dolist (dir (list nemacs-local-dir nemacs-etc-dir nemacs-cache-dir (expand-file-name "elpa" nemacs-packages-dir)))
     (unless (file-directory-p dir)
@@ -140,8 +143,7 @@
 (delete-selection-mode t)
 (column-number-mode t)
 (when (file-exists-p custom-file) (load-file custom-file))
-(set-frame-font "Envy Code R 11")
-(load-theme 'monochrome-dark)
+(set-frame-font "Envy Code R 12")
 
 ;; Initialization
 (add-to-list 'load-path nemacs-lisp-dir)

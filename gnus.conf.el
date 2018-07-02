@@ -1,5 +1,8 @@
 (require 'nnir)
 (require 'smtpmail)
+(require 'gnus-select-account)
+
+(gnus-select-account-enable)
 
 (setq gnus-always-read-dribble-file t
       gnus-directory (concat nemacs-gnus-dir "/News")
