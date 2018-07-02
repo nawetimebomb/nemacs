@@ -54,7 +54,10 @@
     "Where `package.el' and my local plugins are installed.")
 
   (defvar nemacs-lisp-dir (concat nemacs-emacs-dir "lisp/")
-    "Directory with NEMACS's interesting code")
+    "Directory with NEMACS's interesting code.")
+
+  (defvar nemacs-prog-mode-dir (concat nemacs-emacs-dir "prog-mode/")
+    "Directory with configuration for programming.")
 
   (defvar nemacs-themes-dir (concat nemacs-emacs-dir "themes/")
     "The custom themes directory.")
@@ -148,6 +151,10 @@
 ;; Initialization
 (add-to-list 'load-path nemacs-lisp-dir)
 
+;; Nemacs Lisp
+(require 'nemacs-global-keybindings)
+(require 'nemacs-programming)
+
 (eval-and-compile
   (setq gc-cons-threshold 402653184
         gc-cons-percentage 0.6)
@@ -172,13 +179,9 @@
 ;; ============================== DEBUGGER ========================
 
 ;; Startup Hooks
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
+;; TODO: Move this hooks to the respective files.
+(add-hook 'text-mode-hook #'turn-on-auto-fill)
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (font-lock-add-keywords nil
-                                    '(("\\<\\(FIXME\\|NOTE\\|TODO\\|BUG\\)"
-                                       1 font-lock-warning-face t)))))
 
 (add-hook 'after-init-hook
           #'(lambda ()
@@ -186,6 +189,7 @@
               (setq gc-cons-threshold 16777216
                     gc-cons-percentage 0.1)
 
+              ;; Mode line
               (setq-default mode-line-format
                             '("%e"
                               mode-line-front-space
@@ -202,16 +206,11 @@
                               mode-line-misc-info
                               mode-line-end-spaces))
 
-
-              ;; Nemacs Lisp
-              (require 'nemacs-global-keybindings)
-
               ;; Packages Settings
+              (require 'org)
               (helm-mode)
               (global-anzu-mode)
               (projectile-mode)
-
-              (org-agenda :keys "a")
 
               ;; Run the startup page
               (message (emacs-init-time))))

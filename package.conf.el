@@ -14,6 +14,7 @@
                    js2-mode
                    org-plus-contrib
                    projectile
+                   scss-mode
                    w3m))
 
   (unless (package-installed-p package)
