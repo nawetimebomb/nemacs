@@ -209,5 +209,7 @@
               (global-anzu-mode)
               (projectile-mode)
 
+              (org-agenda :keys "a")
+
               ;; Run the startup page
               (message (emacs-init-time))))
