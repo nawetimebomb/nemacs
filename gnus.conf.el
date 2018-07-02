@@ -25,10 +25,11 @@
 (add-hook 'gnus-startup-hook #'(lambda ()
                                  (gnus-demon-init)
                                  (setq gnus-demon-timestep 60)
+                                 ;; Update every 15 minutes
                                  (gnus-demon-add-handler '(lambda ()
                                                             (gnus-demon-scan-news)
                                                             (message "NEMACS GNUs: Checking email..."))
-                                                         2 nil)
+                                                         15 nil)
 
                                  (require 'gnus-desktop-notify)
                                  (gnus-desktop-notify-mode)
