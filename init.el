@@ -152,10 +152,6 @@
 ;; Initialization
 (add-to-list 'load-path nemacs-lisp-dir)
 
-;; Nemacs Lisp
-(require 'nemacs-global-keybindings)
-(require 'nemacs-programming)
-
 (eval-and-compile
   (setq gc-cons-threshold 402653184
         gc-cons-percentage 0.6)
@@ -199,6 +195,12 @@
                               mode-line-modes
                               mode-line-misc-info
                               mode-line-end-spaces))
+
+              ;; Nemacs Lisp
+              (require 'nemacs-functions)
+              (require 'nemacs-global-keybindings)
+              (require 'nemacs-programming)
+
 
               ;; Packages Settings
               (require 'org)
