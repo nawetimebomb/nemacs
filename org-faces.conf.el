@@ -11,5 +11,15 @@
    `(org-property ((t (:foreground ,zenburn-green :weight bold))))
    `(org-property-value ((t (:foreground ,zenburn-green+4 :italic t))))
    `(org-special-keyword ((t (:foreground ,zenburn-green))))
-   `(org-todo ((t (:foreground ,zenburn-red-2 :weight bold))))
-   `(org-done ((t (:foreground ,zenburn-green-1 :weight bold))))))
+   `(org-todo ((t (:foreground ,zenburn-red :underline t :weight bold))))
+   `(org-done ((t (:foreground ,zenburn-green-1 :underline t :weight bold)))))
+
+  (setq org-todo-keyword-faces
+        `(("TODO" . org-todo)
+          ("STARTED" . (:foreground ,zenburn-green+2 :underline t :weight bold))
+          ("WAITING" . (:foreground ,zenburn-orange :underline t :weight bold))
+          ("DELEGATED" . (:foreground ,zenburn-blue :underline t :weight bold))
+          ("FEEDBACK" . (:foreground ,zenburn-yellow-1 :underline t :weight bold))
+          ("REWORK" . (:foreground ,zenburn-red-1 :underline t :weight bold))
+          ("DONE" . org-done)
+          ("CANCELED" . (:foreground ,zenburn-red-3 :underline t :weight bold)))))

@@ -44,6 +44,7 @@ from personal mail address."
       message-confirm-send t
       message-default-mail-headers "Cc: \n"
       message-directory (concat nemacs-gnus-dir "/Mail")
+      message-dont-reply-to-names '("nsacchetti" "nahueljsacchetti")
       message-kill-buffer-on-exit t
       message-send-mail-function 'smtpmail-send-it
       message-signature '(concat "Nahuel Jesús Sacchetti\n"

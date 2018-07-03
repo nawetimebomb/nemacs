@@ -42,13 +42,14 @@ If it was already `DONE', keeps that state and doesn't change the `CLOSED' times
       org-log-done 'time
       org-tags-column -80)
 
-(setq org-email-link-description-format "Email %c (%d): %s")
+(setq org-email-link-description-format "Email %c: %s")
 
 ;; Capture
 (setq org-todo-keywords
       '((sequence "TODO(t!)"
-                  "STARTED(y!)"
+                  "STARTED(s!)"
                   "WAITING(w@)"
+                  "DELEGATED(m@)"
                   "FEEDBACK(f!/@)"
                   "REWORK(r@/!)"
                   "|"
