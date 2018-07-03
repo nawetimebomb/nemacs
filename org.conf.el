@@ -1,3 +1,9 @@
+(defun nemacs-get-inbox-file ()
+  "Open my Inbox file."
+  (interactive)
+  (find-file nemacs-org-inbox-file))
+(global-set-key (kbd "C-c i") #'nemacs-get-inbox-file)
+
 (defun nemacs-get-org-file (filename)
   "Get the Org notes file that's shared between different devices. Concat the `filename' with the directory"
   (expand-file-name filename nemacs-notes-dir))
@@ -20,10 +26,9 @@ If it was already `DONE', keeps that state and doesn't change the `CLOSED' times
 
 (require 'org-id)
 
-;; Defaults
-(setq org-agenda-files (list nemacs-org-inbox-file)
-      org-agenda-start-on-weekday 0
-      org-archive-location (concat nemacs-org-archive-file "::* From %s")
+(setq org-enforce-todo-dependencies t)
+
+(setq org-archive-location (concat nemacs-org-archive-file "::* From %s")
       org-clock-in-resume t
       org-clock-into-drawer t
       org-clock-out-remove-zero-time-clocks t
@@ -32,29 +37,50 @@ If it was already `DONE', keeps that state and doesn't change the `CLOSED' times
       org-clock-persist-query-resume nil
       org-deadline-warning-days 7
       org-default-notes-file nemacs-org-inbox-file
-      org-drawers '("PROPERTIES" "LOGBOOK")
       org-id-files '((expand-file-name "org-id-locations" "~/Notes/references"))
       org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id
       org-log-done 'time
       org-tags-column -80)
 
+(setq org-email-link-description-format "Email %c (%d): %s")
+
 ;; Capture
-(setq org-todo-keywords '((sequence "TODO(t)" "CURRENT(y)" "WAITING(w@)" "|" "DONE(d)" "CANCELED(c@)"))
-      org-capture-templates '(("t" "Add a Todo in the Inbox"
-                               entry (file nemacs-org-inbox-file)
-                               "* TODO %i%?" :kill-buffer t)
-                              ("T" "Timebomb! Something that has a clear deadline or schedule"
-                               entry (file nemacs-org-inbox-file)
-                               "* TODO %i%? \nSCHEDULED: %^t" :kill-buffer t)
-                              ("m" "Start a clock for a meeting and log notes."
-                               entry (file nemacs-org-meetings-file)
-                               "* MEETING %U %^{Title} %^{attendees}p %^{location}p \n%?" :clock-in t :jump-to-captured t)
-                              ("p" "Current project task"
-                               entry (file+headline nemacs-org-project-file "Tasks")
-                               "* TODO %i%?" :kill-buffer t)
-                              ("r" "ROR - Things to fix"
-                               table-line (file+headline (nemacs-get-org-file "ror.org") "Team's Chart")
-                               "| %u | %^{Level} | %^{Reporter} | %^{Person} | %^{Action|Missing Meeting} | %^{Comments} |")))
+(setq org-todo-keywords
+      '((sequence "TODO(t!)"
+                  "STARTED(y!)"
+                  "WAITING(w@)"
+                  "FEEDBACK(f!/@)"
+                  "REWORK(r@/!)"
+                  "|"
+                  "DONE(d)"
+                  "CANCELED(c@)")
+        (sequence "PROJECT(j!)" "|" "CANCELED(c@)" "DONE(d!)")))
+
+(add-hook 'org-capture-before-finalize-hook
+          (lambda ()
+            (interactive)
+            (org-set-property "CREATED" (format-time-string "<%Y-%m-%d %a %H:%M>"))))
+
+(setq org-capture-templates
+      '(("e" "Add entry below Emacs category"
+         entry (file+headline nemacs-org-inbox-file "Emacs")
+         "* TODO %?" :kill-buffer t)
+        ("l" "Add entry below Linux category"
+         entry (file+headline nemacs-org-inbox-file "Linux")
+         "* TODO %?" :kill-buffer t)
+        ("p" "Add entry below Personal category"
+         entry (file+headline nemacs-org-inbox-file "Personal")
+         "* TODO %?" :kill-buffer t)
+        ("t" "Add entry below General Tasks category"
+         entry (file+headline nemacs-org-inbox-file "Tasks")
+         "* TODO %?" :kill-buffer t)
+        ("w" "Add entry below Work category"
+         entry (file+headline nemacs-org-inbox-file "Work")
+         "* TODO %?" :kill-buffer t)
+        ("m" "Start a clock for a meeting and log notes."
+         entry (file nemacs-org-meetings-file)
+         "* MEETING %U %^{Title} %^{attendees}p %^{location}p \n%?" :clock-in t :jump-to-captured t)))
+
 ;; Refile
 (setq org-refile-use-outline-path 'file
       org-outline-path-complete-in-steps nil
@@ -64,12 +90,10 @@ If it was already `DONE', keeps that state and doesn't change the `CLOSED' times
                            (nemacs-org-someday-file :maxlevel . 1)))
 
 ;; Tags
-(setq org-tag-persistent-alist '(("@emacs" . ?e)
-                                 ("@errands" . ?e)
-                                 ("@girlfriend" . ?g)
-                                 ("@outdoors" . ?o)
-                                 ("@weekend" . ?z)
-                                 ("@work" . ?w)))
+(setq org-tag-persistent-alist '(("Emacs" . ?e)
+                                 ("Org" . ?o)
+                                 ("Work" . ?w)
+                                 ("Books" . ?b)))
 
 (setq org-descriptive-links t
       org-ellipsis "\u21b4"
@@ -87,7 +111,8 @@ If it was already `DONE', keeps that state and doesn't change the `CLOSED' times
       org-src-tab-acts-natively t
       org-src-window-setup 'current-window)
 
-(require 'org-notmuch)
+(add-hook 'org-mode-hook #'turn-on-auto-fill)
+(add-hook 'org-mode-hook #'hl-line-mode)
 
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)

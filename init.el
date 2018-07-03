@@ -172,13 +172,6 @@
 
 (require 'package)
 
-;; ============================== DEBUGGER ========================
-;; DELETE AFTER FINISHING WITH THIS CONFIGURATION
-(setq
- debug-on-error t)
-(find-file (expand-file-name (concat nemacs-emacs-dir "init.el")))
-;; ============================== DEBUGGER ========================
-
 ;; Startup Hooks
 ;; TODO: Move this hooks to the respective files.
 (add-hook 'text-mode-hook #'turn-on-auto-fill)

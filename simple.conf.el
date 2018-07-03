@@ -95,21 +95,5 @@
   (org-agenda :keys "a")
   (delete-other-windows)
   (split-window-right)
-  (notmuch))
+  (find-file nemacs-org-inbox-file))
 (global-set-key (kbd "C-c d") #'nemacs-startup)
-
-(defun nemacs-new-mail-whole-frame (account)
-  "Creates new email with `notmuch' but closes other windows before"
-  (interactive)
-  (delete-other-windows)
-  (notmuch)
-  (setq user-mail-address account
-        smtpmail-mail-address account
-        notmuch-always-prompt-for-sender nil)
-  (notmuch-mua-new-mail nil))
-
-(defun nemacs-show-unread-messages ()
-  "Opens the unread messages in the whole frame"
-  (interactive)
-  (delete-other-windows)
-  (notmuch-hello-search "tag:unread"))
