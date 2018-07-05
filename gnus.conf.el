@@ -36,8 +36,6 @@
       mm-text-html-renderer 'w3m
       nnfolder-directory (concat nemacs-gnus-dir "/Mail"))
 
-(setq tls-program '("gnutls-cli --strict-tofu -p %p %h"))
-
 (setq-default gnus-summary-line-format "%U%R%z | %d | %( %-23,23f : %B%s%)\n"
               gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M"))
               gnus-summary-thread-gathering-function 'gnus-gather-threads-by-subject
