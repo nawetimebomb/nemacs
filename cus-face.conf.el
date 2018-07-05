@@ -7,5 +7,6 @@
 
 (zenburn-with-color-variables
   (custom-set-faces
+   `(button ((t (:underline nil))))
    `(font-lock-warning-face ((t (:foreground ,zenburn-green :bold t))))
    `(mode-line ((t (:foreground ,zenburn-fg))))))

@@ -1,4 +1,4 @@
-;;; nemacs-keybindings.el --- My own keybindings. Only use *native Emacs functions*.
+;;; nemacs-keybindings.el --- My own keybindings.
 
 ;; Copyright (C) 2017 ~ 2018 Nahuel Jesús Sacchetti <nahueljsacchetti@gmail.com>
 
@@ -18,6 +18,9 @@
 ;;; Code:
 
 ;; gnus
-(global-set-key (kbd "C-x g") #'gnus)
+(global-set-key (kbd "C-c g") #'gnus)
+
+;; md4rd
+(global-set-key (kbd "C-c r") #'md4rd)
 
 (provide 'nemacs-global-keybindings)
