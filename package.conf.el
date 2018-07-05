@@ -13,6 +13,7 @@
                    helm-projectile
                    gnus-select-account
                    js2-mode
+                   json-mode
                    org-plus-contrib
                    projectile
                    scss-mode
