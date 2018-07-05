@@ -201,12 +201,13 @@
               (require 'nemacs-global-keybindings)
               (require 'nemacs-programming)
 
-
               ;; Packages Settings
               (require 'org)
               (helm-mode)
               (global-anzu-mode)
               (projectile-mode)
+              (bbdb-initialize 'gnus 'message)
+              (bbdb-mua-auto-update-init 'gnus 'message)
 
               ;; Run the startup page
               (message (emacs-init-time))))

@@ -11,8 +11,10 @@
 (gnus-select-account-enable)
 
 (setq gnus-always-read-dribble-file t
+      gnus-auto-select-next nil
       gnus-directory (concat nemacs-gnus-dir "/News")
       gnus-group-goto-unread nil
+      gnus-permanently-visible-groups "INBOX"
       gnus-summary-goto-unread 'never
       gnus-home-directory nemacs-gnus-dir
       gnus-save-newsrc-file nil
@@ -27,10 +29,14 @@
                                               (nnimap-address "localhost")
                                               (nnimap-server-port 8144)
                                               (nnimap-authenticator login)
-                                              (nnir-search-engine imap)))
+                                              (nnir-search-engine imap))
+                                      (nntp "news.gwene.org"
+                                            (nntp-open-connection-function nntp-open-plain-stream)))
       gnus-select-method '(nnnil "")
       mm-text-html-renderer 'w3m
       nnfolder-directory (concat nemacs-gnus-dir "/Mail"))
+
+(setq tls-program '("gnutls-cli --strict-tofu -p %p %h"))
 
 (setq-default gnus-summary-line-format "%U%R%z | %d | %( %-23,23f : %B%s%)\n"
               gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M"))

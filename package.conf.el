@@ -8,6 +8,7 @@
 (package-initialize)
 
 (dolist (package '(anzu
+                   bbdb
                    helm
                    helm-projectile
                    gnus-select-account

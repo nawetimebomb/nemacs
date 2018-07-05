@@ -50,3 +50,6 @@ from personal mail address."
       message-signature '(concat "Nahuel Jesús Sacchetti\n"
                                  ";; Technical Leader @ ITX\n"
                                  ";; Email sent from GNUs " gnus-version " and GNU Emacs " emacs-version))
+
+(add-hook 'message-mode-hook #'footnote-mode)
+(add-hook 'message-mode-hook #'turn-on-flyspell)

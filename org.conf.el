@@ -37,6 +37,7 @@ If it was already `DONE', keeps that state and doesn't change the `CLOSED' times
       org-clock-persist-query-resume nil
       org-deadline-warning-days 7
       org-default-notes-file nemacs-org-inbox-file
+      org-directory nemacs-notes-dir
       org-id-files '((expand-file-name "org-id-locations" "~/Notes/references"))
       org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id
       org-log-done 'time

@@ -56,9 +56,10 @@
       smtpmail-debug-verb t
       starttls-use-gnutls t
       tls-checktrust gnutls-verify-error
-      tls-program (list "gnutls-cli --x509cafile %t -p %p %h"
-                        ;; compatibility fallbacks
-                        "gnutls-cli -p %p %h"
-                        "openssl s_client -connect %h:%p -no_ssl2 -no_ssl3 -ign_eof")
       user-full-name "Nahuel Jesús Sacchetti"
       user-mail-address "nahueljsacchetti@gmail.com")
+
+      ;; tls-program (list "gnutls-cli --x509cafile %t -p %p %h"
+      ;;                   ;; compatibility fallbacks
+      ;;                   "gnutls-cli -p %p %h"
+      ;;                   "openssl s_client -connect %h:%p -no_ssl2 -no_ssl3 -ign_eof")
