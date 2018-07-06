@@ -1,7 +1,18 @@
 (defun nemacs-get-inbox-file ()
-  "Open my Inbox file."
+  "Open my Inbox file. If I'm in office hours, focus only on the Work category and show me that. If not, show me everything."
   (interactive)
-  (find-file nemacs-org-inbox-file))
+  (let ((time-hour (string-to-number (format-time-string "%H")))
+        (day-of-week (format-time-string "%a"))
+        (day-of-weekend '("Sat" "Sun"))
+        (min-hour 8)
+        (max-hour 16))
+    (find-file nemacs-org-inbox-file)
+    (when (and (> time-hour min-hour)
+             (< time-hour max-hour)
+             (not (member day-of-week day-of-weekend)))
+      (org-global-cycle 1)
+      (goto-char (org-find-entry-with-id "2e99b399-8521-49eb-9f9b-d9cdaf3077aa"))
+      (org-cycle))))
 (global-set-key (kbd "C-c i") #'nemacs-get-inbox-file)
 
 (defun nemacs-get-org-file (filename)
