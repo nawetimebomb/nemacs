@@ -64,9 +64,15 @@ If it was already `DONE', keeps that state and doesn't change the `CLOSED' times
             (org-set-property "CREATED" (format-time-string "<%Y-%m-%d %a %H:%M>"))))
 
 (setq org-capture-templates
-      '(("e" "Add entry below Emacs category"
+      '(("b" "Add entry below Books category"
+         entry (file+headline nemacs-org-inbox-file "Books")
+         "* %?" :kill-buffer t)
+        ("e" "Add entry below Emacs category"
          entry (file+headline nemacs-org-inbox-file "Emacs")
          "* TODO %?" :kill-buffer t)
+        ("g" "Add entry below Games category"
+         entry (file+headline nemacs-org-inbox-file "Games")
+         "* %?" :kill-buffer t)
         ("l" "Add entry below Linux category"
          entry (file+headline nemacs-org-inbox-file "Linux")
          "* TODO %?" :kill-buffer t)
