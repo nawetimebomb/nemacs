@@ -20,6 +20,7 @@
                    json-mode
                    md4rd
                    org-plus-contrib
+                   ox-hugo
                    projectile
                    scss-mode
                    w3m))
