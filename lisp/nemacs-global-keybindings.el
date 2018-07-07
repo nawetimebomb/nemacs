@@ -17,6 +17,9 @@
 
 ;;; Code:
 
+;; erc
+(global-set-key (kbd "C-c e") #'erc)
+
 ;; gnus
 (global-set-key (kbd "C-c g") #'gnus)
 

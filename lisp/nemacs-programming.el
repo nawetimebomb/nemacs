@@ -17,20 +17,56 @@
 
 ;;; Code:
 
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (font-lock-add-keywords nil
-                                    '(("\\<\\(FIXME\\|NOTE\\|TODO\\|BUG\\)"
-                                       1 'font-lock-warning-face prepend)))))
+(defcustom nemacs-programming-modes '(js2-mode
+                                      json-mode
+                                      prog-mode
+                                      scss-mode
+                                      sgml-mode)
+  "Major modes for programming.")
 
-(load (expand-file-name "js-mode.conf.el" nemacs-prog-mode-dir))
-(load (expand-file-name "scss-mode.conf.el" nemacs-prog-mode-dir))
-(load (expand-file-name "sgml-mode.conf.el" nemacs-prog-mode-dir))
-
-(add-to-list 'auto-mode-alist `(,(rx ".js" string-end) . js2-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".js" string-end) . js-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".json" string-end) . json-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".less" string-end) . scss-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".sass" string-end) . scss-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".scss" string-end) . scss-mode))
 
+(defun nemacs-setup-programming-mode ()
+  "Setup my defaults when programming."
+  (setq show-trailing-whitespace t)
+  (flyspell-prog-mode)
+  (flycheck-mode 1))
+
+(defun nemacs-js2-mode-setup ()
+  "Setup mode: `js2-mode'."
+  (nemacs-setup-programming-mode)
+  (setq js-indent-level 4
+        js2-mode-show-parse-errors nil
+        js2-mode-show-strict-warnings nil))
+
+(defun nemacs-json-mode-setup ()
+  "Setup mode: `json-mode'."
+  (nemacs-setup-programming-mode)
+  (set (make-local-variable 'js-indent-level) 2))
+
+(defun nemacs-prog-mode-setup ()
+  "Setup mode: `prog-mode'."
+  (font-lock-add-keywords nil
+                          '(("\\<\\(FIXME\\|NOTE\\|TODO\\|BUG\\)"
+                             1 'font-lock-warning-face prepend))))
+
+(defun nemacs-scss-mode-setup ()
+  "Setup mode: `scss-mode'."
+  (nemacs-setup-programming-mode)
+  (setq css-indent-offset 4))
+
+(defun nemacs-sgml-mode-setup ()
+  "Setup mode: `sgml-mode'."
+  (nemacs-setup-programming-mode)
+  (set (make-local-variable 'sgml-basic-offset) 4))
+
+(dolist (mode nemacs-programming-modes)
+  (let ((hook-string (concat (symbol-name mode) "-hook"))
+        (function-string (concat "nemacs-" (symbol-name mode) "-setup")))
+    (add-hook (intern hook-string) (intern function-string))))
 
 (provide 'nemacs-programming)

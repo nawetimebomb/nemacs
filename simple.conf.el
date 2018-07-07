@@ -17,6 +17,17 @@
 
 ;;; Code:
 
+(defvar nemacs-large-file-size 1
+  "Size (in MB) above which the user will be prompted to open the file literally to avoid performance issues. Opening literally means that no major or minor modes are active and the buffer is read-only.")
+
+(defvar nemacs-large-file-modes-list
+  '(archive-mode tar-mode jka-compr git-commit-mode image-mode doc-view-mode
+                 doc-view-mode-maybe ebrowse-tree-mode pdf-view-mode)
+  "Major modes that `nemacs/check-large-file' will ignore")
+
+(defvar nemacs-escape-hook nil
+  "A hook that runs after pressing `C-g' and before `keyboard-quit'")
+
 (defun nemacs-escape ()
   "Runs the `nemacs-escape-hook'."
   (interactive)
@@ -93,7 +104,5 @@
   (interactive)
   (require 'org)
   (org-agenda :keys "a")
-  (delete-other-windows)
-  (split-window-right)
-  (find-file nemacs-org-inbox-file))
+  (delete-other-windows))
 (global-set-key (kbd "C-c d") #'nemacs-startup)

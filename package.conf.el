@@ -13,6 +13,7 @@
 
 (dolist (package '(anzu
                    bbdb
+                   flycheck
                    helm
                    helm-projectile
                    gnus-select-account

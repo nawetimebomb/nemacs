@@ -28,14 +28,6 @@
 ;; Ignore startup messages in the echo area
 (advice-add #'display-startup-echo-area-message :override #'ignore)
 
-;; Initials
-(setq inhibit-startup-message t
-      inhibit-startup-echo-area-message user-login-name
-      inhibit-default-init t
-      initial-major-mode 'fundamental-mode
-      initial-scratch-message nil
-      mode-line-format nil)
-
 ;; Define important variables
 (eval-and-compile
   (defvar nemacs-emacs-dir (expand-file-name user-emacs-directory)
@@ -71,17 +63,6 @@
   (dolist (dir (list nemacs-local-dir nemacs-etc-dir nemacs-cache-dir (expand-file-name "elpa" nemacs-packages-dir)))
     (unless (file-directory-p dir)
       (make-directory dir t))))
-
-(defvar nemacs-large-file-size 1
-  "Size (in MB) above which the user will be prompted to open the file literally to avoid performance issues. Opening literally means that no major or minor modes are active and the buffer is read-only.")
-
-(defvar nemacs-large-file-modes-list
-  '(archive-mode tar-mode jka-compr git-commit-mode image-mode doc-view-mode
-                 doc-view-mode-maybe ebrowse-tree-mode pdf-view-mode)
-  "Major modes that `nemacs/check-large-file' will ignore")
-
-(defvar nemacs-open-clean nil
-  "If non-nill, opens `NEMACS' without running the `after-init-hook'.")
 
 ;; Default Settings
 (setq-default auto-save-default nil
@@ -202,7 +183,6 @@
               (require 'nemacs-programming)
 
               ;; Packages Settings
-              (require 'org)
               (helm-mode)
               (global-anzu-mode)
               (projectile-mode)
@@ -210,4 +190,4 @@
               (bbdb-mua-auto-update-init 'gnus 'message)
 
               ;; Run the startup page
-              (message (emacs-init-time))))
+              (nemacs-startup)))
