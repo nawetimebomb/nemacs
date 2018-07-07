@@ -100,7 +100,7 @@
               tab-width 4
               tabify-regexp "^\t* [ \t]+"
               truncate-lines nil
-              uniquify-buffer-name-style 'forward
+              uniquify-buffer-name-style 'post-forward-angle-brackets
               use-dialog-box nil
               vc-handled-backends nil
               visible-bell nil
