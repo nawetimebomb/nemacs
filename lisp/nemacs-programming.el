@@ -17,7 +17,8 @@
 
 ;;; Code:
 
-(defcustom nemacs-programming-modes '(js2-mode
+(defcustom nemacs-programming-modes '(c-mode
+                                      js2-mode
                                       json-mode
                                       prog-mode
                                       scss-mode
@@ -35,6 +36,20 @@
   (setq show-trailing-whitespace t)
   (flyspell-prog-mode)
   (flycheck-mode 1))
+
+(defun nemacs-c-mode-setup ()
+  "Setup mode: `c-mode'."
+  (nemacs-setup-programming-mode)
+  (c-set-style "linux")
+  (set (make-local-variable 'c-basic-offset) 4)
+  (define-key c-mode-map (kbd "<f8>")
+    (defun nemacs-compile-build ()
+      (interactive)
+      (compile "make build")))
+  (define-key c-mode-map (kbd "<S-f8>")
+    (defun nemacs-compile-run ()
+      (interactive)
+      (compile "make run"))))
 
 (defun nemacs-js2-mode-setup ()
   "Setup mode: `js2-mode'."
