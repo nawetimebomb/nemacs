@@ -40,6 +40,8 @@
 (defun nemacs-c-mode-setup ()
   "Setup mode: `c-mode'."
   (nemacs-setup-programming-mode)
+  (company-mode)
+  (add-to-list 'company-backends 'company-c-headers)
   (c-set-style "linux")
   (set (make-local-variable 'c-basic-offset) 4)
   (define-key c-mode-map (kbd "<f8>")

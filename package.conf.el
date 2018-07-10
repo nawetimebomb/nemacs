@@ -13,8 +13,11 @@
 
 (dolist (package '(anzu
                    bbdb
+                   company
+                   company-c-headers
                    flycheck
                    helm
+                   helm-ag
                    helm-projectile
                    gnus-select-account
                    js2-mode

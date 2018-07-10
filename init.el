@@ -182,6 +182,9 @@
               (require 'nemacs-global-keybindings)
               (require 'nemacs-programming)
 
+              ;; Others Lisp
+              (require 'mu4e)
+
               ;; Packages Settings
               (helm-mode)
               (global-anzu-mode)

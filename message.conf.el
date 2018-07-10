@@ -40,8 +40,7 @@ from personal mail address."
         (keyboard-quit)))))
 (add-hook 'message-send-hook #'nemacs-check-correct-mail-address)
 
-(setq message-auto-save-directory (concat nemacs-gnus-dir "/Mail/draft")
-      message-confirm-send t
+(setq message-confirm-send t
       message-default-mail-headers "Cc: \n"
       message-directory (concat nemacs-gnus-dir "/Mail")
       message-dont-reply-to-names '("nsacchetti" "nahueljsacchetti")

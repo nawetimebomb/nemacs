@@ -17,13 +17,20 @@
 
 ;;; Code:
 
+;; Define new prefix key: `C-z'
+(define-prefix-command 'ring-map)
+(global-set-key (kbd "C-z") 'ring-map)
+
 ;; erc
-(global-set-key (kbd "C-c e") #'erc)
+(global-set-key (kbd "C-z e") #'erc)
 
 ;; gnus
-(global-set-key (kbd "C-c g") #'gnus)
+(global-set-key (kbd "C-z g") #'gnus)
 
 ;; md4rd
-(global-set-key (kbd "C-c r") #'md4rd)
+(global-set-key (kbd "C-z r") #'md4rd)
+
+;; mu4e
+(global-set-key (kbd "C-z m") #'mu4e)
 
 (provide 'nemacs-global-keybindings)
