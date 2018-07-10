@@ -1,9 +1,21 @@
 (mu4e-alert-enable-notifications)
 (mu4e-alert-enable-mode-line-display)
 
-(setq mu4e-maildir "~/Maildir")
+(set-fontset-font "fontset-default" 'unicode "Dejavu Sans Mono")
 
-(setq mu4e-get-mail-command "mbsync -a")
+(setq mu4e-maildir "~/Maildir"
+      mu4e-get-mail-command "~/dotfiles/bin/retrieve-mail"
+      mu4e-change-filenames-when-moving t ;; better for mbsync
+      mu4e-context-policy 'pick-first
+      mu4e-confirm-quit nil
+      mu4e-use-fancy-chars nil
+      mu4e-view-show-addresses t)
+
+(require 'bbdb-mu4e)
+(setq mu4e-compose-complete-addresses nil)
+
+(require 'org-mu4e)
+(setq org-mu4e-link-query-in-headers-mode nil)
 
 (add-to-list 'mu4e-view-actions '("View in browser" . mu4e-action-view-in-browser) t)
 
@@ -27,9 +39,10 @@
 "                                                    ";; Emacs extraordinaire
 "                                                    ";; This message was sent from GNU Emacs "
                                                      emacs-version))
-                   (mu4e-trash-folder      . "/personal/trash")
-                   (mu4e-sent-folder       . "/personal/sent")
                    (mu4e-drafts-folder     . "/personal/drafts")
+                   (mu4e-refile-folder     . "/personal/archive")
+                   (mu4e-sent-folder       . "/personal/sent")
+                   (mu4e-trash-folder      . "/personal/trash")
                    (smtpmail-smtp-server   . "smtp.gmail.com")
                    (smtpmail-smtp-service  . 587)
                    (smtpmail-stream-type   . starttls)))
@@ -45,23 +58,22 @@
 "                                                    ";; Technical Leader @ ITX
 "                                                    ";; Message sent from GNU Emacs "
                                                      emacs-version))
-                   (mu4e-trash-folder      . "/work/trash")
-                   (mu4e-sent-folder       . "/work/sent")
                    (mu4e-drafts-folder     . "/work/drafts")
+                   (mu4e-refile-folder     . "/work/archive")
+                   (mu4e-sent-folder       . "/work/sent")
+                   (mu4e-trash-folder      . "/work/trash")
                    (smtpmail-smtp-server   . "smtp.office365.com")
                    (smtpmail-smtp-service  . 587)
                    (smtpmail-stream-type   . starttls)))))
 
 (setq mu4e-sent-messages-behavior 'sent
       mu4e-compose-format-flowed t
-      mu4e-update-interval 300)
-
-(setq mu4e-headers-fields '((:date            . 12)
+      mu4e-update-interval 300
+      mu4e-headers-fields '((:human-date      . 12)
                             (:flags           . 6)
                             (:from            . 30)
-                            (:thread-subject . nil)))
-
-(setq mu4e-maildir-shortcuts '(("/personal/INBOX" . ?p)
+                            (:thread-subject . nil))
+      mu4e-maildir-shortcuts '(("/personal/INBOX" . ?p)
                                ("/work/INBOX"     . ?w)))
 
 (add-hook 'mu4e-compose-mode-hook #'footnote-mode)
