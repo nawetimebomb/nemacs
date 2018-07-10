@@ -1,17 +1,23 @@
+(mu4e-alert-enable-notifications)
+(mu4e-alert-enable-mode-line-display)
+
 (setq mu4e-maildir "~/Maildir")
 
 (setq mu4e-get-mail-command "mbsync -a")
 
+(add-to-list 'mu4e-view-actions '("View in browser" . mu4e-action-view-in-browser) t)
+
 (setq mu4e-view-show-images t
       mu4e-show-images t
-      mu4e-view-image-max-width 800)
+      mu4e-view-image-max-width 800
+      mu4e-html2text-command "w3m -dump -T text/html")
 
 (setq mu4e-contexts
       `( ,(make-mu4e-context
            :name "Personal"
            :match-func (lambda (msg)
                          (when msg
-                           (mu4e-message-context-field-matches msg
+                           (mu4e-message-contact-field-matches msg
                                                                :to "nahueljsacchetti@gmail.com")))
            :vars '((user-mail-address      . "nahueljsacchetti@gmail.com")
                    (user-full-name         . "Nahuel Jesús Sacchetti")
@@ -25,13 +31,13 @@
                    (mu4e-sent-folder       . "/personal/sent")
                    (mu4e-drafts-folder     . "/personal/drafts")
                    (smtpmail-smtp-server   . "smtp.gmail.com")
-                   (smtpmail-smtp-service  . 465)
+                   (smtpmail-smtp-service  . 587)
                    (smtpmail-stream-type   . starttls)))
          ,(make-mu4e-context
            :name "Work"
            :match-func (lambda (msg)
                          (when msg
-                           (mu4e-message-context-field-matches msg
+                           (mu4e-message-contact-field-matches msg
                                                                :to "nsacchetti@itx.com")))
            :vars '((user-mail-address      . "nsacchetti@itx.com")
                    (user-full-name         . "Nahuel Jesús Sacchetti")
@@ -57,3 +63,11 @@
 
 (setq mu4e-maildir-shortcuts '(("/personal/INBOX" . ?p)
                                ("/work/INBOX"     . ?w)))
+
+(add-hook 'mu4e-compose-mode-hook #'footnote-mode)
+(add-hook 'mu4e-compose-mode-hook #'turn-on-flyspell)
+
+
+(zenburn-with-color-variables
+  (custom-set-faces
+   `(mu4e-header-highlight-face ((t (:inherit region :underline nil :weight bold))))))

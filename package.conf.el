@@ -19,10 +19,10 @@
                    helm
                    helm-ag
                    helm-projectile
-                   gnus-select-account
                    js2-mode
                    json-mode
                    md4rd
+                   mu4e-alert
                    org-plus-contrib
                    ox-hugo
                    projectile
