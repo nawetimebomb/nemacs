@@ -4,7 +4,7 @@
   (let ((time-hour (string-to-number (format-time-string "%H")))
         (day-of-week (format-time-string "%a"))
         (day-of-weekend '("Sat" "Sun"))
-        (min-hour 8)
+        (min-hour 7)
         (max-hour 16))
     (find-file nemacs-org-inbox-file)
     (when (and (> time-hour min-hour)
@@ -93,6 +93,9 @@ If it was already `DONE', keeps that state and doesn't change the `CLOSED' times
          "* TODO %?" :kill-buffer t)
         ("w" "Add entry below Work category"
          entry (file+headline nemacs-org-inbox-file "Work")
+         "* TODO %?" :kill-buffer t)
+        ("y" "PROJECT: Add entry to project.org"
+         entry (file+headline nemacs-org-project-file "Tasks")
          "* TODO %?" :kill-buffer t)
         ("m" "Start a clock for a meeting and log notes."
          entry (file nemacs-org-meetings-file)

@@ -13,6 +13,7 @@
         ("Linux" "~/.emacs.d/icons/org/computer.png" nil nil :ascent center)
         ("Books" "~/.emacs.d/icons/org/book.png" nil nil :ascent center)
         ("Games" "~/.emacs.d/icons/org/games.png" nil nil :ascent center)
+        ("Project" "~/.emacs.d/icons/org/project.png" nil nil :ascent center)
         ("\\(Holidays\\|Vacation\\)" "~/.emacs.d/icons/org/holidays.png" nil nil :ascent center)
         (".*" '(space . (:width (16))))))
 
