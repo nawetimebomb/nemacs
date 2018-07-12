@@ -24,8 +24,8 @@
 ;; erc
 (global-set-key (kbd "C-z e") #'erc)
 
-;; gnus
-(global-set-key (kbd "C-z g") #'gnus)
+;; magit
+(global-set-key (kbd "C-z g") #'magit-status)
 
 ;; md4rd
 (global-set-key (kbd "C-z r") #'md4rd)

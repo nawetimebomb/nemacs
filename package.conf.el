@@ -21,6 +21,7 @@
                    helm-projectile
                    js2-mode
                    json-mode
+                   magit
                    md4rd
                    mu4e-alert
                    org-plus-contrib
