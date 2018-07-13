@@ -21,6 +21,9 @@
 (define-prefix-command 'ring-map)
 (global-set-key (kbd "C-z") 'ring-map)
 
+;;bbdb
+(global-set-key (kbd "C-z b") #'bbdb)
+
 ;; erc
 (global-set-key (kbd "C-z e") #'erc)
 

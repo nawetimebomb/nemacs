@@ -8,7 +8,8 @@
       bbdb-add-mails t
       bbdb-new-mails-primary t
       bbdb-complete-mail-allow-cycling t
-      bbdb-ignore-message-alist '(("From" . "mailer-daemon")
+      bbdb-ignore-message-alist '(("From" . "noreply@itx.com")
+                                  ("From" . "mailer-daemon")
                                   ("From" . "plus.google.com")
                                   ("From" . "notify@twitter.com"))
       bbdb-allow-duplicates t)

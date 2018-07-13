@@ -1,3 +1,4 @@
+(mu4e-alert-set-default-style 'libnotify)
 (mu4e-alert-enable-notifications)
 (mu4e-alert-enable-mode-line-display)
 
@@ -67,7 +68,7 @@
                    (smtpmail-stream-type   . starttls)))))
 
 (setq mu4e-sent-messages-behavior 'sent
-      mu4e-compose-format-flowed t
+      mu4e-compose-format-flowed nil
       mu4e-update-interval (* 15 60)
       mu4e-headers-fields '((:human-date      . 12)
                             (:flags           . 6)
