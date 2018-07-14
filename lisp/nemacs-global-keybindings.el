@@ -27,6 +27,9 @@
 ;; erc
 (global-set-key (kbd "C-z e") #'erc)
 
+;; ledger
+(global-set-key (kbd "C-z l") #'nemacs-add-ledger-transaction)
+
 ;; magit
 (global-set-key (kbd "C-z g") #'magit-status)
 

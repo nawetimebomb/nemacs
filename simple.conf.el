@@ -106,3 +106,9 @@
   (org-agenda :keys "a")
   (delete-other-windows))
 (global-set-key (kbd "C-c d") #'nemacs-startup)
+
+(defun nemacs-add-ledger-transaction ()
+  "Add transaction to my ledger file."
+  (interactive)
+  (find-file "~/Notes/journal.ledger")
+  (ledger-add-transaction (format-time-string "%Y/%m/%d")))
