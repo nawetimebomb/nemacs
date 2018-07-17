@@ -19,22 +19,14 @@
   "Get the Org notes file that's shared between different devices. Concat the `filename' with the directory"
   (expand-file-name filename nemacs-notes-dir))
 
-(defun nemacs-org-mark-done-and-archive ()
-  "Mark a task as `DONE' and then archive it.
-If it was already `DONE', keeps that state and doesn't change the `CLOSED' timestamp."
-  (interactive)
-  (let ((task-status (nth 2 (org-heading-components))))
-    (when (or (not (eq task-status "DONE"))
-              (not (eq task-status "CANCELED")))
-      (org-todo 'done))
-    (org-archive-subtree)))
-
 (setq nemacs-org-archive-file (nemacs-get-org-file "archive.org")
       nemacs-org-inbox-file (nemacs-get-org-file "inbox.org")
       nemacs-org-meetings-file (nemacs-get-org-file "meetings.org")
       nemacs-org-project-file (nemacs-get-org-file "project.org")
       nemacs-org-someday-file (nemacs-get-org-file "someday.org"))
 
+(setq org-id-files '((expand-file-name "org-id-locations" "~/Notes/references"))
+      org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 (require 'org-id)
 
 (setq org-enforce-todo-dependencies t)
@@ -137,4 +129,3 @@ If it was already `DONE', keeps that state and doesn't change the `CLOSED' times
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)
 (global-set-key (kbd "C-c l") #'org-store-link)
-(define-key org-mode-map [remap org-archive-subtree-default] #'nemacs-org-mark-done-and-archive)
