@@ -18,6 +18,7 @@
 ;;; Code:
 
 (defcustom nemacs-programming-modes '(c-mode
+                                      c++-mode
                                       js2-mode
                                       json-mode
                                       prog-mode
@@ -49,6 +50,17 @@
       (interactive)
       (compile "make build")))
   (define-key c-mode-map (kbd "<S-f8>")
+    (defun nemacs-compile-run ()
+      (interactive)
+      (compile "make run"))))
+
+(defun nemacs-c++-mode-setup ()
+  (nemacs-c-mode-setup)
+  (define-key c++-mode-map (kbd "<f8>")
+    (defun nemacs-compile-build ()
+      (interactive)
+      (compile "make build")))
+  (define-key c++-mode-map (kbd "<S-f8>")
     (defun nemacs-compile-run ()
       (interactive)
       (compile "make run"))))
