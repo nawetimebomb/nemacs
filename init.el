@@ -17,6 +17,10 @@
 
 ;;; Code:
 
+;; This is a workaround for Emacs to initialize the packages automatically.
+;; I don't have this issue with Emacs v27, prolly updating would be better.
+;;(package-initialize)
+
 ;; Each file named <somelibrary>.conf.el is loaded just after the library is
 ;; loaded.
 ;; Code from Julien Danjou: https://github.com/jd/emacs.d
