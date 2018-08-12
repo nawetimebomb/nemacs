@@ -34,11 +34,11 @@
                                                                :to "nahueljsacchetti@gmail.com")))
            :vars '((user-mail-address      . "nahueljsacchetti@gmail.com")
                    (user-full-name         . "Nahuel Jesús Sacchetti")
-                   (mu4e-compose-signature . (concat "Nahuel Jesús Sacchetti
-"                                                    ";; Senior JavaScript Developer
-"                                                    ";; Enthusiastic Game Developer
-"                                                    ";; Emacs extraordinaire
-"                                                    ";; This message was sent from GNU Emacs "
+                   (mu4e-compose-signature . (concat "Nahuel Jesús Sacchetti\n"
+                                                     ";; Senior JavaScript Developer\n"
+                                                     ";; Enthusiastic Game Developer\n"
+                                                     ";; Emacs extraordinaire\n"
+                                                     ";; This message was sent from GNU Emacs "
                                                      emacs-version))
                    (mu4e-drafts-folder     . "/personal/drafts")
                    (mu4e-refile-folder     . "/personal/archive")
@@ -55,9 +55,10 @@
                                                                :to "nsacchetti@itx.com")))
            :vars '((user-mail-address      . "nsacchetti@itx.com")
                    (user-full-name         . "Nahuel Jesús Sacchetti")
-                   (mu4e-compose-signature . (concat "Nahuel Jesús Sacchetti
-"                                                    ";; Technical Leader @ ITX
-"                                                    ";; Message sent from GNU Emacs "
+                   (mu4e-compose-signature . (concat "Nahuel Jesús Sacchetti\n"
+                                                     ";; Technical Leader @ ITX\n"
+                                                     ";; Emacs extraordinaire\n"
+                                                     ";; Message sent from GNU Emacs "
                                                      emacs-version))
                    (mu4e-drafts-folder     . "/work/drafts")
                    (mu4e-refile-folder     . "/work/archive")

@@ -59,11 +59,11 @@
   (define-key c++-mode-map (kbd "<f8>")
     (defun nemacs-compile-build ()
       (interactive)
-      (compile "make build")))
+      (compile "make -C ../")))
   (define-key c++-mode-map (kbd "<S-f8>")
     (defun nemacs-compile-run ()
       (interactive)
-      (compile "make run"))))
+      (compile "make -C ../ run"))))
 
 (defun nemacs-js2-mode-setup ()
   "Setup mode: `js2-mode'."

@@ -45,10 +45,7 @@ from personal mail address."
       message-directory (concat nemacs-gnus-dir "/Mail")
       message-dont-reply-to-names '("nsacchetti" "nahueljsacchetti")
       message-kill-buffer-on-exit t
-      message-send-mail-function 'smtpmail-send-it
-      message-signature '(concat "Nahuel Jesús Sacchetti\n"
-                                 ";; Technical Leader @ ITX\n"
-                                 ";; Email sent from GNUs " gnus-version " and GNU Emacs " emacs-version))
+      message-send-mail-function 'smtpmail-send-it)
 
 (add-hook 'message-mode-hook #'footnote-mode)
 (add-hook 'message-mode-hook #'turn-on-flyspell)
