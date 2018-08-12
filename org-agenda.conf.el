@@ -1,11 +1,8 @@
 (defvar nemacs-agenda-files '())
 
 (setq org-agenda-category-icon-alist
-      '(("[Ee]macs" "/usr/share/icons/hicolor/16x16/apps/emacs.png" nil nil :ascent center)
-        ("\\(Party\\|Celeb\\)" "~/.emacs.d/icons/org/party.png" nil nil :ascent center)
-        ("Gnus" "~/.emacs.d/icons/org/gnus.png" nil nil :ascent center)
+      '(("[Ee]macs" "~/.emacs.d/icons/org/emacs.png" nil nil :ascent center)
         ("Org" "~/.emacs.d/icons/org/org.png" nil nil :ascent center)
-        ("Music" "~/.emacs.d/icons/org/music.png" nil nil :ascent center)
         ("Work" "~/.emacs.d/icons/org/work.png" nil nil :ascent center)
         ("Personal" "~/.emacs.d/icons/org/personal.png" nil nil :ascent center)
         ("Tasks" "~/.emacs.d/icons/org/tasks.png" nil nil :ascent center)
@@ -14,7 +11,6 @@
         ("Books" "~/.emacs.d/icons/org/book.png" nil nil :ascent center)
         ("Games" "~/.emacs.d/icons/org/games.png" nil nil :ascent center)
         ("Project" "~/.emacs.d/icons/org/project.png" nil nil :ascent center)
-        ("\\(Holidays\\|Vacation\\)" "~/.emacs.d/icons/org/holidays.png" nil nil :ascent center)
         (".*" '(space . (:width (16))))))
 
 (dolist (file (directory-files nemacs-notes-dir))
