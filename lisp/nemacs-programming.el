@@ -22,12 +22,14 @@
                                       js2-mode
                                       json-mode
                                       prog-mode
+                                      rjsx-mode
                                       scss-mode
                                       sgml-mode)
   "Major modes for programming.")
 
 (add-to-list 'auto-mode-alist `(,(rx ".js" string-end) . js-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".json" string-end) . json-mode))
+(add-to-list 'auto-mode-alist '("tracker\\/.*\\.js\\'" . rjsx-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".less" string-end) . scss-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".sass" string-end) . scss-mode))
 (add-to-list 'auto-mode-alist `(,(rx ".scss" string-end) . scss-mode))
@@ -82,6 +84,11 @@
   (font-lock-add-keywords nil
                           '(("\\<\\(FIXME\\|NOTE\\|TODO\\|BUG\\)"
                              1 'font-lock-warning-face prepend))))
+
+(defun nemacs-rjsx-mode-setup ()
+  "Setup mode: `rjsx-mode'."
+  (setq js-indent-level 4
+        sgml-basic-offset 4))
 
 (defun nemacs-scss-mode-setup ()
   "Setup mode: `scss-mode'."
