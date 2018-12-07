@@ -29,7 +29,7 @@
                    ox-hugo
                    projectile
                    scss-mode
-                   w3m))
+                   wanderlust))
 
   (unless (package-installed-p package)
     (unless package-archive-contents

@@ -40,6 +40,9 @@
   (defvar nemacs-local-dir (concat nemacs-emacs-dir ".local/")
     "Root directory for my local Emacs files.")
 
+  (defvar nemacs-preload-dir (concat nemacs-emacs-dir "preload/")
+    "Directory with ELisp files that are meant to be preloaded, even if the module isn't loaded yet")
+
   (defvar nemacs-etc-dir (concat nemacs-local-dir "etc/")
     "Local directory for non-volatile storage. They ussually are not deleted. Use this for dependencies like servers or config files.")
 
@@ -52,19 +55,18 @@
   (defvar nemacs-lisp-dir (concat nemacs-emacs-dir "lisp/")
     "Directory with NEMACS's interesting code.")
 
-  (defvar nemacs-prog-mode-dir (concat nemacs-emacs-dir "prog-mode/")
-    "Directory with configuration for programming.")
-
   (defvar nemacs-themes-dir (concat nemacs-emacs-dir "themes/")
     "The custom themes directory.")
 
   (defvar nemacs-notes-dir "~/Notes"
     "Notes directory where all the shared org files are stored.")
 
-  (defvar nemacs-gnus-dir "~/Gnus"
-    "Default GNUs directory.")
-
-  (dolist (dir (list nemacs-local-dir nemacs-etc-dir nemacs-cache-dir (expand-file-name "elpa" nemacs-packages-dir)))
+  (dolist (dir (list
+                nemacs-local-dir
+                nemacs-etc-dir
+                nemacs-cache-dir
+                (expand-file-name "elpa" nemacs-packages-dir)
+                nemacs-notes-dir))
     (unless (file-directory-p dir)
       (make-directory dir t))))
 
@@ -118,7 +120,7 @@
               bookmark-default-file     (concat nemacs-etc-dir "bookmarks")
               abbrev-file-name          (concat nemacs-local-dir "abbrev.el")
               pcache-directory          (concat nemacs-cache-dir "pcache")
-              recentf-save-file (expand-file-name "recentf" nemacs-cache-dir))
+              recentf-save-file         (expand-file-name "recentf" nemacs-cache-dir))
 
 (fset #'yes-or-no-p #'y-or-n-p)
 (tooltip-mode -1)
@@ -154,9 +156,7 @@
 (require 'package)
 
 ;; Startup Hooks
-;; TODO: Move this hooks to the respective files.
-(add-hook 'text-mode-hook #'turn-on-auto-fill)
-(add-hook 'before-save-hook #'delete-trailing-whitespace)
+(require 'nemacs-startup-hooks)
 
 (add-hook 'after-init-hook
           #'(lambda ()
@@ -182,12 +182,10 @@
                               mode-line-end-spaces))
 
               ;; Nemacs Lisp
+              (require 'nemacs-email)
               (require 'nemacs-functions)
               (require 'nemacs-global-keybindings)
               (require 'nemacs-programming)
-
-              ;; Others Lisp
-              (require 'mu4e)
 
               ;; Packages Settings
               (helm-mode)

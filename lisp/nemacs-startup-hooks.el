@@ -1,4 +1,4 @@
-;;; nemacs-keybindings.el --- My own keybindings.
+;;; nemacs-startup-hooks.el --- My startup hooks.
 
 ;; Copyright (C) 2017 ~ 2018 Nahuel Jesús Sacchetti <nahueljsacchetti@gmail.com>
 
@@ -17,26 +17,7 @@
 
 ;;; Code:
 
-;; Define new prefix key: `C-z'
-(define-prefix-command 'ring-map)
-(global-set-key (kbd "C-z") 'ring-map)
+(add-hook 'text-mode-hook #'turn-on-auto-fill)
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
 
-;;bbdb
-(global-set-key (kbd "C-z b") #'bbdb)
-
-;; erc
-(global-set-key (kbd "C-z e") #'erc)
-
-;; ledger
-(global-set-key (kbd "C-z l") #'nemacs-add-ledger-transaction)
-
-;; magit
-(global-set-key (kbd "C-z g") #'magit-status)
-
-;; md4rd
-(global-set-key (kbd "C-z r") #'md4rd)
-
-;; mu4e
-(global-set-key (kbd "C-z m") #'wl)
-
-(provide 'nemacs-global-keybindings)
+(provide 'nemacs-startup-hooks)
