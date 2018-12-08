@@ -1,7 +1,10 @@
 (defvar nemacs-agenda-files '())
 
 (setq org-agenda-category-icon-alist
-      '(("[Ee]macs" "~/.emacs.d/icons/org/emacs.png" nil nil :ascent center)
+      '(("Inbox" "~/.emacs.d/icons/org/inbox.png" nil nil :ascent center)
+
+        ;; TODO: Clean up these by projects: ITX, Emacs, Someday, QoL.
+        ("[Ee]macs" "~/.emacs.d/icons/org/emacs.png" nil nil :ascent center)
         ("Org" "~/.emacs.d/icons/org/org.png" nil nil :ascent center)
         ("Work" "~/.emacs.d/icons/org/work.png" nil nil :ascent center)
         ("Personal" "~/.emacs.d/icons/org/personal.png" nil nil :ascent center)

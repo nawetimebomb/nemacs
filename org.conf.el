@@ -32,27 +32,21 @@
       org-default-notes-file nemacs-org-inbox-file
       org-directory nemacs-notes-dir
       org-log-done 'time
-      org-tags-column -80)
+      org-tags-column 0)
 
 (setq org-email-link-description-format "Email %c: %s")
 
 ;; Capture
-(setq org-todo-keywords
-      '((sequence "TODO(t!)"
-                  "STARTED(s!)"
-                  "WAITING(w@)"
-                  "DELEGATED(m@)"
-                  "FEEDBACK(f!/@)"
-                  "REWORK(r@/!)"
-                  "|"
-                  "DONE(d)"
-                  "CANCELED(c@)")
-        (sequence "PROJECT(j!)" "|" "CANCELED(c@)" "DONE(d!)")))
+(setq org-todo-keywords '((sequence "TODO(t!)"
+                                    "WAITING(w@)"
+                                    "|"
+                                    "DONE(d)"
+                                    "CANCELED(c@)")))
 
 (add-hook 'org-capture-before-finalize-hook
           (lambda ()
             (interactive)
-            (org-set-property "CREATED" (format-time-string "<%Y-%m-%d %a %H:%M>"))))
+            (org-set-property "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]"))))
 
 (setq org-capture-templates
       '(("t" "Add a new TODO entry"
@@ -66,17 +60,20 @@
       org-refile-targets '((nemacs-org-inbox-file :maxlevel . 2)))
 
 ;; Tags
-(setq org-tag-persistent-alist '(("Emacs" . ?e)
-                                 ("Org" . ?o)
-                                 ("Work" . ?w)
-                                 ("Books" . ?b)))
+(setq org-tag-persistent-alist '(("computer" . ?c)
+                                 ("finances" . ?f)
+                                 ("goals" . ?g)
+                                 ("phone" . ?p)
+                                 ("office" . ?o)
+                                 ("weekend" . ?w)))
+
 
 (setq org-descriptive-links t
       org-ellipsis "\u21b4"
       org-fontify-done-headline t
       org-fontify-whole-heading-line t
       org-image-actual-width nil
-      org-startup-folded nil
+      org-startup-folded t
       org-startup-truncated nil
       org-support-shift-select 'always)
 
