@@ -58,7 +58,7 @@
   (defvar nemacs-themes-dir (concat nemacs-emacs-dir "themes/")
     "The custom themes directory.")
 
-  (defvar nemacs-notes-dir "~/Notes"
+  (defvar nemacs-notes-dir "~/Dropbox/Notes"
     "Notes directory where all the shared org files are stored.")
 
   (dolist (dir (list
