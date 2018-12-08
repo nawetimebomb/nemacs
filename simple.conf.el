@@ -99,14 +99,6 @@
 (global-set-key [remap save-buffers-kill-terminal] #'nemacs-prompt-before-exiting-emacs)
 (global-set-key [remap suspend-frame] #'ignore)
 
-(defun nemacs-startup ()
-  "Open my Inbox file on the right side and my Agenda on the left side."
-  (interactive)
-  (require 'org)
-  (org-agenda :keys "a")
-  (delete-other-windows))
-(global-set-key (kbd "C-c d") #'nemacs-startup)
-
 (defun nemacs-add-ledger-transaction ()
   "Add transaction to my ledger file."
   (interactive)

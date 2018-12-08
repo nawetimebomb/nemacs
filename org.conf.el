@@ -10,7 +10,7 @@
 (defun nemacs-capture-todo ()
   (interactive)
   "Creates new TODO capture"
-  (org-capture nil "t"))
+  (org-capture :keys "t"))
 
 (setq nemacs-org-archive-file (nemacs-get-org-file "archive.org")
       nemacs-org-inbox-file (nemacs-get-org-file "inbox.org"))
@@ -58,8 +58,9 @@
 ;; Refile
 (setq org-refile-use-outline-path 'file
       org-outline-path-complete-in-steps nil
-      org-refile-allow-creating-parent-nodes 'confirm
-      org-refile-targets '((nemacs-org-inbox-file :maxlevel . 2)))
+      org-refile-allow-creating-parent-nodes 'confirm)
+
+(add-hook 'org-after-refile-insert-hook #'save-buffer)
 
 ;; Tags
 (setq org-tag-persistent-alist '(("computer" . ?c)

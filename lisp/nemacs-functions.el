@@ -23,4 +23,13 @@
   (browse-url (concat "https://jira.itx.com/browse/" (read-string "Enter a JIRA Ticket: "))))
 (global-set-key (kbd "C-c j") #'nemacs-open-jira-ticket)
 
+(defun nemacs-startup ()
+  "Open my Inbox file on the right side and my Agenda on the left side."
+  (interactive)
+  (require 'org)
+  (org-agenda :keys "a")
+  (delete-other-windows))
+(global-set-key (kbd "C-c d") #'nemacs-startup)
+
+
 (provide 'nemacs-functions)
