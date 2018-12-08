@@ -15,9 +15,10 @@
 (setq nemacs-org-archive-file (nemacs-get-org-file "archive.org")
       nemacs-org-inbox-file (nemacs-get-org-file "inbox.org"))
 
-(setq org-id-files '((expand-file-name "org-id-locations" "~/Notes/references"))
-      org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+;; Org-ID
 (require 'org-id)
+(setq org-id-files '("~/Dropbox/orgfiles/references/org-id-db")
+      org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
 (setq org-enforce-todo-dependencies t)
 
@@ -46,7 +47,8 @@
 (add-hook 'org-capture-before-finalize-hook
           (lambda ()
             (interactive)
-            (org-set-property "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]"))))
+            (org-set-property "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]"))
+            (org-id-get-create)))
 
 (setq org-capture-templates
       '(("t" "Add a new TODO entry"
