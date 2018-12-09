@@ -6,17 +6,9 @@
 (setq org-agenda-category-icon-alist
       '(("Inbox" "~/.emacs.d/icons/org/inbox.png" nil nil :ascent center)
         ("Emacs" "~/.emacs.d/icons/org/emacs.png" nil nil :ascent center)
+        ("Quality of Life" "~/.emacs.d/icons/org/qol.png" nil nil :ascent center)
+        ("Someday" "~/.emacs.d/icons/org/someday.png" nil nil :ascent center)
         ("Work" "~/.emacs.d/icons/org/work.png" nil nil :ascent center)
-
-        ;; TODO: Clean up these by projects: ITX, Emacs, Someday, QoL.
-        ("Org" "~/.emacs.d/icons/org/org.png" nil nil :ascent center)
-        ("Personal" "~/.emacs.d/icons/org/personal.png" nil nil :ascent center)
-        ("Tasks" "~/.emacs.d/icons/org/tasks.png" nil nil :ascent center)
-        ("Anniversary" "~/.emacs.d/icons/org/anniversary.png" nil nil :ascent center)
-        ("Linux" "~/.emacs.d/icons/org/computer.png" nil nil :ascent center)
-        ("Books" "~/.emacs.d/icons/org/book.png" nil nil :ascent center)
-        ("Games" "~/.emacs.d/icons/org/games.png" nil nil :ascent center)
-        ("Project" "~/.emacs.d/icons/org/project.png" nil nil :ascent center)
         (".*" '(space . (:width (16))))))
 
 (dolist (file (directory-files nemacs-projects-dir))
