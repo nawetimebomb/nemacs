@@ -184,6 +184,7 @@
               ;; Nemacs Lisp
               (require 'nemacs-email)
               (require 'nemacs-functions)
+              (require 'nemacs-gtd)
               (require 'nemacs-global-keybindings)
               (require 'nemacs-programming)
 

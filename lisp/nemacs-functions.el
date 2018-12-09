@@ -27,9 +27,8 @@
   "Open my Inbox file on the right side and my Agenda on the left side."
   (interactive)
   (require 'org)
-  (org-agenda :keys "a")
+  (org-agenda :keys "o")
   (delete-other-windows))
 (global-set-key (kbd "C-c d") #'nemacs-startup)
-
 
 (provide 'nemacs-functions)
