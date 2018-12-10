@@ -21,12 +21,10 @@
                    helm-projectile
                    js2-mode
                    json-mode
-                   ledger-mode
                    magit
                    md4rd
                    mu4e-alert
                    org-plus-contrib
-                   ox-hugo
                    projectile
                    scss-mode
                    wanderlust))
