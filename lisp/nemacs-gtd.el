@@ -38,6 +38,7 @@
 (setq nemacs-agenda-files '()
       nemacs-org-archive-file (nemacs-get-org-file "archive.org")
       nemacs-org-inbox-file (nemacs-get-org-file "inbox.org")
+      nemacs-calendar-dir (concat nemacs-notes-dir "/calendar")
       nemacs-projects-dir (concat nemacs-notes-dir "/projects"))
 
 (add-to-list 'nemacs-agenda-files (expand-file-name "inbox.org" nemacs-notes-dir))
@@ -46,7 +47,11 @@
     (setq org-file-found (expand-file-name file nemacs-projects-dir))
     (add-to-list 'nemacs-agenda-files org-file-found)
     (add-to-list 'org-refile-targets `(,org-file-found :level . 0))))
-
+(dolist (file (directory-files nemacs-calendar-dir))
+  (when (string-match (format "^\\(.+\\)\\.org$") file)
+    (setq org-file-found (expand-file-name file nemacs-calendar-dir))
+    (add-to-list 'nemacs-agenda-files org-file-found)
+    (add-to-list 'org-refile-targets `(,org-file-found :level . 0))))
 
 ;; Hooks
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
@@ -68,9 +73,10 @@
 ;; Defaults
 (setq org-agenda-category-icon-alist '(("Inbox" "~/.emacs.d/icons/org/inbox.png" nil nil :ascent center)
                                        ("Emacs" "~/.emacs.d/icons/org/emacs.png" nil nil :ascent center)
-                                       ("Quality of Life" "~/.emacs.d/icons/org/qol.png" nil nil :ascent center)
+                                       ("Life" "~/.emacs.d/icons/org/qol.png" nil nil :ascent center)
                                        ("Someday" "~/.emacs.d/icons/org/someday.png" nil nil :ascent center)
                                        ("Work" "~/.emacs.d/icons/org/work.png" nil nil :ascent center)
+                                       ("Calendar" "~/.emacs.d/icons/org/calendar.png" nil nil :ascent center)
                                        (".*" '(space . (:width (16)))))
       org-agenda-files nemacs-agenda-files
       org-agenda-start-on-weekday 0
@@ -112,12 +118,13 @@
       org-capture-templates '(("t" "Add a new TODO entry"
                                entry (file nemacs-org-inbox-file)
                                "* TODO %?" :kill-buffer t))
-      org-tag-persistent-alist '(("computer" . ?c)
-                                 ("finances" . ?f)
-                                 ("goals" . ?g)
-                                 ("phone" . ?p)
-                                 ("office" . ?o)
-                                 ("weekend" . ?w)))
+      org-tag-persistent-alist '(("computer"  . ?c)
+                                 ("finances"  . ?f)
+                                 ("goals"     . ?g)
+                                 ("home"      . ?h)
+                                 ("phone"     . ?p)
+                                 ("office"    . ?o)
+                                 ("weekend"   . ?w)))
 
 ;; Refile
 (setq org-refile-use-outline-path 'file
@@ -125,8 +132,9 @@
       org-refile-allow-creating-parent-nodes 'confirm)
 
 ;; Custom Agenda Commands
-(setq org-agenda-custom-commands '(("o" "At Office"
-                                    ((tags "+office|+computer-weekend")
+(setq org-agenda-custom-commands '(("g" . "Getting Things Done")
+                                    ("go" "At Office"
+                                    ((tags-todo "+office|+computer-weekend")
                                      (agenda #1="")))))
 
 
@@ -140,7 +148,7 @@
 (zenburn-with-color-variables
   (custom-set-faces
    `(org-agenda-date ((t (:foreground ,zenburn-fg))))
-   `(org-agenda-date-today ((t (:foreground ,zenburn-green+1 :height 1.2 :underline t :inherit org-agenda-date))))
+   `(org-agenda-date-today ((t (:foreground ,zenburn-green+1 :height 1.2 :underline nil :inherit org-agenda-date))))
    `(org-agenda-date-weekend ((t (:foreground ,zenburn-bg+3 :inherit org-agenda-date))))
    `(org-agenda-structure ((t (:foreground ,zenburn-fg :weight bold))))
    `(org-level-1 ((t (:foreground unspecified :weight normal))))
