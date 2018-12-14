@@ -67,7 +67,9 @@
 ;; Org ID configuration
 ;; TODO: Needs work on saving the database of ids.
 (require 'org-id)
-(setq org-id-files '("~/Dropbox/orgfiles/references/org-id-db")
+(setq org-id-files nemacs-agenda-files
+      org-id-locations nemacs-agenda-files
+      org-id-locations-file (concat nemacs-notes-dir "/references/org-id-db")
       org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
 ;; Defaults
