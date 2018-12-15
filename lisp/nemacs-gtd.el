@@ -18,6 +18,10 @@
 ;;; Code:
 
 (require 'org)
+(require 'org-agenda)
+(require 'org-bullets)
+(require 'org-id)
+(require 'org-super-agenda)
 (require 'org-gcal.conf)
 
 ;; Functions
@@ -25,6 +29,11 @@
   "Open my Inbox file."
   (interactive)
   (find-file nemacs-org-inbox-file))
+
+(defun nemacs-get-todo-file ()
+  "Open my TODO file."
+  (interactive)
+  (find-file nemacs-org-todo-file))
 
 (defun nemacs-get-org-file (filename)
   "Get the Org notes file that's shared between different devices. Concat the `filename' with the directory"
@@ -35,26 +44,33 @@
   (interactive)
   (org-capture :keys "t"))
 
-;; Files
-(setq nemacs-agenda-files '()
-      nemacs-org-archive-file (nemacs-get-org-file "archive.org")
-      nemacs-org-inbox-file (nemacs-get-org-file "inbox.org")
-      nemacs-calendar-dir (concat nemacs-notes-dir "calendar")
-      nemacs-projects-dir (concat nemacs-notes-dir "projects"))
+(defun nemacs-new-daily-review ()
+  "Creates a new daily review entry."
+  (interactive)
+  (progn
+    (org-capture nil "d")
+    (org-capture-finalize t)
+    (org-speed-move-safe 'outline-up-heading)
+    (org-narrow-to-subtree)
+    (org-gcal-fetch)
+    (org-clock-in)))
 
-(add-to-list 'nemacs-agenda-files (expand-file-name "inbox.org" nemacs-notes-dir))
-(dolist (file (directory-files nemacs-projects-dir))
-  (when (string-match (format "^\\(.+\\)\\.org$") file)
-    (setq org-file-found (expand-file-name file nemacs-projects-dir))
-    (add-to-list 'nemacs-agenda-files org-file-found)
-    (add-to-list 'org-refile-targets `(,org-file-found :level . 0))))
+;; Files
+(setq nemacs-org-archive-file (nemacs-get-org-file "archive.org")
+      nemacs-org-inbox-file (nemacs-get-org-file "inbox.org")
+      nemacs-org-someday-file (nemacs-get-org-file "someday.org")
+      nemacs-org-todo-file (nemacs-get-org-file "todo.org")
+      nemacs-calendar-dir (concat nemacs-notes-dir "calendar"))
+
+(setq nemacs-agenda-files `(,nemacs-org-inbox-file ,nemacs-org-someday-file ,nemacs-org-todo-file))
 (dolist (file (directory-files nemacs-calendar-dir))
   (when (string-match (format "^\\(.+\\)\\.org$") file)
     (setq org-file-found (expand-file-name file nemacs-calendar-dir))
-    (add-to-list 'nemacs-agenda-files org-file-found)
-    (add-to-list 'org-refile-targets `(,org-file-found :level . 0))))
+    (add-to-list 'nemacs-agenda-files org-file-found)))
 
 ;; Hooks
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(add-hook 'org-agenda-finalize-hook (lambda () (delete-other-windows)))
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 (add-hook 'org-after-refile-insert-hook #'save-buffer)
 (add-hook 'org-mode-hook #'turn-on-auto-fill)
@@ -64,24 +80,29 @@
             (interactive)
             (org-set-property "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]"))
             (org-id-get-create)))
+(add-hook 'org-mode-hook
+          (lambda ()
+             (setq line-spacing 0.2)
+             (variable-pitch-mode 1)))
 
 ;; Org ID configuration
-;; TODO: Needs work on saving the database of ids.
-(require 'org-id)
 (setq org-id-locations-file (concat nemacs-notes-dir "references/org-id-db")
       org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
 ;; Defaults
-(setq org-agenda-category-icon-alist '(("Inbox" "~/.emacs.d/icons/org/inbox.png" nil nil :ascent center)
+(setq org-agenda-category-icon-alist '(("Calendar" "~/.emacs.d/icons/org/calendar.png" nil nil :ascent center)
                                        ("Emacs" "~/.emacs.d/icons/org/emacs.png" nil nil :ascent center)
+                                       ("Inbox" "~/.emacs.d/icons/org/inbox.png" nil nil :ascent center)
                                        ("Life" "~/.emacs.d/icons/org/qol.png" nil nil :ascent center)
+                                       ("Personal" "~/.emacs.d/icons/org/personal.png" nil nil :ascent center)
                                        ("Someday" "~/.emacs.d/icons/org/someday.png" nil nil :ascent center)
-                                       ("Work" "~/.emacs.d/icons/org/work.png" nil nil :ascent center)
-                                       ("Calendar" "~/.emacs.d/icons/org/calendar.png" nil nil :ascent center)
+                                       ("Work" "~/.emacs.d/icons/org/itx.png" nil nil :ascent center)
+
                                        (".*" '(space . (:width (16)))))
       org-agenda-files nemacs-agenda-files
       org-agenda-start-on-weekday 0
       org-archive-location (concat nemacs-org-archive-file "::* From %s")
+      org-clock-in-switch-to-state "STARTED"
       org-clock-in-resume t
       org-clock-into-drawer t
       org-clock-out-remove-zero-time-clocks t
@@ -101,6 +122,7 @@
       org-fontify-whole-heading-line t
       org-image-actual-width nil
       org-log-done 'time
+      org-log-into-drawer t
       org-src-fontify-natively t
       org-src-preserve-indentation t
       org-src-tab-acts-natively t
@@ -113,6 +135,7 @@
 ;; Capture
 (setq org-todo-keywords '((sequence "TODO(t!)"
                                     "NEXT(n@)"
+                                    "STARTED"
                                     "|"
                                     "DONE(d)"
                                     "CANCELED(c@)"))
@@ -122,30 +145,62 @@
                               ("d" "Daily Review"
                                entry (file+olp+datetree "/tmp/reviews.org")
                                (file "~/Dropbox/orgfiles/templates/daily-review.template.org")))
-      org-tag-persistent-alist '(("computer"  . ?c)
-                                 ("finances"  . ?f)
-                                 ("goals"     . ?g)
-                                 ("home"      . ?h)
-                                 ("phone"     . ?p)
-                                 ("office"    . ?o)
-                                 ("weekend"   . ?w)))
+      org-tag-persistent-alist '(;; Context
+                                 ("@errand"   . ?e)
+                                 ("@home"     . ?h)
+                                 ("@office"   . ?o)
+
+                                 ;; Time
+                                 ("quick"     . ?<)
+                                 ("long"      . ?>)
+
+                                 ;; ("computer"  . ?c)
+                                 ;; ("finances"  . ?f)
+                                 ;; ("goals"     . ?g)
+                                 ;; ("phone"     . ?p)
+                                 ;; ("weekend"   . ?w)
+                                 ))
 
 ;; Refile
-(setq org-refile-use-outline-path 'file
+(setq org-refile-use-outline-path t
       org-outline-path-complete-in-steps nil
-      org-refile-allow-creating-parent-nodes 'confirm)
+      org-refile-allow-creating-parent-nodes 'confirm
+      org-refile-targets `(((,nemacs-org-inbox-file ,nemacs-org-someday-file ,nemacs-org-todo-file) :maxlevel . 3)))
 
-;; Custom Agenda Commands
+;; Agenda
+(org-super-agenda-mode)
+
+(setq org-agenda-inhibit-startup nil
+      org-agenda-show-future-repeats nil
+      org-agenda-start-on-weekday nil
+      org-agenda-skip-deadline-if-done t
+      org-agenda-skip-scheduled-if-done t)
+
 (setq org-agenda-custom-commands '(("g" . "Getting Things Done")
-                                    ("go" "At Office"
+                                    ("go" "at Office"
                                     ((tags-todo "+office|+computer-weekend")
-                                     (agenda #1="")))))
+                                     (agenda "" ((org-agenda-span 1)
+                                                 (org-deadline-warning-days 7)
+                                                 (org-agenda-start-on-weekday nil)))))))
+
+(defun nemacs-office-agenda ()
+  (interactive)
+  (let ((org-super-agenda-groups
+         '((:name "Today"
+                  :time-grid t)
+           (:name "Tasks"
+                  :tag "office"))))
+    (org-agenda nil "a")
+    (org-agenda-day-view)))
 
 ;; Keybindings
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'nemacs-capture-todo)
 (global-set-key (kbd "C-c i") #'nemacs-get-inbox-file)
+(global-set-key (kbd "C-c t") #'nemacs-get-todo-file)
 (global-set-key (kbd "C-c l") #'org-store-link)
+(global-set-key (kbd "C-c r d") #'nemacs-new-daily-review)
+
 (define-key org-agenda-mode-map "g" #'org-gcal-fetch)
 
 ;; UI
@@ -169,6 +224,7 @@
 
   (setq org-todo-keyword-faces
         `(("TODO" . org-todo)
+          ("STARTED" . (:foreground ,zenburn-green :weight bold))
           ("NEXT" . (:foreground ,zenburn-blue-2 :underline nil :weight bold))
           ("DONE" . org-done)
           ("CANCELED" . (:foreground ,zenburn-red :underline t :weight bold)))))

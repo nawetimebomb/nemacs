@@ -22,8 +22,10 @@
                    js2-mode
                    json-mode
                    magit
-                   org-plus-contrib
+                   org-bullets
                    org-gcal
+                   org-plus-contrib
+                   org-super-agenda
                    projectile
                    scss-mode
                    wanderlust))
