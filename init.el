@@ -34,14 +34,14 @@
 
 ;; Define important variables
 (eval-and-compile
+  (defvar nemacs-shared-dir "~/Dropbox/"
+    "My shared folder on the Cloud")
+
   (defvar nemacs-emacs-dir (expand-file-name user-emacs-directory)
     "The path of .emacs.d.")
 
   (defvar nemacs-local-dir (concat nemacs-emacs-dir ".local/")
     "Root directory for my local Emacs files.")
-
-  (defvar nemacs-preload-dir (concat nemacs-emacs-dir "preload/")
-    "Directory with ELisp files that are meant to be preloaded, even if the module isn't loaded yet")
 
   (defvar nemacs-etc-dir (concat nemacs-local-dir "etc/")
     "Local directory for non-volatile storage. They ussually are not deleted. Use this for dependencies like servers or config files.")
@@ -55,10 +55,13 @@
   (defvar nemacs-lisp-dir (concat nemacs-emacs-dir "lisp/")
     "Directory with NEMACS's interesting code.")
 
+  (defvar nemacs-shared-lisp-dir (concat nemacs-shared-dir "shared-lisp/")
+    "Directory with NEMACS's sensible code that's shared through computers.")
+
   (defvar nemacs-themes-dir (concat nemacs-emacs-dir "themes/")
     "The custom themes directory.")
 
-  (defvar nemacs-notes-dir "~/Dropbox/orgfiles"
+  (defvar nemacs-notes-dir (concat nemacs-shared-dir "orgfiles/")
     "Notes directory where all the shared org files are stored.")
 
   (dolist (dir (list
@@ -139,6 +142,7 @@
 
 ;; Initialization
 (add-to-list 'load-path nemacs-lisp-dir)
+(add-to-list 'load-path nemacs-shared-lisp-dir)
 
 (eval-and-compile
   (setq gc-cons-threshold 402653184

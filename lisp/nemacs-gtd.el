@@ -18,6 +18,7 @@
 ;;; Code:
 
 (require 'org)
+(require 'org-gcal.conf)
 
 ;; Functions
 (defun nemacs-get-inbox-file ()
@@ -30,16 +31,16 @@
   (expand-file-name filename nemacs-notes-dir))
 
 (defun nemacs-capture-todo ()
-  (interactive)
   "Creates new TODO capture"
+  (interactive)
   (org-capture :keys "t"))
 
 ;; Files
 (setq nemacs-agenda-files '()
       nemacs-org-archive-file (nemacs-get-org-file "archive.org")
       nemacs-org-inbox-file (nemacs-get-org-file "inbox.org")
-      nemacs-calendar-dir (concat nemacs-notes-dir "/calendar")
-      nemacs-projects-dir (concat nemacs-notes-dir "/projects"))
+      nemacs-calendar-dir (concat nemacs-notes-dir "calendar")
+      nemacs-projects-dir (concat nemacs-notes-dir "projects"))
 
 (add-to-list 'nemacs-agenda-files (expand-file-name "inbox.org" nemacs-notes-dir))
 (dolist (file (directory-files nemacs-projects-dir))
@@ -67,9 +68,7 @@
 ;; Org ID configuration
 ;; TODO: Needs work on saving the database of ids.
 (require 'org-id)
-(setq org-id-files nemacs-agenda-files
-      org-id-locations nemacs-agenda-files
-      org-id-locations-file (concat nemacs-notes-dir "/references/org-id-db")
+(setq org-id-locations-file (concat nemacs-notes-dir "references/org-id-db")
       org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
 ;; Defaults
@@ -119,7 +118,10 @@
                                     "CANCELED(c@)"))
       org-capture-templates '(("t" "Add a new TODO entry"
                                entry (file nemacs-org-inbox-file)
-                               "* TODO %?" :kill-buffer t))
+                               "* TODO %?" :kill-buffer t)
+                              ("d" "Daily Review"
+                               entry (file+olp+datetree "/tmp/reviews.org")
+                               (file "~/Dropbox/orgfiles/templates/daily-review.template.org")))
       org-tag-persistent-alist '(("computer"  . ?c)
                                  ("finances"  . ?f)
                                  ("goals"     . ?g)
@@ -139,12 +141,12 @@
                                     ((tags-todo "+office|+computer-weekend")
                                      (agenda #1="")))))
 
-
 ;; Keybindings
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'nemacs-capture-todo)
 (global-set-key (kbd "C-c i") #'nemacs-get-inbox-file)
 (global-set-key (kbd "C-c l") #'org-store-link)
+;;(define-key org-agenda-mode-map (kbd "g") #'org-gcal-fetch)
 
 ;; UI
 (zenburn-with-color-variables

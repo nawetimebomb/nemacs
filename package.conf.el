@@ -23,6 +23,7 @@
                    json-mode
                    magit
                    org-plus-contrib
+                   org-gcal
                    projectile
                    scss-mode
                    wanderlust))
