@@ -146,15 +146,17 @@
 (global-set-key (kbd "C-c c") #'nemacs-capture-todo)
 (global-set-key (kbd "C-c i") #'nemacs-get-inbox-file)
 (global-set-key (kbd "C-c l") #'org-store-link)
-;;(define-key org-agenda-mode-map (kbd "g") #'org-gcal-fetch)
+(define-key org-agenda-mode-map "g" #'org-gcal-fetch)
 
 ;; UI
 (zenburn-with-color-variables
   (custom-set-faces
-   `(org-agenda-date ((t (:foreground ,zenburn-fg))))
-   `(org-agenda-date-today ((t (:foreground ,zenburn-green+1 :height 1.2 :underline nil :inherit org-agenda-date))))
+   `(org-agenda-date ((t (:foreground ,zenburn-blue+1))))
+   `(org-agenda-date-today ((t (:foreground ,zenburn-blue+1 :height 1.2 :underline nil :inherit org-agenda-date))))
    `(org-agenda-date-weekend ((t (:foreground ,zenburn-bg+3 :inherit org-agenda-date))))
    `(org-agenda-structure ((t (:foreground ,zenburn-fg :weight bold))))
+   `(org-agenda-calendar-event ((t (:foreground ,zenburn-fg))))
+   `(org-time-grid ((t (:foreground ,zenburn-fg-1))))
    `(org-level-1 ((t (:foreground unspecified :weight normal))))
    `(org-level-2 ((t (:foreground ,zenburn-yellow-1))))
    `(org-priority ((t (:foreground ,zenburn-cyan))))
