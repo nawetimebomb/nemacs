@@ -136,6 +136,7 @@
 (global-subword-mode t)
 (delete-selection-mode t)
 (column-number-mode t)
+(when (executable-find "hunspell") (flyspell-mode t))
 (when (file-exists-p custom-file) (load-file custom-file))
 (set-frame-font "Envy Code R 12")
 
@@ -192,7 +193,6 @@
               (require 'nemacs-programming)
 
               ;; Packages Settings
-              (when (executable-find "hunspell") (flyspell-mode t))
               (helm-mode)
               (global-anzu-mode)
               (projectile-mode)
