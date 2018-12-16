@@ -185,17 +185,8 @@
                                      (tags-todo "Today")
                                      (agenda "" ((org-agenda-span 1)
                                                  (org-deadline-warning-days 7)
-                                                 (org-agenda-start-on-weekday nil)))))))
-
-(defun nemacs-office-agenda ()
-  (interactive)
-  (let ((org-super-agenda-groups
-         '((:name "Today"
-                  :time-grid t)
-           (:name "Tasks"
-                  :tag "office"))))
-    (org-agenda nil "go")
-    (org-agenda-day-view)))
+                                                 (org-agenda-start-on-weekday nil)))
+                                     (tags-todo "This Week")))))
 
 ;; Keybindings
 (global-set-key (kbd "C-c a") #'org-agenda)
