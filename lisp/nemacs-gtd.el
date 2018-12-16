@@ -70,7 +70,6 @@
 
 ;; Hooks
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-(add-hook 'org-agenda-finalize-hook (lambda () (delete-other-windows)))
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 (add-hook 'org-after-refile-insert-hook #'save-buffer)
 (add-hook 'org-mode-hook #'turn-on-auto-fill)
@@ -151,15 +150,13 @@
                                  ("@office"   . ?o)
 
                                  ;; Time
-                                 ("quick"     . ?<)
-                                 ("long"      . ?>)
+                                 ("Today"     . ?=)
+                                 ("Tomorrow"  . ?>)
+                                 ("This Week" . ?7)
 
-                                 ;; ("computer"  . ?c)
-                                 ;; ("finances"  . ?f)
-                                 ;; ("goals"     . ?g)
-                                 ;; ("phone"     . ?p)
-                                 ;; ("weekend"   . ?w)
-                                 ))
+                                 ;; Focus
+                                 ("IMMERSIVE" . ?I)
+                                 ("PROCESS"   . ?P)))
 
 ;; Refile
 (setq org-refile-use-outline-path t
@@ -176,9 +173,16 @@
       org-agenda-skip-deadline-if-done t
       org-agenda-skip-scheduled-if-done t)
 
-(setq org-agenda-custom-commands '(("g" . "Getting Things Done")
-                                    ("go" "at Office"
-                                    ((tags-todo "+office|+computer-weekend")
+(setq org-agenda-custom-commands `(("r" "Daily Review"
+                                    ((tags-todo "Today")
+                                     (tags-todo "Tomorrow")
+                                     (agenda "" ((org-agenda-span 2)
+                                                 (org-deadline-warning-days 7)
+                                                 (org-agenda-start-on-weekday nil)))))
+                                   ("g" . "Getting Things Done")
+                                   ("go" "at Office"
+                                    ((tags-todo "@office")
+                                     (tags-todo "Today")
                                      (agenda "" ((org-agenda-span 1)
                                                  (org-deadline-warning-days 7)
                                                  (org-agenda-start-on-weekday nil)))))))
@@ -190,7 +194,7 @@
                   :time-grid t)
            (:name "Tasks"
                   :tag "office"))))
-    (org-agenda nil "a")
+    (org-agenda nil "go")
     (org-agenda-day-view)))
 
 ;; Keybindings
