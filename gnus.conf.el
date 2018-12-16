@@ -18,9 +18,12 @@
 ;;; Code:
 
 (require 'gnus-cite)
+(require 'gnus-select-account)
 
-(setq user-full-name "Nahuel Jesus Sacchetti"
-      user-mail-address "nahueljsacchetti@gmail.com")
+;;; Start GNUs configuration
+
+;; Startup
+(gnus-select-account-enable)
 
 ;; Functions
 (defun exit-gnus-on-exit ()

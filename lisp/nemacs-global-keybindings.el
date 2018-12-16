@@ -27,16 +27,10 @@
 ;; erc
 (global-set-key (kbd "C-z e") #'erc)
 
-;; ledger
-(global-set-key (kbd "C-z l") #'nemacs-add-ledger-transaction)
-
 ;; magit
 (global-set-key (kbd "C-z g") #'magit-status)
 
-;; md4rd
-(global-set-key (kbd "C-z r") #'md4rd)
-
 ;; mu4e
-(global-set-key (kbd "C-z m") #'wl)
+(global-set-key (kbd "C-z m") #'gnus)
 
 (provide 'nemacs-global-keybindings)

@@ -16,6 +16,7 @@
                    company
                    company-c-headers
                    flycheck
+                   gnus-select-account
                    helm
                    helm-ag
                    helm-projectile

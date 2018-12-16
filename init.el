@@ -196,8 +196,8 @@
               (helm-mode)
               (global-anzu-mode)
               (projectile-mode)
-              (bbdb-initialize 'message)
-              (bbdb-mua-auto-update-init 'message)
+              (bbdb-initialize 'gnus 'message)
+              (bbdb-mua-auto-update-init 'gnus 'message)
 
               ;; Run the startup page
               (nemacs-startup)))

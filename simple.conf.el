@@ -98,9 +98,3 @@
 (global-set-key [remap save-buffers-kill-emacs] #'nemacs-prompt-before-exiting-emacs)
 (global-set-key [remap save-buffers-kill-terminal] #'nemacs-prompt-before-exiting-emacs)
 (global-set-key [remap suspend-frame] #'ignore)
-
-(defun nemacs-add-ledger-transaction ()
-  "Add transaction to my ledger file."
-  (interactive)
-  (find-file "~/Notes/journal.ledger")
-  (ledger-add-transaction (format-time-string "%Y/%m/%d")))
