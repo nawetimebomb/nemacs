@@ -70,6 +70,8 @@
 (setq gnus-auto-select-next nil
       gnus-group-goto-unread nil
       gnus-large-newsgroup 600
+      gnus-save-killed-list nil
+      gnus-check-new-newsgroups 'ask-server
       gnus-permanently-visible-groups "INBOX"
       gnus-read-active-file 'some
       gnus-select-method '(nnnil "")
@@ -79,11 +81,9 @@
                                               (nnimap-address "outlook.office365.com")))
       gnus-summary-goto-unread 'never)
 
+(when (executable-find "w3m") (setq mm-text-html-renderer 'gnus-w3m))
+
 ;; Keybindings
-(define-key gnus-group-mode-map (kbd "<return>")
-  (lambda ()
-    (interactive)
-    (gnus-topic-select-group t)))
 (define-key gnus-summary-mode-map "F" #'gnus-summary-wide-reply-with-original)
 (define-key gnus-article-mode-map "F" #'gnus-article-wide-reply-with-original)
 
