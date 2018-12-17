@@ -184,8 +184,8 @@
 (setq org-agenda-inhibit-startup nil
       org-agenda-show-future-repeats nil
       org-agenda-start-on-weekday nil
-      org-agenda-skip-deadline-if-done t
-      org-agenda-skip-scheduled-if-done t)
+      org-agenda-skip-deadline-if-done nil
+      org-agenda-skip-scheduled-if-done nil)
 
 (setq org-agenda-custom-commands `(("r" "Daily Review"
                                     ((tags-todo "Today")
@@ -196,7 +196,6 @@
                                    ("g" . "Getting Things Done")
                                    ("go" "at Office"
                                     ((tags-todo "@office")
-                                     (tags-todo "Today")
                                      (agenda "" ((org-agenda-span 1)
                                                  (org-deadline-warning-days 7)
                                                  (org-agenda-start-on-weekday nil)))

@@ -107,5 +107,36 @@
    `(gnus-header-content ((t (:foreground ,zenburn-fg-1))))
    `(gnus-header-subject ((t (:foreground ,zenburn-cyan))))
 
-   `(variable-pitch ((t (:font unspecified))))
-   ))
+   `(variable-pitch ((t (:font unspecified))))))
+
+;; FORMAT=FLOWED fix
+(defun harden-newlines ()
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "\n" nil t)
+      (put-text-property (1- (point)) (point) 'hard t))))
+
+(setq fill-flowed-display-column nil)
+
+;; The following line is needed since emacs 24.1:
+(setq gnus-treat-fill-long-lines nil)
+
+(add-hook 'message-setup-hook
+  (lambda ()
+    (when message-this-is-mail
+      (turn-off-auto-fill)
+      (setq
+	truncate-lines nil
+	word-wrap t
+	use-hard-newlines t))))
+
+(add-hook 'message-send-hook
+  (lambda ()
+    (when use-hard-newlines
+      (harden-newlines))))
+
+(add-hook 'gnus-article-mode-hook
+  (lambda ()
+    (setq
+      truncate-lines nil
+      word-wrap t)))
