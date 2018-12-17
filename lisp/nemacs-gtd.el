@@ -82,9 +82,9 @@
 ;; Hooks
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
+(add-hook 'org-agenda-mode-hook (lambda () (setq line-spacing 0.2)))
 (add-hook 'org-after-refile-insert-hook #'save-buffer)
 (add-hook 'org-mode-hook #'turn-on-auto-fill)
-(add-hook 'org-mode-hook #'hl-line-mode)
 (add-hook 'org-capture-before-finalize-hook
           (lambda ()
             (interactive)
@@ -210,18 +210,17 @@
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c r d") #'nemacs-new-daily-review)
 (global-set-key (kbd "C-c r w") #'nemacs-new-weekly-review)
-
 (define-key org-agenda-mode-map "g" #'org-gcal-fetch)
 
 ;; UI
 (zenburn-with-color-variables
   (custom-set-faces
-   `(org-agenda-date ((t (:foreground ,zenburn-blue+1))))
-   `(org-agenda-date-today ((t (:foreground ,zenburn-blue+1 :height 1.2 :underline nil :inherit org-agenda-date))))
-   `(org-agenda-date-weekend ((t (:foreground ,zenburn-bg+3 :inherit org-agenda-date))))
+   `(org-agenda-date ((t (:foreground ,zenburn-fg+1 :underline t))))
+   `(org-agenda-date-today ((t (:foreground ,zenburn-fg+1 :height 1.2 :underline t :inherit org-agenda-date))))
+   `(org-agenda-date-weekend ((t (:foreground ,zenburn-fg-1 :inherit org-agenda-date))))
    `(org-agenda-structure ((t (:foreground ,zenburn-fg :weight bold))))
-   `(org-agenda-calendar-event ((t (:foreground ,zenburn-fg))))
-   `(org-time-grid ((t (:foreground ,zenburn-fg-1))))
+   `(org-agenda-calendar-event ((t (:foreground ,zenburn-yellow))))
+   `(org-time-grid ((t (:foreground ,zenburn-bg+3))))
    `(org-level-1 ((t (:foreground unspecified :weight normal))))
    `(org-level-2 ((t (:foreground ,zenburn-yellow-1))))
    `(org-priority ((t (:foreground ,zenburn-cyan))))
