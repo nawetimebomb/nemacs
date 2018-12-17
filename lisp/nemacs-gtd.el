@@ -55,6 +55,17 @@
     (org-gcal-fetch)
     (org-clock-in)))
 
+(defun nemacs-new-weekly-review ()
+  "Creates a new weekly review entry."
+  (interactive)
+  (progn
+    (org-capture nil "w")
+    (org-capture-finalize t)
+    (org-speed-move-safe 'outline-up-heading)
+    (org-narrow-to-subtree)
+    (org-gcal-fetch)
+    (org-clock-in)))
+
 ;; Files
 (setq nemacs-org-archive-file (nemacs-get-org-file "archive.org")
       nemacs-org-inbox-file (nemacs-get-org-file "inbox.org")
@@ -143,7 +154,10 @@
                                "* TODO %?" :kill-buffer t)
                               ("d" "Daily Review"
                                entry (file+olp+datetree "/tmp/reviews.org")
-                               (file "~/Dropbox/orgfiles/templates/daily-review.template.org")))
+                               (file "~/Dropbox/orgfiles/templates/daily-review.template.org"))
+                              ("w" "Weekly Review"
+                               entry (file+olp+datetree "/tmp/reviews.org")
+                               (file "~/Dropbox/orgfiles/templates/weekly-review.template.org")))
       org-tag-persistent-alist '(;; Context
                                  ("@errand"   . ?e)
                                  ("@home"     . ?h)
@@ -195,6 +209,7 @@
 (global-set-key (kbd "C-c t") #'nemacs-get-todo-file)
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c r d") #'nemacs-new-daily-review)
+(global-set-key (kbd "C-c r w") #'nemacs-new-weekly-review)
 (define-key org-agenda-mode-map "g" #'org-gcal-fetch)
 
 ;; UI
