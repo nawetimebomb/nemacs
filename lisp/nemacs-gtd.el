@@ -187,6 +187,10 @@
       org-agenda-skip-deadline-if-done nil
       org-agenda-skip-scheduled-if-done nil)
 
+(setq org-agenda-time-grid '((daily today require-timed remove-match)
+                             (700 800 900 1000 1100 1200 1300 1400 1500 1600 1800 2000)
+                             "......" "----------------"))
+
 (setq org-agenda-custom-commands `(("r" "Daily Review"
                                     ((tags-todo "Today")
                                      (tags-todo "Tomorrow")
