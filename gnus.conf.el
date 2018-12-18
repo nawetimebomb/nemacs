@@ -59,15 +59,18 @@
 (setq-default gnus-summary-line-format "%U%R%z | %d | %( %-23,23f : %B%s%)\n"
               gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M"))
               gnus-summary-thread-gathering-function 'gnus-gather-threads-by-subject
-              gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date)
-              gnus-sum-thread-tree-false-root ""
-              gnus-sum-thread-tree-indent "  "
-              gnus-sum-thread-tree-leaf-with-other "├► "
-              gnus-sum-thread-tree-root "■ "
-              gnus-sum-thread-tree-single-leaf "╰► "
-              gnus-sum-thread-tree-vertical "│")
+              gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date))
 
-(setq gnus-auto-select-next nil
+(setq gnus-sum-thread-tree-false-root      ""
+      gnus-sum-thread-tree-single-indent   ""
+      gnus-sum-thread-tree-root            ""
+      gnus-sum-thread-tree-vertical        "|"
+      gnus-sum-thread-tree-leaf-with-other "+-> "
+      gnus-sum-thread-tree-single-leaf     "\\-> "
+      gnus-sum-thread-tree-indent          " ")
+
+(setq gnus-asynchronous t
+      gnus-auto-select-next nil
       gnus-group-goto-unread nil
       gnus-large-newsgroup 600
       gnus-save-killed-list nil

@@ -197,12 +197,16 @@
                                      (agenda "" ((org-agenda-span 2)
                                                  (org-deadline-warning-days 7)
                                                  (org-agenda-start-on-weekday nil)))))
+                                   ("u" "Unscheduled TODOs"
+                                    ((todo ""
+                                           ((org-agenda-overriding-header "Unscheduled TODO")))))
                                    ("g" . "Getting Things Done")
                                    ("go" "at Office"
-                                    ((tags-todo "@office")
-                                     (agenda "" ((org-agenda-span 1)
+                                    ((agenda "" ((org-agenda-overriding-header "Office Work")
+                                                 (org-agenda-span 1)
                                                  (org-deadline-warning-days 7)
                                                  (org-agenda-start-on-weekday nil)))
+                                     (tags-todo "@office")
                                      (tags-todo "This Week")))))
 
 ;; Keybindings
@@ -221,9 +225,11 @@
    `(org-agenda-date ((t (:foreground ,zenburn-fg+1 :underline t))))
    `(org-agenda-date-today ((t (:foreground ,zenburn-fg+1 :height 1.2 :underline t :inherit org-agenda-date))))
    `(org-agenda-date-weekend ((t (:foreground ,zenburn-fg-1 :inherit org-agenda-date))))
-   `(org-agenda-structure ((t (:foreground ,zenburn-fg :weight bold))))
+   `(org-agenda-structure ((t (:foreground ,zenburn-fg :weight bold :height 1.5))))
    `(org-agenda-calendar-event ((t (:foreground ,zenburn-yellow))))
    `(org-time-grid ((t (:foreground ,zenburn-bg+3))))
+   `(org-scheduled ((t (:foreground ,zenburn-blue+2))))
+   `(org-scheduled-today ((t (:foreground ,zenburn-blue+1))))
    `(org-level-1 ((t (:foreground unspecified :weight normal))))
    `(org-level-2 ((t (:foreground ,zenburn-yellow-1))))
    `(org-priority ((t (:foreground ,zenburn-cyan))))

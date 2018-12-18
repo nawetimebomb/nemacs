@@ -24,7 +24,7 @@
 (global-set-key (kbd "C-c j") #'nemacs-open-jira-ticket)
 
 (defun nemacs-startup ()
-  "Open my Inbox file on the right side and my Agenda on the left side."
+  "Open my work agenda"
   (interactive)
   (require 'org)
   (switch-to-buffer "*scratch*")
