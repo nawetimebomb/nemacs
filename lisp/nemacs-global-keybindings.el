@@ -31,6 +31,6 @@
 (global-set-key (kbd "C-z g") #'magit-status)
 
 ;; mu4e
-(global-set-key (kbd "C-z m") #'gnus-no-server)
+(global-set-key (kbd "C-z m") #'gnus)
 
 (provide 'nemacs-global-keybindings)

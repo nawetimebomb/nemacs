@@ -119,5 +119,14 @@
       user-full-name "Nahuel Jesús Sacchetti"
       user-mail-address "nahueljsacchetti@gmail.com")
 
+(defun nemacs-signature ()
+  (interactive)
+  (concat "Nahuel Jesus Sacchetti\n"
+          "Software Engineer.\n"
+          "Solution Lead for Monsters Team at ITX.\n\n"
+          "Message sent using Emacs " emacs-version " and " gnus-version ".\n"))
+
+(setq message-signature 'nemacs-signature)
+
 ;; Keybindings
 (define-key message-mode-map (kbd "C-c f") #'nemacs-change-mail-address)
