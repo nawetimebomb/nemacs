@@ -175,15 +175,17 @@
                               mode-line-front-space
                               mode-line-client
                               mode-line-modified
-                              " "
+                              "   "
                               mode-line-directory
                               mode-line-buffer-identification
-                              " "
+                              "   "
                               mode-line-position
+                              "   "
                               (flycheck-mode flycheck-mode-line)
-                              " "
-                              mode-line-modes
-                              mode-line-misc-info
+                              (vc-mode vc-mode)
+                              battery-mode-line-string
+                              ;; mode-line-modes
+                              ;; mode-line-misc-info
                               mode-line-end-spaces))
 
               ;; Nemacs Lisp

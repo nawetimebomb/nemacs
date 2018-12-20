@@ -27,6 +27,9 @@
 ;; erc
 (global-set-key (kbd "C-z e") #'erc)
 
+;; rtv
+(global-set-key (kbd "C-z r") (lambda () (interactive) (term "rtv")))
+
 ;; magit
 (global-set-key (kbd "C-z g") #'magit-status)
 

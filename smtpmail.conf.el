@@ -20,6 +20,7 @@
 (require 'cl)
 (require 'message)
 (require 'smtpmail)
+(require 'smtpmail-async)
 
 ;; Addresses
 (setq mail-addresses '("nahueljsacchetti@gmail.com" "nsacchetti@itx.com"))
@@ -107,7 +108,7 @@
       message-kill-buffer-on-exit t
       message-send-mail-function 'smtpmail-send-it
       nsm-settings-file (expand-file-name "network-security.data" nemacs-cache-dir)
-      send-mail-function 'smtpmail-send-it
+      send-mail-function 'async-smtpmail-send-it
       smtpmail-debug-info t
       smtpmail-debug-verb t
       starttls-use-gnutls t
