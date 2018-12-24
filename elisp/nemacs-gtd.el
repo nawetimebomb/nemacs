@@ -21,9 +21,8 @@
 (require 'org-agenda)
 (require 'org-bullets)
 (require 'org-id)
-(require 'org-super-agenda)
 (require 'org-notmuch)
-(require 'org-gcal.conf)
+(require 'my-org-gcal.conf)
 
 ;; Functions
 (defun nemacs-get-inbox-file ()
@@ -81,6 +80,7 @@
     (add-to-list 'nemacs-agenda-files org-file-found)))
 
 ;; Hooks
+(add-hook 'org-mode-hook #'flyspell-mode)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 (add-hook 'org-agenda-mode-hook (lambda () (setq line-spacing 0.2)))
@@ -179,8 +179,6 @@
       org-refile-targets `(((,nemacs-org-inbox-file ,nemacs-org-someday-file ,nemacs-org-todo-file) :maxlevel . 3)))
 
 ;; Agenda
-(org-super-agenda-mode)
-
 (setq org-agenda-inhibit-startup nil
       org-agenda-show-future-repeats nil
       org-agenda-start-on-weekday nil

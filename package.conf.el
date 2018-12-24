@@ -23,14 +23,11 @@
                    js2-mode
                    json-mode
                    magit
-                   mu4e-alert
                    org-bullets
                    org-gcal
                    org-plus-contrib
-                   org-super-agenda
                    projectile
-                   scss-mode
-                   wanderlust))
+                   scss-mode))
 
   (unless (package-installed-p package)
     (unless package-archive-contents

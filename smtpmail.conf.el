@@ -19,9 +19,7 @@
 
 (require 'cl)
 (require 'message)
-
-;; Addresses
-(setq mail-addresses '("me@nsacchetti.com" "nsacchetti@itx.com"))
+(require 'my-smtpmail.conf)
 
 ;; Functions
 (defun nemacs-change-mail-address ()
@@ -33,8 +31,8 @@
       (let* ((no-name (null (match-string 2)))
              (name (if no-name user-full-name (match-string 1)))
              (address (match-string (if no-name 1 3))))
-        (replace-match (concat "From: " name
-                               " <" (nemacs-select-next-address address) ">"))))))
+        (replace-match (concat "From: " (nemacs-select-next-address address)
+                               " (" name ")"))))))
 
 (defun nemacs-select-next-address (address)
   (let ((found (member address mail-addresses)))
@@ -49,6 +47,9 @@
       (nth current-selected-index mail-addresses))))
 
 (define-key message-mode-map (kbd "C-c f") #'nemacs-change-mail-address)
+
+;; Hooks
+(add-hook 'message-mode-hook #'flyspell-mode)
 
 ;; Defaults
 (setq gnutls-verify-error t
@@ -68,26 +69,6 @@
                         ;; compatibility fallbacks
                         "gnutls-cli -p %p %h"
                         "openssl s_client -connect %h:%p -no_ssl2 -no_ssl3 -ign_eof"))
-
-;; email sending
-(setq mail-signature 'nemacs-signature
-      message-signature 'nemacs-signature
-      smtpmail-smtp-server "smtp.fastmail.com"
-      smtpmail-smtp-service 465
-      smtpmail-smtp-user "me@nsacchetti.com"
-      smtpmail-stream-type 'ssl
-      user-email-address "me@nsacchetti.com"
-      user-full-name "Nahuel Jesús Sacchetti")
-
-(defun nemacs-signature ()
-  "My e-mail signature."
-  (concat
-   "Nahuel Jesús Sacchetti\n"
-   "Solution Lead for Monsters at ITX\n"
-   "Learn more about ITX at https://www.itx.com/\n"
-   "and about me at https://nsacchetti.com\n\n"
-
-   "Message sent from GNU Emacs " emacs-version "."))
 
 (zenburn-with-color-variables
   (custom-set-faces

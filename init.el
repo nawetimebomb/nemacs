@@ -17,9 +17,6 @@
 
 ;;; Code:
 
-;; This is a workaround for Emacs to initialize the packages automatically.
-;; I don't have this issue with Emacs v27, prolly updating would be better.
-
 ;; Define new prefix key: `C-z'
 (define-prefix-command 'ring-map)
 (global-set-key (kbd "C-z") 'ring-map)
@@ -55,11 +52,11 @@
   (defvar nemacs-packages-dir (concat nemacs-local-dir "packages/")
     "Where `package.el' and my local plugins are installed.")
 
-  (defvar nemacs-lisp-dir (concat nemacs-emacs-dir "lisp/")
+  (defvar nemacs-elisp-dir (concat nemacs-emacs-dir "elisp/")
     "Directory with NEMACS's interesting code.")
 
-  (defvar nemacs-shared-lisp-dir (concat nemacs-shared-dir "shared-lisp/")
-    "Directory with NEMACS's sensible code that's shared through computers.")
+  (defvar nemacs-private-elisp-dir (concat nemacs-shared-dir "elisp/")
+    "Directory with elisp code with sensible information.")
 
   (defvar nemacs-themes-dir (concat nemacs-emacs-dir "themes/")
     "The custom themes directory.")
@@ -139,13 +136,11 @@
 (global-subword-mode t)
 (delete-selection-mode t)
 (column-number-mode t)
-(when (executable-find "hunspell") (flyspell-mode t))
-(when (file-exists-p custom-file) (load-file custom-file))
 (set-frame-font "Envy Code R 12")
 
 ;; Initialization
-(add-to-list 'load-path nemacs-lisp-dir)
-(add-to-list 'load-path nemacs-shared-lisp-dir)
+(add-to-list 'load-path nemacs-elisp-dir)
+(add-to-list 'load-path nemacs-private-elisp-dir)
 
 (eval-and-compile
   (setq gc-cons-threshold 402653184
@@ -173,14 +168,12 @@
                     gc-cons-percentage 0.1)
 
               ;; Nemacs Lisp
+              (require 'magit)
               (require 'nemacs-functions)
               (require 'nemacs-gtd)
-              (require 'nemacs-global-keybindings)
               (require 'nemacs-programming)
-              (when (executable-find "notmuch")
-                (add-to-list 'load-path "/usr/share/emacs/site-lisp")
-                (require 'smtpmail)
-                (require 'notmuch))
+              (require 'notmuch)
+              (require 'smtpmail)
 
               ;; Mode line
               (setq-default mode-line-format
@@ -194,12 +187,7 @@
                               "   "
                               mode-line-position
                               "   "
-                              (flycheck-mode flycheck-mode-line)
-                              (vc-mode vc-mode)
                               battery-mode-line-string
-                              "   "
-                              ;; mode-line-modes
-                              ;; mode-line-misc-info
                               mode-line-end-spaces))
 
               ;; Packages Settings
@@ -207,7 +195,4 @@
               (global-anzu-mode)
               (projectile-mode)
               (bbdb-initialize 'message)
-              (bbdb-mua-auto-update-init 'message)
-
-              ;; Run the startup page
-              (nemacs-startup)))
+              (bbdb-mua-auto-update-init 'message)))
