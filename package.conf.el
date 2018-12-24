@@ -23,6 +23,7 @@
                    js2-mode
                    json-mode
                    magit
+                   mu4e-alert
                    org-bullets
                    org-gcal
                    org-plus-contrib

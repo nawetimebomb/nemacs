@@ -33,6 +33,7 @@
 
 ;; Module: Notifications
 (setq erc-notifications-icon "~/.emacs.d/icons/irc.png")
+(require 'my-erc.conf)
 
 (zenburn-with-color-variables
   (custom-set-faces

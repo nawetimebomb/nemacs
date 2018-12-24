@@ -19,7 +19,10 @@
 
 ;; This is a workaround for Emacs to initialize the packages automatically.
 ;; I don't have this issue with Emacs v27, prolly updating would be better.
-;;(package-initialize)
+
+;; Define new prefix key: `C-z'
+(define-prefix-command 'ring-map)
+(global-set-key (kbd "C-z") 'ring-map)
 
 ;; Each file named <somelibrary>.conf.el is loaded just after the library is
 ;; loaded.
@@ -169,6 +172,16 @@
               (setq gc-cons-threshold 16777216
                     gc-cons-percentage 0.1)
 
+              ;; Nemacs Lisp
+              (require 'nemacs-functions)
+              (require 'nemacs-gtd)
+              (require 'nemacs-global-keybindings)
+              (require 'nemacs-programming)
+              (when (executable-find "notmuch")
+                (add-to-list 'load-path "/usr/share/emacs/site-lisp")
+                (require 'smtpmail)
+                (require 'notmuch))
+
               ;; Mode line
               (setq-default mode-line-format
                             '("%e"
@@ -184,22 +197,17 @@
                               (flycheck-mode flycheck-mode-line)
                               (vc-mode vc-mode)
                               battery-mode-line-string
+                              "   "
                               ;; mode-line-modes
                               ;; mode-line-misc-info
                               mode-line-end-spaces))
-
-              ;; Nemacs Lisp
-              (require 'nemacs-functions)
-              (require 'nemacs-gtd)
-              (require 'nemacs-global-keybindings)
-              (require 'nemacs-programming)
 
               ;; Packages Settings
               (helm-mode)
               (global-anzu-mode)
               (projectile-mode)
-              (bbdb-initialize 'gnus 'message)
-              (bbdb-mua-auto-update-init 'gnus 'message)
+              (bbdb-initialize 'message)
+              (bbdb-mua-auto-update-init 'message)
 
               ;; Run the startup page
               (nemacs-startup)))

@@ -22,6 +22,7 @@
 (require 'org-bullets)
 (require 'org-id)
 (require 'org-super-agenda)
+(require 'org-notmuch)
 (require 'org-gcal.conf)
 
 ;; Functions
@@ -92,8 +93,7 @@
             (org-id-get-create)))
 (add-hook 'org-mode-hook
           (lambda ()
-             (setq line-spacing 0.2)
-             (variable-pitch-mode 1)))
+             (setq line-spacing 0.2)))
 
 ;; Org ID configuration
 (setq org-id-locations-file (concat nemacs-notes-dir "references/org-id-db")

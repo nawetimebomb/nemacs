@@ -17,23 +17,4 @@
 
 ;;; Code:
 
-;; Define new prefix key: `C-z'
-(define-prefix-command 'ring-map)
-(global-set-key (kbd "C-z") 'ring-map)
-
-;;bbdb
-(global-set-key (kbd "C-z b") #'bbdb)
-
-;; erc
-(global-set-key (kbd "C-z e") #'erc)
-
-;; rtv
-(global-set-key (kbd "C-z r") (lambda () (interactive) (term "rtv")))
-
-;; magit
-(global-set-key (kbd "C-z g") #'magit-status)
-
-;; mu4e
-(global-set-key (kbd "C-z m") #'gnus)
-
 (provide 'nemacs-global-keybindings)
