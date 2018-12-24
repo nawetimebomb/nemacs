@@ -83,7 +83,7 @@
               create-lockfiles nil
               delete-by-moving-to-trash t
               display-time-format "%H:%M"
-              fill-column 78
+              fill-column 80
               frame-inhibit-implied-resize t
               frame-title-format "NEMACS"
               help-window-select t

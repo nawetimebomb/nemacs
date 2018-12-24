@@ -49,7 +49,11 @@
 (define-key message-mode-map (kbd "C-c f") #'nemacs-change-mail-address)
 
 ;; Hooks
-(add-hook 'message-mode-hook #'flyspell-mode)
+(add-hook 'message-mode-hook
+          #'(lambda ()
+              (interactive)
+              (flyspell-mode)
+              (turn-off-auto-fill)))
 
 ;; Defaults
 (setq gnutls-verify-error t

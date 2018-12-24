@@ -85,6 +85,7 @@ and not tag:event and not tag:finances and not tag:flagged and not tag:incident 
 and not tag:muted and not tag:need_update_email and not tag:replied and not tag:shopping and not tag:subscription and not tag:work")))
 
 (setq mm-text-html-renderer 'w3m
+      mml-enable-flowed nil
       notmuch-multipart/alternative-discouraged '("text/plain" "text/html" "multipart/related"))
 
 (setq notmuch-show-tag-macro-alist
@@ -109,7 +110,10 @@ and not tag:muted and not tag:need_update_email and not tag:replied and not tag:
 
 
 ;; Keybindings
-(global-set-key (kbd "C-z n n") #'notmuch)
+(global-set-key (kbd "C-c n n") #'notmuch)
+(global-set-key (kbd "C-c n i") #'(lambda () (interactive) (notmuch-search "tag:inbox")))
+(global-set-key (kbd "C-c n w") #'(lambda () (interactive) (notmuch-search "tag:work")))
+(global-set-key (kbd "C-c n u w") #'(lambda () (interactive) (notmuch-search "tag:work and tag:unread")))
 
 (define-key notmuch-show-mode-map "d"
   (lambda ()

@@ -146,6 +146,7 @@
 (setq org-todo-keywords '((sequence "TODO(t!)"
                                     "NEXT(n@)"
                                     "STARTED"
+                                    "PROJECT"
                                     "|"
                                     "DONE(d)"
                                     "CANCELED(c@)"))
@@ -162,11 +163,6 @@
                                  ("@errand"   . ?e)
                                  ("@home"     . ?h)
                                  ("@office"   . ?o)
-
-                                 ;; Time
-                                 ("Today"     . ?=)
-                                 ("Tomorrow"  . ?>)
-                                 ("This Week" . ?7)
 
                                  ;; Focus
                                  ("IMMERSIVE" . ?I)
@@ -196,8 +192,9 @@
                                                  (org-deadline-warning-days 7)
                                                  (org-agenda-start-on-weekday nil)))))
                                    ("u" "Unscheduled TODOs"
-                                    ((todo ""
-                                           ((org-agenda-overriding-header "Unscheduled TODO")))))
+                                    ((todo "TODO"
+                                           ((org-agenda-overriding-header "Unscheduled TODO")
+                                            (org-agenda-todo-ignore-scheduled 'future)))))
                                    ("g" . "Getting Things Done")
                                    ("go" "at Office"
                                     ((agenda "" ((org-agenda-overriding-header "Office Work")
@@ -240,6 +237,7 @@
 
   (setq org-todo-keyword-faces
         `(("TODO" . org-todo)
+          ("PROJECT" . (:foreground ,zenburn-orange :weight bold))
           ("STARTED" . (:foreground ,zenburn-green :weight bold))
           ("NEXT" . (:foreground ,zenburn-blue-2 :underline nil :weight bold))
           ("DONE" . org-done)
