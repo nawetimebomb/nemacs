@@ -13,6 +13,7 @@
 
 (dolist (package '(anzu
                    bbdb
+                   boxquote
                    company
                    company-c-headers
                    flycheck

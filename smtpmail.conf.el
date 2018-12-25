@@ -17,6 +17,7 @@
 
 ;;; Code:
 
+(require 'boxquote)
 (require 'cl)
 (require 'message)
 (require 'my-smtpmail.conf)
@@ -49,11 +50,10 @@
 (define-key message-mode-map (kbd "C-c f") #'nemacs-change-mail-address)
 
 ;; Hooks
-(add-hook 'message-mode-hook
+(add-hook 'notmuch-message-mode-hook
           #'(lambda ()
               (interactive)
-              (flyspell-mode)
-              (turn-off-auto-fill)))
+              (flyspell-mode)))
 
 ;; Defaults
 (setq gnutls-verify-error t

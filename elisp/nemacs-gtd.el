@@ -206,7 +206,8 @@
 
 ;; Keybindings
 (global-set-key (kbd "C-c a") #'org-agenda)
-(global-set-key (kbd "C-c c") #'nemacs-capture-todo)
+(global-set-key (kbd "C-c c") #'org-capture)
+(global-set-key (kbd "M-m") #'nemacs-capture-todo)
 (global-set-key (kbd "C-c i") #'nemacs-get-inbox-file)
 (global-set-key (kbd "C-c t") #'nemacs-get-todo-file)
 (global-set-key (kbd "C-c l") #'org-store-link)

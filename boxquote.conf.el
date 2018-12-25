@@ -1,0 +1,8 @@
+(define-key message-mode-map (kbd "M-q")
+  #'(lambda ()
+      (interactive)
+      (if (use-region-p)
+          (boxquote-region (region-beginning) (region-end))
+        (call-interactively #'boxquote-text))))
+(define-key message-mode-map (kbd "C-M-y") #'boxquote-yank)
+(define-key message-mode-map (kbd "M-Q") #'boxquote-title)
