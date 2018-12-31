@@ -90,7 +90,7 @@
  '(query-replace
    ((t (:inherit (isearch)))))
  '(show-paren-match
-   ((t (:background "PaleGreen"))))
+   ((t (:inherit default))))
  '(show-paren-mismatch
    ((t (:background "IndianRed" :foreground "white"))))
  '(widget-button
