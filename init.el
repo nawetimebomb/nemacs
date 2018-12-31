@@ -64,6 +64,9 @@
   (defvar nemacs-notes-dir (concat nemacs-shared-dir "orgfiles/")
     "Notes directory where all the shared org files are stored.")
 
+  (defvar nemacs-enable-extras t
+    "When non-nil enables the Nemacs extras (like more packages and modes, synchronization and more).")
+
   (dolist (dir (list
                 nemacs-local-dir
                 nemacs-etc-dir
@@ -136,7 +139,7 @@
 (global-subword-mode t)
 (delete-selection-mode t)
 (column-number-mode t)
-(set-frame-font "Envy Code R 12")
+(set-frame-font "Envy Code R 14")
 
 ;; Initialization
 (add-to-list 'load-path nemacs-elisp-dir)
@@ -174,6 +177,7 @@
               (require 'nemacs-programming)
               (require 'notmuch)
               (require 'smtpmail)
+              (load-theme 'leuven-improved t)
 
               ;; Mode line
               (setq-default mode-line-format

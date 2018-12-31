@@ -11,24 +11,30 @@
 
 (package-initialize)
 
-(dolist (package '(anzu
-                   bbdb
-                   boxquote
-                   company
-                   company-c-headers
-                   flycheck
-                   gnus-select-account
-                   helm
-                   helm-ag
-                   helm-projectile
-                   js2-mode
-                   json-mode
-                   magit
-                   org-bullets
-                   org-gcal
-                   org-plus-contrib
-                   projectile
-                   scss-mode))
+(setq nemacs-basic-packages '(anzu
+                              js2-mode
+                              json-mode
+                              projectile
+                              scss-mode))
+
+(setq nemacs-extra-packages '(bbdb
+                              boxquote
+                              company
+                              company-c-headers
+                              flycheck
+                              helm
+                              helm-ag
+                              helm-projectile
+                              ledger-mode
+                              magit
+                              org-bullets
+                              org-gcal
+                              org-plus-contrib
+                              w3m))
+
+(dolist (package (append nemacs-basic-packages
+                         (when nemacs-enable-extras
+                           nemacs-extra-packages)))
 
   (unless (package-installed-p package)
     (unless package-archive-contents

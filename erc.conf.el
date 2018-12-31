@@ -35,11 +35,3 @@
 (setq erc-notifications-icon "~/.emacs.d/icons/irc.png")
 
 (require 'my-erc.conf)
-
-(zenburn-with-color-variables
-  (custom-set-faces
-   `(erc-default-face ((t (:foreground ,zenburn-fg+1 :height 1.2))))
-   `(erc-input-face ((t (:foreground ,zenburn-fg-1))))
-   `(erc-my-nick-face ((t (:foreground ,zenburn-blue :weight normal))))
-   `(erc-nick-default-face ((t (:foreground ,zenburn-magenta))))
-   `(erc-notice-face ((t (:italic t))))))

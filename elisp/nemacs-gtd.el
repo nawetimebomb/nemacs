@@ -83,7 +83,7 @@
 (add-hook 'org-mode-hook #'flyspell-mode)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
-(add-hook 'org-agenda-mode-hook (lambda () (setq line-spacing 0.2)))
+(add-hook 'org-agenda-mode-hook (lambda () (setq line-spacing 0.35)))
 (add-hook 'org-after-refile-insert-hook #'save-buffer)
 (add-hook 'org-mode-hook #'turn-on-auto-fill)
 (add-hook 'org-capture-before-finalize-hook
@@ -216,32 +216,68 @@
 (define-key org-agenda-mode-map "g" #'org-gcal-fetch)
 
 ;; UI
-(zenburn-with-color-variables
-  (custom-set-faces
-   `(org-agenda-date ((t (:foreground ,zenburn-fg+1 :underline t))))
-   `(org-agenda-date-today ((t (:foreground ,zenburn-fg+1 :height 1.2 :underline t :inherit org-agenda-date))))
-   `(org-agenda-date-weekend ((t (:foreground ,zenburn-fg-1 :inherit org-agenda-date))))
-   `(org-agenda-structure ((t (:foreground ,zenburn-fg :weight bold :height 1.5))))
-   `(org-agenda-calendar-event ((t (:foreground ,zenburn-yellow))))
-   `(org-time-grid ((t (:foreground ,zenburn-bg+3))))
-   `(org-scheduled ((t (:foreground ,zenburn-blue+2))))
-   `(org-scheduled-today ((t (:foreground ,zenburn-blue+1))))
-   `(org-level-1 ((t (:foreground unspecified :weight normal))))
-   `(org-level-2 ((t (:foreground ,zenburn-yellow-1))))
-   `(org-priority ((t (:foreground ,zenburn-cyan))))
-   `(org-property ((t (:foreground ,zenburn-green :weight bold))))
-   `(org-property-value ((t (:foreground ,zenburn-green+4 :italic t))))
-   `(org-special-keyword ((t (:foreground ,zenburn-green))))
-   `(org-tag ((t (:foreground ,zenburn-blue))))
-   `(org-todo ((t (:foreground ,zenburn-red-2 :underline nil :weight bold))))
-   `(org-done ((t (:foreground ,zenburn-green-1 :underline t :weight bold)))))
+(custom-set-faces
+ '(org-agenda-date
+   ((t (:foreground "gray19"))))
+ '(org-agenda-date-today
+   ((t (:underline t :inherit org-agenda-date))))
+ '(org-agenda-date-weekend
+   ((t (:foreground "gray30"))))
+ '(org-agenda-structure
+   ((t (:foreground "gray19" :weight bold))))
+ '(org-agenda-calendar-event
+   ((t (:foreground "NavyBlue"))))
+ '(org-time-grid
+   ((t (:foreground "gray50"))))
+ '(org-scheduled
+   ((t (:foreground "blue"))))
+ '(org-scheduled-today
+   ((t (:foreground "blue3"))))
+ '(org-ellipsis
+   ((t (:foreground "gold4" :weight bold))))
+ '(org-level-1
+   ((t (:foreground "gray20" :inherit default :weight normal))))
+ '(org-level-2
+   ((t (:foreground "gray23" :weight bold))))
+ '(org-level-3
+   ((t (:foreground "gray25" :weight normal))))
+ '(org-level-4
+   ((t (:foreground "gray28" :weight normal))))
+ '(org-priority
+   ((t (:foreground "DarkCyan" :weight bold))))
+ '(org-link
+   ((t (:inherit widget-button))))
+ '(org-special-keyword
+   ((t (:foreground "ForestGreen" :weight normal))))
+ '(org-property
+   ((t (:foreground "ForestGreen" :weight normal))))
+ '(org-property-value
+   ((t (:foreground "gray19" :slant italic))))
+ '(org-tag
+   ((t (:foreground "MidnightBlue" :weight bold))))
+ '(org-todo
+   ((t (:box nil :foreground "red" :underline nil :weight bold))))
+ '(org-done
+   ((t (:foreground "ForestGreen" :underline t :weight bold)))))
 
-  (setq org-todo-keyword-faces
-        `(("TODO" . org-todo)
-          ("PROJECT" . (:foreground ,zenburn-orange :weight bold))
-          ("STARTED" . (:foreground ,zenburn-green :weight bold))
-          ("NEXT" . (:foreground ,zenburn-blue-2 :underline nil :weight bold))
-          ("DONE" . org-done)
-          ("CANCELED" . (:foreground ,zenburn-red :underline t :weight bold)))))
+(setq org-todo-keyword-faces
+      '(("TODO"      . org-todo)
+        ("PROJECT"   . (:foreground "orange" :weight bold))
+        ("STARTED"   . (:foreground "LimeGreen" :weight bold))
+        ("NEXT"      . (:foreground "blue" :weight bold))
+        ("DONE"      . org-done)
+        ("CANCELED"  . (:foreground "red" :underline t :weight bold))))
+
+;;    `(org-tag ((t (:foreground ,zenburn-blue))))
+;;    `(org-todo ((t (:foreground ,zenburn-red-2 :underline nil :weight bold))))
+;;    `(org-done ((t (:foreground ,zenburn-green-1 :underline t :weight bold)))))
+
+;;   (setq org-todo-keyword-faces
+;;         `(("TODO" . org-todo)
+;;           ("PROJECT" . (:foreground ,zenburn-orange :weight bold))
+;;           ("STARTED" . (:foreground ,zenburn-green :weight bold))
+;;           ("NEXT" . (:foreground ,zenburn-blue-2 :underline nil :weight bold))
+;;           ("DONE" . org-done)
+;;           ("CANCELED" . (:foreground ,zenburn-red :underline t :weight bold)))))
 
 (provide 'nemacs-gtd)

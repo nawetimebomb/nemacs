@@ -73,14 +73,3 @@
                         ;; compatibility fallbacks
                         "gnutls-cli -p %p %h"
                         "openssl s_client -connect %h:%p -no_ssl2 -no_ssl3 -ign_eof"))
-
-(zenburn-with-color-variables
-  (custom-set-faces
-   `(message-header-name ((t (:foreground ,zenburn-cyan :weight bold))))
-   `(message-header-other ((t (:foreground ,zenburn-yellow))))
-   `(message-header-to ((t (:foreground ,zenburn-yellow :weight normal))))
-   `(message-header-cc ((t (:foreground ,zenburn-yellow :weight normal))))
-   `(message-header-fcc ((t (:foreground ,zenburn-yellow :weight normal))))
-   `(message-header-subject ((t (:foreground ,zenburn-yellow :weight bold))))
-   `(message-mml ((t (:foreground ,zenburn-green+2 :weight normal))))
-   `(message-separator ((t (:foreground ,zenburn-orange :weight bold))))))

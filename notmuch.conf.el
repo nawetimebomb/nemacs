@@ -58,11 +58,19 @@
 ;; Saved searches
 (setq notmuch-saved-searches '((:name "unread from work [uw]"
                                       :key "uw"
-                                      :query "tag:work and tag:unread"
+                                      :query "tag:work and tag:unread and not tag:bitbucket"
                                       :sort-order 'oldest-first)
-                               (:name "total unread [tu]"
-                                      :key "tu"
+                               (:name "unread from bitbucket [ub]"
+                                      :key "ub"
+                                      :query "tag:unread and tag:bitbucket"
+                                      :sort-order 'oldest-first)
+                               (:name "all unread [au]"
+                                      :key "au"
                                       :query "tag:unread"
+                                      :sort-order 'oldest-first)
+                               (:name "needs review [nr]"
+                                      :key "nr"
+                                      :query "tag:needs_review"
                                       :sort-order 'oldest-first)
                                (:name "inbox [i]"
                                       :key "i"
@@ -81,12 +89,13 @@
                                       ;; Run script to get this query updated:
                                       ;; notmuch search --output=tags \* | sed 's/^/not tag:/;2~1s/^/and /'
                                       :query "not tag:inbox and not tag:attachment and not tag:bitbucket and not tag:deleted and not tag:emacs
-and not tag:event and not tag:finances and not tag:flagged and not tag:incident and not tag:jira and not tag:mailing_list
+and not tag:event and not tag:finances and not tag:flagged and not tag:incident and not tag:jira and not tag:mailing_list and not tag:needs_review
 and not tag:muted and not tag:need_update_email and not tag:replied and not tag:shopping and not tag:subscription and not tag:work")))
 
 (setq mm-text-html-renderer 'w3m
       mml-enable-flowed nil
-      notmuch-multipart/alternative-discouraged '("text/plain" "text/html" "multipart/related"))
+      mm-discouraged-alternatives '("text/html" "text/richtext")
+      notmuch-multipart/alternative-discouraged '("text/html" "text/richtext"))
 
 (setq notmuch-show-tag-macro-alist
   (list
@@ -114,6 +123,8 @@ and not tag:muted and not tag:need_update_email and not tag:replied and not tag:
 (global-set-key (kbd "C-c n i") #'(lambda () (interactive) (notmuch-search "tag:inbox")))
 (global-set-key (kbd "C-c n w") #'(lambda () (interactive) (notmuch-search "tag:work")))
 (global-set-key (kbd "C-c n u w") #'(lambda () (interactive) (notmuch-search "tag:work and tag:unread")))
+
+(define-key notmuch-show-mode-map (kbd "C-c C-o") #'browse-url)
 
 (define-key notmuch-show-mode-map "d"
   (lambda ()
@@ -147,8 +158,6 @@ and not tag:muted and not tag:need_update_email and not tag:replied and not tag:
 (define-key notmuch-tree-mode-map "R" (notmuch-tree-close-message-pane-and #'notmuch-show-reply-sender))
 
 ;; UI
-(zenburn-with-color-variables
-  (custom-set-faces
-   `(notmuch-search-flagged-face ((t (:foreground ,zenburn-yellow))))
-   `(hl-line ((t (:background ,zenburn-bg+1))))
-   `(variable-pitch ((t (:height unspecified :inherit default))))))
+(custom-set-faces
+ '(notmuch-search-flagged-face
+   ((t (:foreground "OrangeRed")))))

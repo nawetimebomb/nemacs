@@ -27,9 +27,7 @@
   "Open my work agenda"
   (interactive)
   (require 'org)
-  (switch-to-buffer "*scratch*")
-  (org-agenda :keys "go")
-  (delete-other-windows))
+  (org-agenda :keys "go"))
 (global-set-key (kbd "C-c d") #'nemacs-startup)
 
 (provide 'nemacs-functions)
