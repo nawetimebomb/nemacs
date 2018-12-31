@@ -20,3 +20,28 @@
 (global-set-key [remap switch-to-buffer] #'helm-mini)
 (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
 (define-key helm-map (kbd "C-z") #'helm-select-action)
+
+;; UI
+(custom-set-faces
+ '(helm-ff-prefix
+   ((t (:inherit default))))
+ '(helm-ff-file
+   ((t (:inherit default))))
+ '(helm-ff-executable
+   ((t (:foreground "blue"))))
+ '(helm-ff-directory
+   ((t (:foreground "DarkRed" :weight bold))))
+ '(helm-ff-dotted-directory
+   ((t (:foreground "red"))))
+ '(helm-buffer-file
+   ((t (:inherit default))))
+ '(helm-source-header
+   ((t (:foreground "white" :inherit mode-line :weight bold))))
+ '(helm-selection
+   ((t (:inherit hl-line))))
+ '(helm-candidate-number
+   ((t (:inherit mode-line))))
+ '(helm-match
+   ((t (:foreground "ForestGreen" :weight bold))))
+ '(helm-visible-mark
+   ((t (:box nil :inherit mode-line)))))

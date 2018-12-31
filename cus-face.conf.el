@@ -56,15 +56,15 @@
  '(font-lock-warning-face
    ((t (:foreground "red" :weight bold))))
  '(button
-   ((t (:foreground "DodgerBlue" :underline (:color foreground-color :style line)))))
+   ((t (:foreground "#1F00FF" :underline (:color foreground-color :style line)))))
  '(link
-   ((t (:foreground "DodgerBlue" :underline (:color foreground-color :style line) :weight normal))))
+   ((t (:foreground "#1F00FF" :underline (:color foreground-color :style line) :weight normal))))
  '(link-visited
    ((t (:foreground "DarkOrchid" :underline (:color foreground-color :style line)))))
  '(fringe
    ((t (:background "gray19" :foreground "WhiteSmoke"))))
  '(header-line
-   ((t (:background "#FFFF88" :foreground "black" :overline "black" :underline (:color "black" :style line) :weight bold))))
+   ((t (:background "WhiteSmoke" :foreground "black" :overline "black" :underline (:color "black" :style line) :weight normal))))
  '(tooltip
    ((t (:background "light yellow" :foreground "black"))))
  '(mode-line
@@ -89,5 +89,9 @@
    ((t (:underline nil :background "yellow"))))
  '(query-replace
    ((t (:inherit (isearch)))))
+ '(show-paren-match
+   ((t (:background "PaleGreen"))))
+ '(show-paren-mismatch
+   ((t (:background "IndianRed" :foreground "white"))))
  '(widget-button
    ((t (:foreground "#1F00FF" :underline t :weight normal)))))
