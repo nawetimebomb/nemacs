@@ -1,22 +1,3 @@
-;;; nemacs-gtd.el --- Getting Things Done on Emacs.
-
-;; Copyright (C) 2017 ~ 2018 Nahuel Jesús Sacchetti <nahueljsacchetti@gmail.com>
-
-;; This program is free software; you can redistribute it and/or modify it
-;; under the terms of the GNU General Public License as published by the Free
-;; Software Foundation, either version 3 of the License, or (at your option)
-;; any later version.
-
-;; This program is distributed in the hope that it will be useful, but WITHOUT
-;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-;; more details.
-
-;; You should have received a copy of the GNU General Public License along
-;; with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-;;; Code:
-
 (require 'org)
 (require 'org-agenda)
 (require 'org-bullets)
@@ -65,6 +46,11 @@
     (org-narrow-to-subtree)
     (org-gcal-fetch)
     (org-clock-in)))
+
+(defun nemacs-startup ()
+  "Open my work agenda"
+  (interactive)
+  (org-agenda :keys "go"))
 
 ;; Files
 (setq nemacs-org-archive-file (nemacs-get-org-file "archive.org")
@@ -213,6 +199,7 @@
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c r d") #'nemacs-new-daily-review)
 (global-set-key (kbd "C-c r w") #'nemacs-new-weekly-review)
+(global-set-key (kbd "C-c d") #'nemacs-startup)
 (define-key org-agenda-mode-map "g" #'org-gcal-fetch)
 
 ;; UI
@@ -267,17 +254,3 @@
         ("NEXT"      . (:foreground "blue" :weight bold))
         ("DONE"      . org-done)
         ("CANCELED"  . (:foreground "red" :underline t :weight bold))))
-
-;;    `(org-tag ((t (:foreground ,zenburn-blue))))
-;;    `(org-todo ((t (:foreground ,zenburn-red-2 :underline nil :weight bold))))
-;;    `(org-done ((t (:foreground ,zenburn-green-1 :underline t :weight bold)))))
-
-;;   (setq org-todo-keyword-faces
-;;         `(("TODO" . org-todo)
-;;           ("PROJECT" . (:foreground ,zenburn-orange :weight bold))
-;;           ("STARTED" . (:foreground ,zenburn-green :weight bold))
-;;           ("NEXT" . (:foreground ,zenburn-blue-2 :underline nil :weight bold))
-;;           ("DONE" . org-done)
-;;           ("CANCELED" . (:foreground ,zenburn-red :underline t :weight bold)))))
-
-(provide 'nemacs-gtd)

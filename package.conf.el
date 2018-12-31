@@ -17,8 +17,7 @@
                               projectile
                               scss-mode))
 
-(setq nemacs-extra-packages '(bbdb
-                              boxquote
+(setq nemacs-extra-packages '(boxquote
                               company
                               company-c-headers
                               flycheck
@@ -30,6 +29,7 @@
                               org-bullets
                               org-gcal
                               org-plus-contrib
+                              sane-term
                               w3m))
 
 (dolist (package (append nemacs-basic-packages

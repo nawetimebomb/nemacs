@@ -90,7 +90,7 @@
  '(query-replace
    ((t (:inherit (isearch)))))
  '(show-paren-match
-   ((t (:inherit default))))
+   ((t (:background "gainsboro"))))
  '(show-paren-mismatch
    ((t (:background "IndianRed" :foreground "white"))))
  '(widget-button

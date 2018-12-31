@@ -1,22 +1,3 @@
-;;; notmuch.conf.el --- Notmuch Configuration file.
-
-;; Copyright (C) 2017 ~ 2018 Nahuel Jesús Sacchetti <nahueljsacchetti@gmail.com>
-
-;; This program is free software; you can redistribute it and/or modify it
-;; under the terms of the GNU General Public License as published by the Free
-;; Software Foundation, either version 3 of the License, or (at your option)
-;; any later version.
-
-;; This program is distributed in the hope that it will be useful, but WITHOUT
-;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-;; more details.
-
-;; You should have received a copy of the GNU General Public License along
-;; with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-;;; Code:
-
 (require 'notmuch)
 (require 'notmuch-show)
 
@@ -95,36 +76,17 @@ and not tag:muted and not tag:need_update_email and not tag:replied and not tag:
 (setq mm-text-html-renderer 'w3m
       mml-enable-flowed nil
       mm-discouraged-alternatives '("text/html" "text/richtext")
-      notmuch-multipart/alternative-discouraged '("text/html" "text/richtext"))
-
-(setq notmuch-show-tag-macro-alist
-  (list
-   '("e" "+event" "-inbox")
-   '("E" "+emacs" "-inbox")
-   '("m" "+mailing_list" "-inbox")
-   '("d" "+deleted" "-inbox")
-   '("f" "+finances" "-inbox")
-   '("j" "+jira" "-inbox")
-   '("i" "+incident" "-inbox")
-   '("M" "+muted" "-inbox")
-   '("s" "+subscription" "-inbox")
-   '("S" "+shopping" "-inbox")
-   '("w" "+work" "-inbox")
-   '("F" "+flagged")))
-
-(defun notmuch-show-apply-tag-macro (key)
-  (interactive "k")
-  (let ((macro (assoc key notmuch-show-tag-macro-alist)))
-    (apply 'notmuch-show-tag-message (cdr macro))))
-
+      notmuch-multipart/alternative-discouraged '("text/html" "text/richtext")
+      notmuch-address-command "notmuch-addrlookup")
 
 ;; Keybindings
-(global-set-key (kbd "C-c n n") #'notmuch)
-(global-set-key (kbd "C-c n i") #'(lambda () (interactive) (notmuch-search "tag:inbox")))
-(global-set-key (kbd "C-c n w") #'(lambda () (interactive) (notmuch-search "tag:work")))
-(global-set-key (kbd "C-c n u w") #'(lambda () (interactive) (notmuch-search "tag:work and tag:unread")))
+(global-set-key (kbd "C-x n") #'notmuch)
+(global-set-key (kbd "C-x N") (lambda ()
+                                (interactive)
+                                (notmuch)
+                                (notmuch-poll-and-refresh-this-buffer)))
 
-(define-key notmuch-show-mode-map (kbd "C-c C-o") #'browse-url)
+(define-key notmuch-show-mode-map (kbd "C-c C-o") #'browse-url-at-point)
 
 (define-key notmuch-show-mode-map "d"
   (lambda ()

@@ -161,23 +161,20 @@
 
 (require 'package)
 
-;; Startup Hooks
-(require 'nemacs-startup-hooks)
-
 (add-hook 'after-init-hook
           #'(lambda ()
               ;; Reset defaults
               (setq gc-cons-threshold 16777216
                     gc-cons-percentage 0.1)
 
-              ;; Nemacs Lisp
-              (require 'magit)
-              (require 'nemacs-functions)
-              (require 'nemacs-gtd)
-              (require 'nemacs-programming)
-              (require 'notmuch)
-              (require 'smtpmail)
-              (load-theme 'leuven-improved t)
+              ;; Include extras
+              (when nemacs-enable-extras
+                (require 'ledger-mode)
+                (require 'magit)
+                (require 'notmuch)
+                (require 'org)
+                (require 'sane-term)
+                (require 'smtpmail))
 
               ;; Mode line
               (setq-default mode-line-format
@@ -197,6 +194,4 @@
               ;; Packages Settings
               (helm-mode)
               (global-anzu-mode)
-              (projectile-mode)
-              (bbdb-initialize 'message)
-              (bbdb-mua-auto-update-init 'message)))
+              (projectile-mode)))

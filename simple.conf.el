@@ -98,3 +98,9 @@
 (global-set-key [remap save-buffers-kill-emacs] #'nemacs-prompt-before-exiting-emacs)
 (global-set-key [remap save-buffers-kill-terminal] #'nemacs-prompt-before-exiting-emacs)
 (global-set-key [remap suspend-frame] #'ignore)
+
+(defun nemacs-open-jira-ticket ()
+  "Open a JIRA ticket in the default browser."
+  (interactive)
+  (browse-url (concat "https://jira.itx.com/browse/" (read-string "Enter a JIRA Ticket: "))))
+(global-set-key (kbd "C-c j") #'nemacs-open-jira-ticket)

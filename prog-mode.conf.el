@@ -1,22 +1,3 @@
-;;; nemacs-programming.el --- The main file with programming documentation.
-
-;; Copyright (C) 2017 ~ 2018 Nahuel Jesús Sacchetti <nahueljsacchetti@gmail.com>
-
-;; This program is free software; you can redistribute it and/or modify it
-;; under the terms of the GNU General Public License as published by the Free
-;; Software Foundation, either version 3 of the License, or (at your option)
-;; any later version.
-
-;; This program is distributed in the hope that it will be useful, but WITHOUT
-;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-;; more details.
-
-;; You should have received a copy of the GNU General Public License along
-;; with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-;;; Code:
-
 (defcustom nemacs-programming-modes '(c-mode
                                       c++-mode
                                       js2-mode
@@ -27,12 +8,12 @@
                                       sgml-mode)
   "Major modes for programming.")
 
-(add-to-list 'auto-mode-alist `(,(rx ".js" string-end) . js-mode))
-(add-to-list 'auto-mode-alist `(,(rx ".json" string-end) . json-mode))
-(add-to-list 'auto-mode-alist '("tracker\\/.*\\.js\\'" . rjsx-mode))
-(add-to-list 'auto-mode-alist `(,(rx ".less" string-end) . scss-mode))
-(add-to-list 'auto-mode-alist `(,(rx ".sass" string-end) . scss-mode))
-(add-to-list 'auto-mode-alist `(,(rx ".scss" string-end) . scss-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".js" string-end)     . js-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".json" string-end)   . json-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".jsx" string-end)    . rjsx-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".less" string-end)   . scss-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".sass" string-end)   . scss-mode))
+(add-to-list 'auto-mode-alist `(,(rx ".scss" string-end)   . scss-mode))
 
 (defun nemacs-setup-programming-mode ()
   "Setup my defaults when programming."
@@ -104,5 +85,3 @@
   (let ((hook-string (concat (symbol-name mode) "-hook"))
         (function-string (concat "nemacs-" (symbol-name mode) "-setup")))
     (add-hook (intern hook-string) (intern function-string))))
-
-(provide 'nemacs-programming)
