@@ -1,7 +1,9 @@
+
 (require 'org)
 (require 'org-agenda)
 (require 'org-bullets)
 (require 'org-id)
+(require 'org-journal)
 (require 'org-notmuch)
 (require 'my-org-gcal.conf)
 
@@ -190,6 +192,12 @@
                                      (tags-todo "@office")
                                      (tags-todo "This Week")))))
 
+;; Journal
+(setq org-journal-date-format "%A, %b %e %Y"
+      org-journal-dir "~/Dropbox/journal/2019/"
+      org-journal-file-format "%Y%m%d"
+      org-journal-time-format "")
+
 ;; Keybindings
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)
@@ -244,6 +252,8 @@
    ((t (:foreground "MidnightBlue" :weight bold))))
  '(org-todo
    ((t (:box nil :foreground "red" :underline nil :weight bold))))
+ '(org-headline-done
+   ((t (:foreground unspecified :strike-through t))))
  '(org-done
    ((t (:foreground "ForestGreen" :underline t :weight bold)))))
 

@@ -20,6 +20,7 @@
 (setq nemacs-extra-packages '(boxquote
                               company
                               company-c-headers
+                              dashboard
                               flycheck
                               helm
                               helm-ag
@@ -28,6 +29,7 @@
                               magit
                               org-bullets
                               org-gcal
+                              org-journal
                               org-plus-contrib
                               sane-term
                               w3m))

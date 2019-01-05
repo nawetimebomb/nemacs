@@ -122,4 +122,6 @@ and not tag:muted and not tag:need_update_email and not tag:replied and not tag:
 ;; UI
 (custom-set-faces
  '(notmuch-search-flagged-face
-   ((t (:foreground "OrangeRed")))))
+   ((t (:foreground "OrangeRed"))))
+ '(notmuch-message-summary-face
+   ((t (:foreground "white" :inherit mode-line)))))

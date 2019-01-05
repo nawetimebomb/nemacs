@@ -169,6 +169,8 @@
 
               ;; Include extras
               (when nemacs-enable-extras
+                (require 'dashboard)
+                (require 'erc)
                 (require 'ledger-mode)
                 (require 'magit)
                 (require 'notmuch)
@@ -189,6 +191,8 @@
                               mode-line-position
                               "   "
                               battery-mode-line-string
+                              "   "
+
                               mode-line-end-spaces))
 
               ;; Packages Settings
