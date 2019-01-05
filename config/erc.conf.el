@@ -1,3 +1,4 @@
+;; TODO: Update this code
 (add-to-list 'erc-modules 'smiley)
 (add-to-list 'erc-modules 'match)
 (add-to-list 'erc-modules 'notifications)

@@ -1,6 +1,6 @@
-;;; init.el --- Nemacs initialization file.
+;;; init.el --- Nemacs Initialization File.
 
-;; Copyright (C) 2017 ~ 2018 Nahuel Jesús Sacchetti <nahueljsacchetti@gmail.com>
+;; Copyright (C) 2017 ~ 2019 Nahuel Jesús Sacchetti <nahueljsacchetti@gmail.com>
 
 ;; This program is free software; you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -17,18 +17,6 @@
 
 ;;; Code:
 
-;; Define new prefix key: `C-z'
-(define-prefix-command 'ring-map)
-(global-set-key (kbd "C-z") 'ring-map)
-
-;; Each file named <somelibrary>.conf.el is loaded just after the library is
-;; loaded.
-;; Code from Julien Danjou: https://github.com/jd/emacs.d
-(dolist (file (directory-files user-emacs-directory))
-  (when (string-match (format "^\\(.+\\)\\.conf\\.el$") file)
-    (eval-after-load (match-string-no-properties 1 file)
-      `(load ,(concat user-emacs-directory file)))))
-
 ;; Ignore startup messages in the echo area
 (advice-add #'display-startup-echo-area-message :override #'ignore)
 
@@ -42,6 +30,12 @@
 
   (defvar nemacs-local-dir (concat nemacs-emacs-dir ".local/")
     "Root directory for my local Emacs files.")
+
+  (defvar nemacs-config-dir (concat nemacs-emacs-dir "config/")
+    "Directory with the configuration files.")
+
+  (defvar nemacs-config-file-list '()
+    "List of NEMACS configuration files.")
 
   (defvar nemacs-etc-dir (concat nemacs-local-dir "etc/")
     "Local directory for non-volatile storage. They ussually are not deleted. Use this for dependencies like servers or config files.")
@@ -114,6 +108,7 @@
               truncate-lines nil
               uniquify-buffer-name-style 'post-forward-angle-brackets
               use-dialog-box nil
+              use-package-always-ensure t
               vc-handled-backends nil
               visible-bell nil
               visible-cursor nil
@@ -128,18 +123,22 @@
               pcache-directory          (concat nemacs-cache-dir "pcache")
               recentf-save-file         (expand-file-name "recentf" nemacs-cache-dir))
 
+(when window-system
+  (tooltip-mode -1)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1))
+
+(cd "~/")
 (fset #'yes-or-no-p #'y-or-n-p)
-(tooltip-mode -1)
-(menu-bar-mode -1)
-(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (display-battery-mode t)
 (show-paren-mode t)
 (global-auto-revert-mode t)
 (global-subword-mode t)
 (delete-selection-mode t)
 (column-number-mode t)
-(set-frame-font "Envy Code R 14")
+(set-fontset-font t 'unicode (font-spec :name "DejaVu Sans Mono") nil)
+(set-face-font 'default "Envy Code R 14")
 
 ;; Initialization
 (add-to-list 'load-path nemacs-elisp-dir)
@@ -159,43 +158,31 @@
 (eval-and-compile
   (setq load-path (append load-path (directory-files package-user-dir t "^[^.]" t))))
 
-(require 'package)
+(setq package-archives '(("org"          . "https://orgmode.org/elpa/")
+                         ("gnu"          . "https://elpa.gnu.org/packages/")
+                         ("melpa"        . "https://melpa.org/packages/")
+                         ("melpa-stable" . "https://stable.melpa.org/packages/")))
+(package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(use-package delight)
+(use-package use-package-ensure-system-package)
+
+;; Create a list of configuration files
+(dolist (file (directory-files nemacs-config-dir))
+  (when (string-match (format "^\\(.+\\)\\.conf\\.el$") file)
+    (add-to-list 'nemacs-config-file-list (expand-file-name file nemacs-config-dir))))
 
 (add-hook 'after-init-hook
           #'(lambda ()
+              ;; Load configuration files
+              (mapc (lambda (file)
+                      (load file))
+                    nemacs-config-file-list)
+
               ;; Reset defaults
               (setq gc-cons-threshold 16777216
-                    gc-cons-percentage 0.1)
-
-              ;; Include extras
-              (when nemacs-enable-extras
-                (require 'dashboard)
-                (require 'erc)
-                (require 'ledger-mode)
-                (require 'magit)
-                (require 'notmuch)
-                (require 'org)
-                (require 'sane-term)
-                (require 'smtpmail))
-
-              ;; Mode line
-              (setq-default mode-line-format
-                            '("%e"
-                              mode-line-front-space
-                              mode-line-client
-                              mode-line-modified
-                              "   "
-                              mode-line-directory
-                              mode-line-buffer-identification
-                              "   "
-                              mode-line-position
-                              "   "
-                              battery-mode-line-string
-                              "   "
-
-                              mode-line-end-spaces))
-
-              ;; Packages Settings
-              (helm-mode)
-              (global-anzu-mode)
-              (projectile-mode)))
+                    gc-cons-percentage 0.1)))
