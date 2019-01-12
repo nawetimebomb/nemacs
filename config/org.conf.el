@@ -20,6 +20,7 @@
          ("C-c t" . nemacs-open-org-todo-file)
          ("C-c l" . org-store-link))
   :custom
+  (diary-file "~/Dropbox/orgfiles/calendar/Org Calendar.org")
   (org-archive-location "~/Dropbox/orgfiles/archive.org::* From %s")
   (org-blank-before-new-entry '((heading . t) (plain-list-item . t)))
   (org-deadline-warning-days 7)
@@ -111,7 +112,7 @@
 
   (defun nemacs-org-agenda-startup ()
     (interactive)
-    (org-agenda :keys "go"))
+    (org-agenda :keys "gtd"))
 
   (defun nemacs-org-agenda-mark-as-done (&optional arg)
     (interactive "P")
@@ -130,8 +131,11 @@
                ("x" . nemacs-org-agenda-mark-as-done)
                ("X" . nemacs-org-agenda-mark-as-done-capture-follow-up)))
   :custom
-  (org-agenda-category-icon-alist '(("Calendar" "~/.emacs.d/icons/org/calendar.png" nil nil :ascent center)
+  (org-agenda-category-icon-alist '(("Birthday" "~/.emacs.d/icons/org/birthday.png" nil nil :ascent center)
+                                    ("Calendar" "~/.emacs.d/icons/org/calendar.png" nil nil :ascent center)
+                                    ("Contacts" "~/.emacs.d/icons/org/contacts.png" nil nil :ascent center)
                                     ("Emacs" "~/.emacs.d/icons/org/emacs.png" nil nil :ascent center)
+                                    ("Holiday" "~/.emacs.d/icons/org/holiday.png" nil nil :ascent center)
                                     ("Inbox" "~/.emacs.d/icons/org/inbox.png" nil nil :ascent center)
                                     ("Life" "~/.emacs.d/icons/org/qol.png" nil nil :ascent center)
                                     ("Personal" "~/.emacs.d/icons/org/personal.png" nil nil :ascent center)
@@ -146,17 +150,16 @@
                                 ("u" "Unscheduled TODOs" ((todo "TODO"
                                                                 ((org-agenda-overriding-header "Unscheduled TODO")
                                                                  (org-agenda-todo-ignore-scheduled 'future)))))
-                                ("g" . "Getting Things Done")
-                                ("go" "at Office" ((agenda "" ((org-agenda-overriding-header "Office Work")
-                                                               (org-agenda-span 1)
-                                                               (org-deadline-warning-days 7)
-                                                               (org-agenda-start-on-weekday nil)))
-                                                   (tags-todo "@office")
-                                                   (tags-todo "This Week")))))
-  (org-agenda-files '("~/Dropbox/orgfiles/inbox.org"
+                                ("gtd" "My GTD Agenda" ((agenda "" ((org-agenda-overriding-header "Getting Things Done")
+                                                                    (org-agenda-span 1)
+                                                                    (org-deadline-warning-days 7)
+                                                                    (org-agenda-start-on-weekday nil)))))))
+  (org-agenda-files '("~/Dropbox/orgfiles/agenda.org"
+                      "~/Dropbox/orgfiles/inbox.org"
                       "~/Dropbox/orgfiles/someday.org"
                       "~/Dropbox/orgfiles/todo.org"
                       "~/Dropbox/orgfiles/calendar/ITX Calendar.org"
+                      "~/Dropbox/orgfiles/calendar/Org Calendar.org"
                       "~/Dropbox/orgfiles/calendar/Personal Calendar.org"))
   (org-agenda-inhibit-startup nil)
   (org-agenda-show-future-repeats nil)
@@ -188,20 +191,28 @@
   :after org
   :preface
   (defvar nemacs-org-capture-basic-template "* TODO %^{Task}
-:PROPERTIES:
-:CAPTURED: %<%Y-%m-%d %H:%M>
-:END:")
+  :PROPERTIES:
+  :CAPTURED: %<%Y-%m-%d %H:%M>
+  :END:")
+  (defvar nemacs-org-capture-link-template "* TODO %^{Task} :#LINK:
+  :PROPERTIES:
+  :CAPTURED: %<%Y-%m-%d %H:%M>
+  :LINK:     %a
+  :END:")
   (defvar nemacs-org-capture-contact-template "* %(org-contacts-template-name)
-:PROPERTIES:
-:ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
-:BIRTHDAY: %^{YYYY-MM-DD}
-:EMAIL: %(org-contacts-template-email)
-:NOTE: %^{Note}
-:END:")
+  :PROPERTIES:
+  :ADDRESS:  %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
+  :BIRTHDAY: %^{YYYY-MM-DD}
+  :EMAIL:    %(org-contacts-template-email)
+  :PHONE:    %^{+5493411234567}
+  :NOTE:     %^{Note}
+  :END:")
 
-  (defun nemacs-org-capture-basic ()
-    (interactive)
-    (org-capture :keys "t"))
+  (defun nemacs-org-capture (&optional args)
+    (interactive "P")
+    (if current-prefix-arg
+        (org-capture :keys "T")
+      (org-capture :keys "t")))
 
   (defun nemacs-org-capture-add-basic-properties ()
     (interactive)
@@ -227,13 +238,16 @@
       (org-gcal-fetch)
       (org-clock-in)))
   :hook (org-capture-before-finalize . nemacs-org-capture-add-basic-properties)
-  :bind (("M-m"     . nemacs-org-capture-basic)
+  :bind (("M-m"     . nemacs-org-capture)
          ("C-c c"   . org-capture)
          ("C-c r d" . nemacs-org-capture-review-daily)
          ("C-c r w" . nemacs-org-capture-review-weekly))
   :custom
   (org-capture-templates `(("t" "Add TODO Task" entry (file ,org-default-notes-file)
                             ,nemacs-org-capture-basic-template
+                            :empty-lines 1 :immediate-finish t)
+                           ("T" "Add Linked TODO Task" entry (file ,org-default-notes-file)
+                            ,nemacs-org-capture-link-template
                             :empty-lines 1 :immediate-finish t)
                            ("c" "Add Contact" entry (file "~/Dropbox/orgfiles/contacts.org")
                             ,nemacs-org-capture-contact-template
@@ -259,7 +273,9 @@
 (use-package org-contacts
   :ensure nil
   :after org
-  :custom (org-contacts-file '("~/Dropbox/orgfiles/contacts.org")))
+  :custom
+  (org-contacts-birthday-format " %l")
+  (org-contacts-files '("~/Dropbox/orgfiles/contacts.org")))
 
 (use-package org-id
   :ensure nil
@@ -271,13 +287,14 @@
 (use-package org-gcal
   :after org
   :preface
-  (require 'org-gcal)
   (defvar nemacs-org-gcal-auth (auth-source-user-and-password "org-gcal"))
   :custom
   (org-gcal-client-id (car nemacs-org-gcal-auth))
   (org-gcal-client-secret (cadr nemacs-org-gcal-auth))
   (org-gcal-file-alist '(("nahueljsacchetti@gmail.com" . "~/Dropbox/orgfiles/calendar/Personal Calendar.org")
-                         ("lprcql81oieu0v9kb3kf1utcgg@group.calendar.google.com" . "~/Dropbox/orgfiles/calendar/ITX Calendar.org"))))
+                         ("lprcql81oieu0v9kb3kf1utcgg@group.calendar.google.com" . "~/Dropbox/orgfiles/calendar/ITX Calendar.org")))
+  :init
+  (setq org-gcal-dir (concat nemacs-cache-dir "org-gcal/")))
 
 (use-package org-journal
   :after org
@@ -286,3 +303,6 @@
   (org-journal-dir "~/Dropbox/journal/2019/")
   (org-journal-file-format "%Y%m%d")
   (org-journal-time-format ""))
+
+(use-package org-mu4e
+  :ensure nil)

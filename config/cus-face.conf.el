@@ -16,7 +16,7 @@
                             :underline nil
                             :weight normal
                             :width normal))))
-  (cursor ((t (:background "MediumBlue"))))
+  (cursor ((t (:background "DarkSlateBlue"))))
   (fixed-pitch ((t (:family "Monospace"))))
   (variable-pitch ((((type w32)) (:foundry "outline"
                                            :family "Arial"))
@@ -66,25 +66,14 @@
                          :underline (:color foreground-color :style line) :weight normal))))
   (link-visited ((t (:foreground "DarkOrchid"
                                  :underline (:color foreground-color :style line)))))
-  (fringe ((t (:background "gray19"
-                           :foreground "WhiteSmoke"))))
+  (fringe ((t (:background "WhiteSmoke"
+                           :foreground "LightSteelBlue"))))
   (header-line ((t (:background "WhiteSmoke"
                                 :foreground "black"
                                 :overline "black"
                                 :underline (:color "black" :style line) :weight normal))))
   (tooltip ((t (:background "light yellow"
                             :foreground "black"))))
-  (mode-line ((t (:background "SpringGreen4"
-                              :box (:color "gray19" :line-width 1 :style nil)
-                              :foreground "DarkSeaGreen1"))))
-  (mode-line-buffer-id ((t (:foreground "white"
-                                        :weight bold))))
-  (mode-line-emphasis ((t (:foreground "white"
-                                       :weight bold))))
-  (mode-line-highlight ((t (:foreground "yellow"))))
-  (mode-line-inactive ((t (:background "gray61"
-                                       :box (:color "gray19" :line-width 1 :style nil)
-                                       :foreground "white"))))
   (isearch ((t (:background "PaleGreen"
                             :foreground "black"
                             :underline nil

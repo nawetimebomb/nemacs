@@ -79,7 +79,6 @@
               custom-file (expand-file-name "custom.el" nemacs-etc-dir)
               create-lockfiles nil
               delete-by-moving-to-trash t
-              display-time-format "%H:%M"
               fill-column 80
               frame-inhibit-implied-resize t
               frame-title-format "NEMACS"
@@ -131,7 +130,6 @@
 
 (cd "~/")
 (fset #'yes-or-no-p #'y-or-n-p)
-(display-battery-mode t)
 (show-paren-mode t)
 (global-auto-revert-mode t)
 (global-subword-mode t)
@@ -174,7 +172,7 @@
 ;; Create a list of configuration files
 (dolist (file (directory-files nemacs-config-dir))
   (when (string-match (format "^\\(.+\\)\\.conf\\.el$") file)
-    (add-to-list 'nemacs-config-file-list (expand-file-name file nemacs-config-dir))))
+    (add-to-list 'nemacs-config-file-list (expand-file-name file nemacs-config-dir) t)))
 
 (add-hook 'after-init-hook
           #'(lambda ()
