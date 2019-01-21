@@ -303,6 +303,3 @@
   (org-journal-dir "~/Dropbox/journal/2019/")
   (org-journal-file-format "%Y%m%d")
   (org-journal-time-format ""))
-
-(use-package org-mu4e
-  :ensure nil)
