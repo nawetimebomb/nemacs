@@ -23,22 +23,19 @@ NEMACS follows the principle of "one function does only one thing" (basic functi
 
 Now NEMACS has its basics separated in different files, `init.el` loads the whole thing in a "lifecycle" fashion and after everything (Emacs core-related) is initialized, the modules are loaded one by one.
 
-|-----------------|--------|-------------------------------------------------------------------------------------------------------------------|
 | Name            | Type   | Description                                                                                                       |
 |-----------------|--------|-------------------------------------------------------------------------------------------------------------------|
-| ~/.emacs.d      | Folder | The main Emacs configuration folder. Also saved in variable =nemacs-emacs-dir=                                    |
-| .local          | Folder | Local folder, not shared upstream. Contains all the system's folders like =cache=, =etc= and =packages=           |
-| .local/cache    | Folder | Contains cache files, can be removed to reset some temporary configuration. Example: =autosave=, =history=        |
-| .local/etc      | Folder | Persisted configuration is saved here. Like =bookmarks=                                                           |
-| .local/packages | Folder | Packages downloaded from =MELPA= live here                                                                        |
-| modules         | Folder | Modules files live here. The name of the files inside should be =<modulename>.module.el                           |
+| ~/.emacs.d      | Folder | The main Emacs configuration folder. Also saved in variable `nemacs-emacs-dir`                                    |
+| .local          | Folder | Local folder, not shared upstream. Contains all the system's folders like `cache`, `etc` and `packages`           |
+| .local/etc      | Folder | Persisted configuration is saved here. Like `bookmarks`                                                           |
+| .local/packages | Folder | Packages downloaded from `MELPA` live here                                                                        |
+| modules         | Folder | Modules files live here. The name of the files inside should be `<modulename>.module.el`                          |
 | elisp           | Folder | Custom functions and packages that I create are here                                                              |
 | themes          | Folder | Contains all the themes I use or used in Emacs                                                                    |
 | keybindings.el  | File   | File containing configurations for my custom keybindings                                                          |
 | hooks.el        | File   | Contains all the hook bindings                                                                                    |
 | init.el         | File   | Initialization file                                                                                               |
 | packages.el     | File   | Initialize the Package Manager and downloads the necessary packages                                               |
-| preload.el      | File   | Runs before the =after-init-hook=. Contains defaults and configurations that are needed before Emacs ends loading |
+| preload.el      | File   | Runs before the `after-init-hook`. Contains defaults and configurations that are needed before Emacs ends loading |
 | theme.el        | File   | Custom theme changes for the current selected theme are declared here                                             |
 | vars.el         | File   | Initialize the custom variables needed for the configuration                                                      |
-|-----------------|--------|-------------------------------------------------------------------------------------------------------------------|
