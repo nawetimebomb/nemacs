@@ -4,7 +4,7 @@
 ;; hooked, check for file size before opening it (and open it in
 ;; `fundamental-mode' if the file is too big), and more.
 
-;; Copyright (C) 2017 ~ 2019 Nahuel Jesús Sacchetti <nahueljsacchetti@gmail.com>
+;; Copyright (C) 2017 ~ 2019 Nahuel Jesús Sacchetti <me@nsacchetti.com>
 
 ;; This program is free software; you can redistribute it and/or modify it under
 ;; the terms of the GNU General Public License as published by the Free Software

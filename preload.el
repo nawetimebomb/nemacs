@@ -1,3 +1,6 @@
+;; Ignore messages during startup
+(advice-add #'display-startup-echo-area-message :override #'ignore)
+
 ;; Defaults
 (setq-default auto-save-default nil
               bidi-display-reordering nil

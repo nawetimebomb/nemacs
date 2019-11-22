@@ -76,3 +76,5 @@ This helps to not block the Emacs `runtime` while opening big files and solving 
 Emacs has almost all the facilities to be an Operating System. If we provide a Linux kernel we can make it our Window Manager. Since I already do all of my things in Emacs, except for browsing, I can transform NEMACS in my Window Manager. I do this with [EXWM](https://github.com/ch11ng/exwm).
 
 `EXWM` supports multi-monitor, multiple workspaces, a system tray bar (although I use an external bar too in Polybar) and running X applications inside Emacs, while passing in any keybindings I want (like making Firefox scroll down when I press `C-n`).
+
+### Modules

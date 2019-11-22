@@ -1,3 +1,4 @@
+;; Directory Variables
 (eval-and-compile
   (defvar nemacs-emacs-dir (expand-file-name user-emacs-directory)
     "Literally, the Emacs user directory or `user-emacs-directory'.
@@ -46,17 +47,29 @@ through the Emacs package manager.")
 across my systems through Dropbox. Notes and documents are also
 up in the cloud.")
 
-  (defvar nemacs-directories (list
-                              nemacs-local-dir
-                              nemacs-cache-dir
-                              nemacs-etc-dir
+  (defvar nemacs-maildir-dir (expand-file-name "~/Maildir/")
+    "Maildir folder where the mail is downloaded using the IMAP
+    protocol.")
+
+  (defvar nemacs-downloads-dir (expand-file-name "~/Downloads/")
+    "Downloads folder from the System.")
+
+  (defvar nemacs-directories (list nemacs-local-dir
+                              nemacs-cache-dir nemacs-etc-dir
                               nemacs-packages-dir
                               nemacs-modules-dir
-                              nemacs-themes-dir
-                              nemacs-elisp-dir
-                              nemacs-dropbox-dir)
+                              nemacs-themes-dir nemacs-elisp-dir
+                              nemacs-dropbox-dir
+                              nemacs-maildir-dir
+                              nemacs-downloads-dir)
     "NEMACS directories. This is used on the initial setup.")
 
   (dolist (dir nemacs-directories)
     (unless (file-directory-p dir)
       (make-directory dir t))))
+
+;; Configuration Variables
+(eval-and-compile
+  (defvar nemacs-necessary-packages '()
+    "Packages needed for `NEMACS' to run. This list is `setq' in
+    `packages.el'."))
