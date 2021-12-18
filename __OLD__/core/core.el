@@ -85,6 +85,7 @@ Emacs or specific packages. This data should not be deleted.")
 (load (concat user-emacs-directory "core/editor.el"))
 (load (concat user-emacs-directory "core/interface.el"))
 (load (concat user-emacs-directory "core/packages.el"))
+(load (concat user-emacs-directory "core/utils/utils.el"))
 ;; Do not close Emacs on C-x C-c
 (global-key-binding (kbd "C-x C-c") #'ignore)
 (define-key global-map (kbd "C-x C-c") #'ignore)
@@ -99,18 +100,6 @@ Emacs or specific packages. This data should not be deleted.")
 
 (defun nemacs-initialize ()
   "Initialize the NEMACS system."
-  ;; Create folder on first initialization
-  (defvar nemacs-directories (list nemacs-local-dir
-                                   nemacs-cache-dir
-                                   nemacs-etc-dir
-                                   (concat nemacs-local-dir "packages")
-                                   (concat nemacs-local-dir "packages/elpa"))
-    "NEMACS directories. This is used on the initial setup.")
-
-  (dolist (dir nemacs-directories)
-    (unless (file-directory-p dir)
-      (make-directory dir t)))
-
   ;; Memory management before starting
   (eval-and-compile
     (setq gc-cons-threshold 402653184

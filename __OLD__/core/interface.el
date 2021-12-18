@@ -1,6 +1,6 @@
 ;;; core/interface.el --- NEMACS CORE Interface File.
 
-;; Copyright (C) 2017 ~ 2022 Nahuel Jesús Sacchetti <me@nsacchetti.com>
+;; Copyright (C) 2017 ~ 2021 Nahuel Jesús Sacchetti <me@nsacchetti.com>
 
 ;; This program is free software; you can redistribute it and/or modify it under
 ;; the terms of the GNU General Public License as published by the Free Software
@@ -56,20 +56,20 @@
 
 ;; General and frame configurations
 (setq-default frame-inhibit-implied-resize t
-	          frame-title-format "NEMACS"
-	          fringe-indicator-alist (delq
-				                      (assq 'continuation fringe-indicator-alist)
-				                      fringe-indicator-alist)
-	          help-window-select t
-	          resize-mini-windows 'grow-only
-	          ring-bell-function #'ignore
-	          show-help-function nil
-	          split-height-threshold nil
-	          split-width-threshold 160
-	          uniquify-buffer-name-style 'post-forward-angle-brackets
-	          use-dialog-box nil
-	          visible-bell nil
-	          word-wrap t)
+	      frame-title-format "NEMACS"
+	      fringe-indicator-alist (delq
+				      (assq 'continuation fringe-indicator-alist)
+				      fringe-indicator-alist)
+	      help-window-select t
+	      resize-mini-windows 'grow-only
+	      ring-bell-function #'ignore
+	      show-help-function nil
+	      split-height-threshold nil
+	      split-width-threshold 160
+	      uniquify-buffer-name-style 'post-forward-angle-brackets
+	      use-dialog-box nil
+	      visible-bell nil
+	      word-wrap t)
 ;; Remove all frame distractions if it's not in terminal mode.
 (when window-system
   (tooltip-mode -1)

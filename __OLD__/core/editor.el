@@ -1,6 +1,6 @@
 ;;; core/editor.el --- NEMACS CORE Editor File.
 
-;; Copyright (C) 2017 ~ 2022 Nahuel Jesús Sacchetti <me@nsacchetti.com>
+;; Copyright (C) 2017 ~ 2021 Nahuel Jesús Sacchetti <me@nsacchetti.com>
 
 ;; This program is free software; you can redistribute it and/or modify it under
 ;; the terms of the GNU General Public License as published by the Free Software
@@ -182,6 +182,6 @@ fundamental-mode) for performance sake."
            ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
       fixme-modes)
 ;; Temporary face. Change this face within your theme configuration.
-(modify-face 'font-lock-fixme-face "Pink" nil nil t nil t nil nil)
-(modify-face 'font-lock-important-face "Cyan" nil nil t nil t nil nil)
-(modify-face 'font-lock-note-face "Green" nil nil t nil t nil nil)
+(modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
+(modify-face 'font-lock-important-face "Blue" nil nil t nil t nil nil)
+(modify-face 'font-lock-note-face "Dark Green" nil nil t nil t nil nil)
