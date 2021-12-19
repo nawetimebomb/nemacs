@@ -23,8 +23,8 @@
 ;; Load `core' configuration
 (load (concat user-emacs-directory "core/core.el"))
 
-;; Load all files from `custom/'
-(mapc 'load (file-expand-wildcards (concat nemacs-emacs-dir "custom/*.el")))
+;; Load all files from `modules/'
+(mapc 'load (file-expand-wildcards (concat nemacs-emacs-dir "modules/*.el")))
 
 ;;
 ;;; FONT

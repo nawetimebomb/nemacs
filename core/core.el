@@ -97,9 +97,19 @@ Emacs or specific packages. This data should not be deleted.")
 (load (concat user-emacs-directory "core/editor.el"))
 (load (concat user-emacs-directory "core/interface.el"))
 (load (concat user-emacs-directory "core/packages.el"))
-;; Do not close Emacs on C-x C-c
-(global-key-binding (kbd "C-x C-c") #'ignore)
-(define-key global-map (kbd "C-x C-c") #'ignore)
+
+;; Ask before quitting Emacs
+(defun nemacs-prompt-before-exiting-emacs ()
+  "Prompts before closing the frame with `C-x C-c'. Standarizes `emacs' and
+`emacsclient'."
+  (interactive)
+  (if (y-or-n-p ">>> Quit Nemacs? ")
+      (save-buffers-kill-terminal)
+    (message "Good. You should never do it.")))
+
+;; Remap keybindings
+(global-set-key (kbd "C-x C-c") #'nemacs-prompt-before-exiting-emacs)
+
 ;; Do not suspend Emacs on C-z or C-x C-z
 (define-key global-map (kbd "C-z") #'ignore)
 (define-key global-map (kbd "C-x C-z") #'ignore)

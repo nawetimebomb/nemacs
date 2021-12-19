@@ -76,8 +76,7 @@ of line."
   "Kill current buffer without prompting."
   (interactive)
   (kill-buffer (current-buffer)))
-(global-set-key [remap kill-buffer] ;; C-x k
-                #'nemacs-kill-current-buffer)
+(global-set-key (kbd "C-x k") #'nemacs-kill-current-buffer)
 
 ;; Create a window and switch.
 (defun nemacs-create-window-bottom-and-switch ()
