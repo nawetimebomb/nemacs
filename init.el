@@ -34,8 +34,8 @@
   (set-face-font 'default "Envy Code R-14"))
 
 (when IS-WINDOWS
-  (set-fontset-font t 'unicode (font-spec :name "DejaVu Sans Mono-12") nil)
-  (set-face-font 'default "DejaVu Sans Mono-12"))
+  (set-fontset-font t 'unicode (font-spec :name "Envy Code R-14") nil)
+  (set-face-font 'default "Envy Code R-14"))
 
 ;;
 ;;; INITIALIZE EMACS

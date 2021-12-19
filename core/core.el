@@ -48,6 +48,18 @@ using `(nemacs-delete-cache)'.")
 This folder contains specific configuration files created by
 Emacs or specific packages. This data should not be deleted.")
 
+;; Create folder on first initialization
+(defvar nemacs-directories (list nemacs-local-dir
+                                 nemacs-cache-dir
+                                 nemacs-etc-dir
+                                 (concat nemacs-local-dir "packages")
+                                 (concat nemacs-local-dir "packages/elpa"))
+  "NEMACS directories. This is used on the initial setup.")
+
+(dolist (dir nemacs-directories)
+  (unless (file-directory-p dir)
+    (make-directory dir t)))
+
 ;;
 ;;; SYSTEM VARIABLES
 
@@ -99,17 +111,6 @@ Emacs or specific packages. This data should not be deleted.")
 
 (defun nemacs-initialize ()
   "Initialize the NEMACS system."
-  ;; Create folder on first initialization
-  (defvar nemacs-directories (list nemacs-local-dir
-                                   nemacs-cache-dir
-                                   nemacs-etc-dir
-                                   (concat nemacs-local-dir "packages")
-                                   (concat nemacs-local-dir "packages/elpa"))
-    "NEMACS directories. This is used on the initial setup.")
-
-  (dolist (dir nemacs-directories)
-    (unless (file-directory-p dir)
-      (make-directory dir t)))
 
   ;; Memory management before starting
   (eval-and-compile
@@ -117,19 +118,19 @@ Emacs or specific packages. This data should not be deleted.")
           gc-cons-percentage 0.6))
 
   (setq max-lisp-eval-depth 50000
-	max-specpdl-size 13000)
+	    max-specpdl-size 13000)
 
   ;; Startup configuration
   (setq inhibit-default-init t
-	inhibit-startup-echo-area-message user-login-name
-	initial-major-mode 'fundamental-mode
-	initial-scratch-message nil
-	inhibit-startup-message t)
+	    inhibit-startup-echo-area-message user-login-name
+	    initial-major-mode 'fundamental-mode
+	    initial-scratch-message nil
+	    inhibit-startup-message t)
 
   ;; Add hoook to after-init
   (add-hook 'after-init-hook
             #'(lambda ()
-		(setq gc-cons-threshold 16777216
+		        (setq gc-cons-threshold 16777216
                       gc-cons-percentage 0.1)
 
-		(add-to-list 'default-frame-alist '(fullscreen . maximized)))))
+		        (add-to-list 'default-frame-alist '(fullscreen . maximized)))))
