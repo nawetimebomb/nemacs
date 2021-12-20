@@ -1,0 +1,45 @@
+(use-package org-bullets)
+
+(use-package org
+  :ensure org-plus-contrib
+  :preface
+  (defun nemacs-setup-org-mode ()
+    (org-bullets-mode)
+    (turn-on-visual-line-mode)
+    (setq-local line-spacing 0.1))
+  :hook
+  (org-mode                . nemacs-setup-org-mode)
+  (org-after-refile-insert . org-save-all-org-buffers)
+  :bind
+  (("C-c l" . org-store-link)
+   ("M-n"   . org-capture))
+  :custom
+  (org-adapt-indentation nil)
+  (org-blank-before-new-entry '((heading . t)
+                                (plain-list-item . nil)))
+  (org-deadline-warning-days 7)
+  (org-descriptive-links t)
+  (org-ellipsis " ↓")
+  (org-fontify-done-headline t)
+  (org-fontify-whole-heading-line t)
+  (org-hide-emphasis-markers t)
+  (org-link-frame-setup '((file . find-file)))
+  (org-log-done 'time)
+  (org-log-redeadline 'note)
+  (org-log-reschedule 'note)
+  (org-read-date-prefer-future 'time)
+  (org-return-follows-link t)
+  (org-startup-folded nil)
+  (org-startup-truncated nil)
+  (org-support-shift-select 'always)
+  (org-tags-column -75)
+  :custom-face
+  (org-document-info-keyword ((t (:height 1.2))))
+  (org-document-title ((t (:height 1.2))))
+  (org-level-1 ((t (:height 1.1))))
+  (org-level-2 ((t (:height 1.1))))
+  (org-level-3 ((t (:height 1.1))))
+  (org-level-4 ((t (:height 1.1))))
+  (org-level-5 ((t (:height 1.1))))
+  (org-level-6 ((t (:height 1.1))))
+  (org-level-7 ((t (:height 1.1)))))

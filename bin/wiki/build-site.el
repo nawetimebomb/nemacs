@@ -1,3 +1,21 @@
+;;
+;;; INSTALL HTMLIZE
+
+(require 'package)
+
+(setq package-user-dir (expand-file-name "./.packages"))
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
+
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(package-install 'htmlize)
+
+;;
+;;; CONFIGURE OX-PUBLISH
+
 (require 'ox-publish)
 
 (setq org-html-validation-link nil
