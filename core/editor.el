@@ -154,7 +154,7 @@ fundamental-mode) for performance sake."
 ;;
 ;;; PROGRAMMING
 
-(setq-default fill-column 80
+(setq-default fill-column 120
 	          indent-tabs-mode nil
 	          mouse-yank-at-point t
 	          require-final-newline t
