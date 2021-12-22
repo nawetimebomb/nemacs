@@ -18,6 +18,7 @@
 ;;; Code:
 
 (require 'battery)
+(require 'desktop)
 
 ;;
 ;;; NEMACS
@@ -93,6 +94,9 @@ Emacs or specific packages. This data should not be deleted.")
       make-backup-files nil)
 ;; Custom file
 (setq-default custom-file (expand-file-name "custom.el" nemacs-etc-dir))
+;; Transient and Server files
+(setq-default transient-history-file (expand-file-name "transient" nemacs-cache-dir))
+(setq-default server-socket-dir nemacs-cache-dir)
 ;; Load all the core libraries.
 (load (concat user-emacs-directory "core/editor.el"))
 (load (concat user-emacs-directory "core/interface.el"))
