@@ -102,7 +102,7 @@ Emacs or specific packages. This data should not be deleted.")
 (setq desktop-auto-save-timeout 30
       desktop-base-file-name "emacs.desktop"
       desktop-base-lock-name "emacs.lock"
-      desktop-files-not-to-save "^$"
+      desktop-files-not-to-save "\\(\\`/[^/:]*:\\|^magit-*|(ftp)\\'\\)"
       desktop-load-locked-desktop nil
       desktop-path (list nemacs-cache-dir)
       desktop-save t
@@ -152,6 +152,4 @@ Emacs or specific packages. This data should not be deleted.")
   (add-hook 'after-init-hook
             #'(lambda ()
 		        (setq gc-cons-threshold 16777216
-                      gc-cons-percentage 0.1)
-
-		        (add-to-list 'default-frame-alist '(fullscreen . maximized)))))
+                      gc-cons-percentage 0.1))))
