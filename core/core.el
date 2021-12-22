@@ -26,22 +26,14 @@
 (defconst nemacs-version "0.10b"
   "Version of `NEMACS'.")
 
-(defconst nemacs-emacs-dir (expand-file-name user-emacs-directory)
-  "Literally, the Emacs user directory or `user-emacs-directory'.
-
-This variable is set to be used securely across NEMACS without
-the risk of changing the default value of
-`user-emacs-directory'.")
-
-(defconst nemacs-local-dir (concat nemacs-emacs-dir ".local/")
+(defconst nemacs-local-dir (concat user-emacs-directory ".local/")
   "The local folder where most of NEMACS stuff lives.")
 
 (defconst nemacs-cache-dir (concat nemacs-local-dir "cache/")
   "The folder where all the soft data is saved.
 
 Cached folder can be deleted at any time to reset saved
-information, this can be done manually or
-using `(nemacs-delete-cache)'.")
+information, this can be done manually.")
 
 (defconst nemacs-etc-dir (concat nemacs-local-dir "etc/")
   "The folder where the hard data is saved.
@@ -65,13 +57,28 @@ Emacs or specific packages. This data should not be deleted.")
 ;;; SYSTEM VARIABLES
 
 ;; Define variables for system identification
-(defconst EMACS27+  (> emacs-major-version 26))
-(defconst IS-LINUX  (eq system-type 'gnu/linux))
-(defconst IS-LAPTOP (and battery-status-function
-                         (not (string-match-p "N/A"
-                                              (battery-format "%B"
-                                                              (funcall battery-status-function))))))
-(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+;;;###autoload
+(defmacro IS-EMACS27+ (&rest body)
+  `(when (> emacs-major-version 26)
+     ,@body))
+
+;;;###autoload
+(defmacro IS-LAPTOP (&rest body)
+  `(when (and battery-status-function
+              (not (string-match-p "N/A"
+                                   (battery-format "%B"
+                                                   (funcall battery-status-function)))))
+     ,@body))
+
+;;;###autoload
+(defmacro IS-LINUX (&rest body)
+  `(when (eq system-type 'gnu/linux)
+     ,@body))
+
+;;;###autoload
+(defmacro IS-WINDOWS (&rest body)
+  `(when (memq system-type '(cygwin windows-nt ms-dos))
+     ,@body))
 
 ;;
 ;;; ENCODING
@@ -83,8 +90,7 @@ Emacs or specific packages. This data should not be deleted.")
 (setq locale-coding-system 'utf-8)
 ;; And fix the Windows clipboard by changing to UTF-8 since Windows
 ;; most likely is using a wider encoding (UTF-16)
-(unless IS-WINDOWS
-  (setq selection-coding-system 'utf-8))
+(IS-WINDOWS (setq selection-coding-system 'utf-8))
 
 ;;
 ;;; NEMACS CORE
@@ -107,6 +113,8 @@ Emacs or specific packages. This data should not be deleted.")
       desktop-base-file-name "emacs.desktop"
       desktop-base-lock-name "emacs.lock"
       desktop-files-not-to-save "\\(\\`/[^/:]*:\\|^magit-*|(ftp)\\'\\)"
+      desktop-modes-not-to-save '(dired-mode
+                                  tags-table-mode)
       desktop-load-locked-desktop nil
       desktop-path (list nemacs-cache-dir)
       desktop-save t
@@ -134,6 +142,7 @@ Emacs or specific packages. This data should not be deleted.")
 ;;
 ;;; RUN NEMACS
 
+;;;###autoload
 (defun nemacs-initialize ()
   "Initialize the NEMACS system."
 

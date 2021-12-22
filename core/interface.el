@@ -17,21 +17,9 @@
 
 ;;; Code:
 
-(require 'battery)
-
 ;;
 ;;; MODE LINE
 
-;; Display the battery if available/user is in laptop.
-(when IS-LAPTOP
-  (setq battery-update-interval 15
-        fancy-battery-show-percentage t)
-  (display-battery-mode 1))
-;; Display the time
-(setq display-time-24h-format t
-      display-time-default-load-average nil
-      display-time-format "%b %d %H:%M ")
-(display-time-mode 1)
 ;; Hide help echo from the modeline.
 (setq mode-line-default-help-echo nil)
 

@@ -24,24 +24,24 @@
 (load (concat user-emacs-directory "core/core.el"))
 
 ;; Load all files from `modules/'
-(mapc 'load (file-expand-wildcards (concat nemacs-emacs-dir "modules/*.el")))
+(mapc 'load (file-expand-wildcards (concat user-emacs-directory "modules/*.el")))
 
 ;; Load all files from `programming/'
-(mapc 'load (file-expand-wildcards (concat nemacs-emacs-dir "programming/*.el")))
+(mapc 'load (file-expand-wildcards (concat user-emacs-directory "programming/*.el")))
 
 ;; Load all files from `custom/'
-(mapc 'load (file-expand-wildcards (concat nemacs-emacs-dir "custom/*.el")))
+(mapc 'load (file-expand-wildcards (concat user-emacs-directory "custom/*.el")))
 
 ;;
 ;;; FONT
 
-(when IS-LINUX
-  (set-fontset-font t 'unicode (font-spec :name "Envy Code R-14") nil)
-  (set-face-font 'default "Envy Code R-14"))
+(IS-LINUX
+ (set-fontset-font t 'unicode (font-spec :name "Envy Code R-14") nil)
+ (set-face-font 'default "Envy Code R-14"))
 
-(when IS-WINDOWS
-  (set-fontset-font t 'unicode (font-spec :name "Envy Code R-16") nil)
-  (set-face-font 'default "Envy Code R-16"))
+(IS-WINDOWS
+ (set-fontset-font t 'unicode (font-spec :name "Envy Code R-16") nil)
+ (set-face-font 'default "Envy Code R-16"))
 
 ;;
 ;;; INITIALIZE EMACS

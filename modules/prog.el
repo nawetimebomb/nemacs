@@ -1,6 +1,7 @@
-(use-package flycheck
-  :custom
-  (flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+;;
+;;; PACKAGES
+
+(use-package ag)
 
 (use-package company
   :bind
@@ -12,8 +13,15 @@
   :custom
   (company-idle-delay 0.5))
 
+(use-package flycheck
+  :custom
+  (flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+;;
+;;; FUNCTION DEFINITIONS
+
 (defun nemacs-setup-default-prog-mode ()
   "Setup the default programming mode for NEMACS."
   (interactive)
-  (flycheck-mode)
-  (company-mode))
+  (company-mode)
+  (flycheck-mode))

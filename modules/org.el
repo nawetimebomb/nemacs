@@ -11,7 +11,8 @@
   (org-mode                . nemacs-setup-org-mode)
   (org-after-refile-insert . org-save-all-org-buffers)
   :bind
-  (("C-c l" . org-store-link)
+  (("C-c a" . org-agenda)
+   ("C-c l" . org-store-link)
    ("M-n"   . org-capture))
   :custom
   (org-adapt-indentation nil)
