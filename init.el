@@ -26,6 +26,12 @@
 ;; Load all files from `modules/'
 (mapc 'load (file-expand-wildcards (concat nemacs-emacs-dir "modules/*.el")))
 
+;; Load all files from `programming/'
+(mapc 'load (file-expand-wildcards (concat nemacs-emacs-dir "programming/*.el")))
+
+;; Load all files from `custom/'
+(mapc 'load (file-expand-wildcards (concat nemacs-emacs-dir "custom/*.el")))
+
 ;;
 ;;; FONT
 
@@ -34,8 +40,8 @@
   (set-face-font 'default "Envy Code R-14"))
 
 (when IS-WINDOWS
-  (set-fontset-font t 'unicode (font-spec :name "Envy Code R-14") nil)
-  (set-face-font 'default "Envy Code R-14"))
+  (set-fontset-font t 'unicode (font-spec :name "Envy Code R-16") nil)
+  (set-face-font 'default "Envy Code R-16"))
 
 ;;
 ;;; INITIALIZE EMACS

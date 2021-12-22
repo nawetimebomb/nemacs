@@ -1,3 +1,4 @@
 .local
 server
 tutorial
+custom/*.el
