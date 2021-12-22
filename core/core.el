@@ -98,6 +98,17 @@ Emacs or specific packages. This data should not be deleted.")
 (load (concat user-emacs-directory "core/interface.el"))
 (load (concat user-emacs-directory "core/packages.el"))
 
+;; Save desktop before closing
+(setq desktop-auto-save-timeout 30
+      desktop-base-file-name "emacs.desktop"
+      desktop-base-lock-name "emacs.lock"
+      desktop-files-not-to-save "^$"
+      desktop-load-locked-desktop nil
+      desktop-path (list nemacs-cache-dir)
+      desktop-save t
+      desktop-dirname nemacs-cache-dir)
+(desktop-save-mode 1)
+
 ;; Ask before quitting Emacs
 (defun nemacs-prompt-before-exiting-emacs ()
   "Prompts before closing the frame with `C-x C-c'. Standarizes `emacs' and

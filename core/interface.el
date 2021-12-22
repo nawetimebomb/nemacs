@@ -34,22 +34,6 @@
 (display-time-mode 1)
 ;; Hide help echo from the modeline.
 (setq mode-line-default-help-echo nil)
-;; Change mode-line format, remove minor modes
-(setq-default mode-line-format
-              '("%e"
-                mode-line-front-space
-                mode-line-mule-info
-                mode-line-client
-                mode-line-modified
-                mode-line-remote
-                mode-line-frame-identification
-                mode-line-buffer-identification
-                "   "
-                mode-line-position
-                (vc-mode vc-mode)
-                "  "
-                mode-line-misc-info
-                mode-line-end-spaces))
 
 ;;
 ;;; FRAMES/WINDOWS
