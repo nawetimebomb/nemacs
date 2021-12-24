@@ -19,30 +19,21 @@
 
 ;;
 ;;; NEMACS PACKAGES
-(defconst nemacs-packages-dir (expand-file-name "packages/elpa" nemacs-local-dir)
-  "Folder containing all the packages downloaded from MELPA.")
 
-;; Setting up initial variables.
-(eval-and-compile
-  (setq package-user-dir nemacs-packages-dir))
+(defvar bootstrap-version)
 
-(setq package-enable-at-startup nil)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-(eval-and-compile
-  (setq load-path (append load-path (directory-files package-user-dir t "^[^.]" t))))
+(straight-use-package 'use-package)
 
-(setq package-archives '(("gnu"          . "https://elpa.gnu.org/packages/")
-                         ("melpa"        . "https://melpa.org/packages/")
-                         ("melpa-stable" . "https://stable.melpa.org/packages/")))
-
-(setq load-prefer-newer noninteractive)
-
-;; Initialize packages.
-(package-initialize)
-
-;; Install `use-package'.
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(setq use-package-always-ensure t)
+(setq straight-use-package-by-default t)

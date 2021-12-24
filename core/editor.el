@@ -150,6 +150,8 @@ fundamental-mode) for performance sake."
 (global-subword-mode t)
 ;; Delete selection when overriden by new code.
 (delete-selection-mode t)
+;; Save search and navigation history
+(savehist-mode t)
 
 ;;
 ;;; PROGRAMMING
@@ -164,7 +166,7 @@ fundamental-mode) for performance sake."
 	          truncate-lines nil)
 
 ;; Add TODOs, NOTEs and IMPORTANT keywords
-(setq fixme-modes '(c++-mode
+(defvar fixme-modes '(c++-mode
                     c-mode
                     emacs-lisp-mode
                     js2-mode

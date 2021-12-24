@@ -1,7 +1,7 @@
 (use-package org-bullets)
 
 (use-package org
-  :ensure org-plus-contrib
+  ;;:ensure org-plus-contrib
   :preface
   (defun nemacs-setup-org-mode ()
     (org-bullets-mode)

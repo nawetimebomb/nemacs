@@ -22,6 +22,10 @@
 
 ;; Hide help echo from the modeline.
 (setq mode-line-default-help-echo nil)
+;; Mode Line format
+(setq-default mode-line-format nil)
+;; Header Line
+(setq-default header-line-format nil)
 
 ;;
 ;;; FRAMES/WINDOWS
