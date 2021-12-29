@@ -1,8 +1,6 @@
 ;;
 ;;; PACKAGES
 
-(use-package ag)
-
 (use-package company
   :bind
   (:map company-active-map
@@ -16,6 +14,8 @@
 (use-package flycheck
   :custom
   (flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+(use-package lsp-mode)
 
 ;;
 ;;; FUNCTION DEFINITIONS
