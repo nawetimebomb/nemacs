@@ -35,18 +35,16 @@
 Cached folder can be deleted at any time to reset saved
 information, this can be done manually.")
 
-(defconst nemacs-etc-dir (concat nemacs-local-dir "etc/")
-  "The folder where the hard data is saved.
+(defconst nemacs-tmp-dir (concat nemacs-local-dir "tmp/")
+  "The folder where temporary files for NEMACS are created
 
-This folder contains specific configuration files created by
-Emacs or specific packages. This data should not be deleted.")
+This folder contains temporary data that can be deleted whenever.
+The content of this folder should be cleaned up on `C-x C-c'.")
 
 ;; Create folder on first initialization
 (defvar nemacs-directories (list nemacs-local-dir
                                  nemacs-cache-dir
-                                 nemacs-etc-dir
-                                 (concat nemacs-local-dir "packages")
-                                 (concat nemacs-local-dir "packages/elpa"))
+                                 nemacs-tmp-dir)
   "NEMACS directories. This is used on the initial setup.")
 
 (dolist (dir nemacs-directories)
@@ -99,7 +97,7 @@ Emacs or specific packages. This data should not be deleted.")
 (setq create-lockfiles nil
       make-backup-files nil)
 ;; Custom file
-(setq-default custom-file (expand-file-name "custom.el" nemacs-etc-dir))
+(setq-default custom-file (make-temp-file (expand-file-name "emacs-custom-" nemacs-tmp-dir)))
 ;; Transient and Server files
 (setq-default transient-history-file (expand-file-name "transient" nemacs-cache-dir))
 (setq-default server-socket-dir nemacs-cache-dir)
@@ -112,9 +110,11 @@ Emacs or specific packages. This data should not be deleted.")
 (setq desktop-auto-save-timeout 30
       desktop-base-file-name "emacs.desktop"
       desktop-base-lock-name "emacs.lock"
-      desktop-files-not-to-save "\\(\\`/[^/:]*:\\|^magit-*|(ftp)\\'\\)"
+      desktop-files-not-to-save "\\(\\`/[^/:]*:\\|(ftp)\\'\\)"
       desktop-modes-not-to-save '(dired-mode
-                                  tags-table-mode)
+                                  org-mode
+                                  tags-table-mode
+                                  vc-dir-mode)
       desktop-load-locked-desktop nil
       desktop-path (list nemacs-cache-dir)
       desktop-save t
@@ -126,9 +126,13 @@ Emacs or specific packages. This data should not be deleted.")
   "Prompts before closing the frame with `C-x C-c'. Standarizes `emacs' and
 `emacsclient'."
   (interactive)
+  (let* ((tmp-files (directory-files nemacs-tmp-dir t "[a-z|A-Z]")))
   (if (y-or-n-p ">>> Quit Nemacs? ")
-      (save-buffers-kill-terminal)
-    (message "Good. You should never do it.")))
+      (progn
+        (dolist (tmp-file tmp-files)
+          (delete-file tmp-file))
+        (save-buffers-kill-terminal))
+    (message "Good. You should never do it."))))
 
 ;; Remap keybindings
 (global-set-key (kbd "C-x C-c") #'nemacs-prompt-before-exiting-emacs)

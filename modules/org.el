@@ -1,11 +1,7 @@
-(use-package org-bullets)
-
 (use-package org
-  ;;:ensure org-plus-contrib
+  :straight org-contrib
   :preface
   (defun nemacs-setup-org-mode ()
-    (org-bullets-mode)
-    (turn-on-visual-line-mode)
     (setq-local line-spacing 0.1))
   :hook
   (org-mode                . nemacs-setup-org-mode)
@@ -35,12 +31,12 @@
   (org-support-shift-select 'always)
   (org-tags-column -75)
   :custom-face
-  (org-document-info-keyword ((t (:height 1.2))))
-  (org-document-title ((t (:height 1.2))))
-  (org-level-1 ((t (:height 1.1))))
-  (org-level-2 ((t (:height 1.1))))
-  (org-level-3 ((t (:height 1.1))))
-  (org-level-4 ((t (:height 1.1))))
-  (org-level-5 ((t (:height 1.1))))
-  (org-level-6 ((t (:height 1.1))))
-  (org-level-7 ((t (:height 1.1)))))
+  (org-document-info-keyword ((t :height 1.0)))
+  (org-document-title ((t :height 1.0)))
+  (org-level-1 ((t :height 1.0 :weight bold)))
+  (org-level-2 ((t :height 1.0)))
+  (org-level-3 ((t :height 1.0)))
+  (org-level-4 ((t :height 1.0)))
+  (org-level-5 ((t :height 1.0)))
+  (org-level-6 ((t :height 1.0)))
+  (org-level-7 ((t :height 1.0))))

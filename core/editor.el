@@ -126,7 +126,7 @@ fundamental-mode) for performance sake."
 ;; Default saving folders
 (setq abbrev-file-name (concat nemacs-local-dir "abbrev.el")
       auto-save-list-file-name (concat nemacs-cache-dir "autosave")
-      bookmark-default-file (concat nemacs-etc-dir   "bookmarks")
+      bookmark-default-file (concat nemacs-cache-dir   "bookmarks")
       nsm-settings-file (expand-file-name "ns.data" nemacs-cache-dir)
       pcache-directory (concat nemacs-cache-dir "pcache")
       recentf-save-file (expand-file-name "recentf" nemacs-cache-dir)
