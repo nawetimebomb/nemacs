@@ -106,6 +106,19 @@ The content of this folder should be cleaned up on `C-x C-c'.")
 (load (concat user-emacs-directory "core/interface.el"))
 (load (concat user-emacs-directory "core/packages.el"))
 
+;; Save bookmarks on change
+(setq bookmark-save-flag 1)
+
+;; Default saving folders
+(setq abbrev-file-name (concat nemacs-local-dir "abbrev.el")
+      auto-save-list-file-name (concat nemacs-cache-dir "autosave")
+      bookmark-default-file (concat nemacs-cache-dir   "bookmarks")
+      nsm-settings-file (expand-file-name "ns.data" nemacs-cache-dir)
+      pcache-directory (concat nemacs-cache-dir "pcache")
+      recentf-save-file (expand-file-name "recentf" nemacs-cache-dir)
+      savehist-file (expand-file-name "history" nemacs-cache-dir)
+      url-history-file (expand-file-name "url.el" nemacs-cache-dir))
+
 ;; Save desktop before closing
 (setq desktop-auto-save-timeout 30
       desktop-base-file-name "emacs.desktop"

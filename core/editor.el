@@ -123,15 +123,6 @@ fundamental-mode) for performance sake."
 ;; Default saving configurations
 (setq auto-save-default nil
 	  delete-by-moving-to-trash t)
-;; Default saving folders
-(setq abbrev-file-name (concat nemacs-local-dir "abbrev.el")
-      auto-save-list-file-name (concat nemacs-cache-dir "autosave")
-      bookmark-default-file (concat nemacs-cache-dir   "bookmarks")
-      nsm-settings-file (expand-file-name "ns.data" nemacs-cache-dir)
-      pcache-directory (concat nemacs-cache-dir "pcache")
-      recentf-save-file (expand-file-name "recentf" nemacs-cache-dir)
-      savehist-file (expand-file-name "history" nemacs-cache-dir)
-      url-history-file (expand-file-name "url.el" nemacs-cache-dir))
 ;; After saving, remove all trailing whitespace
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
@@ -183,6 +174,6 @@ fundamental-mode) for performance sake."
            ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
       fixme-modes)
 ;; Temporary face. Change this face within your theme configuration.
-(modify-face 'font-lock-fixme-face "Pink" nil nil t nil t nil nil)
+(modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
 (modify-face 'font-lock-important-face "Cyan" nil nil t nil t nil nil)
 (modify-face 'font-lock-note-face "Green" nil nil t nil t nil nil)
