@@ -1,6 +1,18 @@
+(use-package consult
+  :bind
+  (("M-g g" . consult-goto-line)
+   ("M-y" . consult-yank-from-kill-ring)
+   ("C-x b" . consult-buffer)))
+
 (use-package marginalia
   :init
   (marginalia-mode))
+
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles . (partial-completion))))))
 
 (use-package project
   :custom
