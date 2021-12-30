@@ -30,6 +30,7 @@
   (setq exwm-input-global-keys
         `(([?\s-&]                . nemacs-exwm-run-application)
           ([?\s-r]                . exwm-reset)
+          ([?\s-w]                . exwm-workspace-switch)
 
           ([s-left]               . windmove-left)
           ([s-down]               . windmove-down)
