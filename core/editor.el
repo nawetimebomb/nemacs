@@ -173,7 +173,8 @@ fundamental-mode) for performance sake."
            ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
            ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
       fixme-modes)
+
 ;; Temporary face. Change this face within your theme configuration.
-(modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
-(modify-face 'font-lock-important-face "Cyan" nil nil t nil t nil nil)
-(modify-face 'font-lock-note-face "Green" nil nil t nil t nil nil)
+(modify-face 'font-lock-fixme-face "IndianRed" nil nil t nil t nil nil)
+(modify-face 'font-lock-important-face "DodgerBlue" nil nil t nil t nil nil)
+(modify-face 'font-lock-note-face nil nil nil t nil t nil nil)
