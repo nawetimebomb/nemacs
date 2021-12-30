@@ -7,7 +7,7 @@
   (golden-ratio-mode 1)
 
   (when nemacs-widescreen
-    (golden-ratio-toggle-widescreen))
+    (call-interactively 'golden-ratio-toggle-widescreen))
   :custom
   (golden-ratio-extra-commands '(ace-window
                                  windmove-down
