@@ -32,6 +32,9 @@
 ;; Load all files from `custom/'
 (mapc 'load (file-expand-wildcards (concat user-emacs-directory "custom/*.el")))
 
+(when nemacs-exwm-enabled
+  (load (expand-file-name "exwm/exwm.el" user-emacs-directory)))
+
 ;;
 ;;; FONT
 

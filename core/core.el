@@ -51,6 +51,17 @@ The content of this folder should be cleaned up on `C-x C-c'.")
   (unless (file-directory-p dir)
     (make-directory dir t)))
 
+(defcustom nemacs-exwm-enabled nil
+  "Enables the EXWM functionality, meaning it loads and start the
+Emacs Window Manager system on startup
+
+Change this value on a `user-emacs-directory/custom' file.")
+
+(defcustom nemacs-widescreen nil
+  "Enable widescreen options for NEMACS but needs to be enabled manually.
+
+Change this value on a `user-emacs-directory/custom' file.")
+
 ;;
 ;;; SYSTEM VARIABLES
 
@@ -126,6 +137,7 @@ The content of this folder should be cleaned up on `C-x C-c'.")
       desktop-files-not-to-save "\\(\\`/[^/:]*:\\|(ftp)\\'\\)"
       desktop-modes-not-to-save '(dired-mode
                                   org-mode
+                                  special-mode
                                   tags-table-mode
                                   vc-dir-mode)
       desktop-load-locked-desktop nil
@@ -133,6 +145,8 @@ The content of this folder should be cleaned up on `C-x C-c'.")
       desktop-save t
       desktop-dirname nemacs-cache-dir)
 (desktop-save-mode 1)
+
+(ido-mode -1)
 
 ;; Ask before quitting Emacs
 (defun nemacs-prompt-before-exiting-emacs ()
