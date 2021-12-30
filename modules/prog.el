@@ -16,12 +16,3 @@
   (flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
 (use-package lsp-mode)
-
-;;
-;;; FUNCTION DEFINITIONS
-
-(defun nemacs-setup-default-prog-mode ()
-  "Setup the default programming mode for NEMACS."
-  (interactive)
-  (company-mode)
-  (flycheck-mode))
