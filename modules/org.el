@@ -49,7 +49,6 @@
 
 (use-package org-roam
   :disabled (not nemacs-org-roam-enabled)
-  :straight emacsql
   :bind
   ((:map org-mode-map
          ("C-M-i" . completion-at-point))
