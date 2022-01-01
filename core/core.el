@@ -58,7 +58,12 @@ Emacs Window Manager system on startup
 Change this value on a `user-emacs-directory/custom' file.")
 
 (defcustom nemacs-widescreen nil
-  "Enable widescreen options for NEMACS but needs to be enabled manually.
+  "Enables widescreen options for NEMACS but needs to be enabled manually.
+
+Change this value on a `user-emacs-directory/custom' file.")
+
+(defcustom nemacs-org-roam-enabled nil
+  "Enables the Org Roam package configuration.
 
 Change this value on a `user-emacs-directory/custom' file.")
 
