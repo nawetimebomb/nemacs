@@ -1,5 +1,8 @@
 * NEMACS - Emacs Documentation
 
+*Reference:*
+- =[fn:N]= means footnote reference. Check the footnote for more info.
+
 ** Philosophy
 
 It's been more than 2 years[fn:1] since I started using Emacs for everything. My first commit was on May 2017 and surprisingly I was on MacOS. Although that wasn't my first time using Emacs, as I had use it for work weeks before that on Ubuntu, but it was what pulled me over to the Emacs world as I really hated the Mac and all the environment and Emacs helped me use it a little bit more.
@@ -20,20 +23,18 @@ NEMACS follows the principle of "one function does only one thing" (basic functi
 
 Now NEMACS has its basics separated in different files, =init.el= loads the whole thing in a "lifecycle" fashion and after everything (Emacs core-related) is initialized, the modules are loaded one by one.
 
-|---------------+--------+-----------------------------------------------------------------------------------------------------------------|
-| Name          | Type   | Description                                                                                                     |
-|---------------+--------+-----------------------------------------------------------------------------------------------------------------|
-| ~/.emacs.d    | Folder | The main Emacs configuration folder. Also saved in variable `nemacs-emacs-dir`                                  |
-| .local        | Folder | Local folder, not shared upstream. Contains all the system's folders like `cache`, `etc` and `packages`         |
-| .local/cache  | Folder | Saved configurations and navigations that can be safely deleted                                                 |
-| .local/etc    | Folder | Persisted configuration is saved here. Like `bookmarks`                                                         |
-| straight      | Folder | Packages are managed by =straight.el= and are installed in this folder                                          |
-| core          | Folder | Core modules. These are the ones that don't include external packages and modify the base Emacs configuration   |
-| modules       | Folder | Modules files live here. Loaded after =core=                                                                    |
-| programming   | Folder | Programming modes, a file per programming language. Loaded after =modules=                                      |
-| custom        | Folder | Custom files that are not promoted to the version control system. Modifications are local to that system        |
-| init.el       | File   | Initialization file                                                                                             |
-| early-init.el | File   | Loaded before the init file. Modifies the initial Emacs configuration, like disabling the original =package.el= |
+|---------------+--------+---------------------------------------------------------------------------------------------------------------|
+| Name          | Type   | Description                                                                                                   |
+|---------------+--------+---------------------------------------------------------------------------------------------------------------|
+| ~/.emacs.d    | Folder | The main Emacs configuration folder. Also saved in variable `nemacs-emacs-dir`                                |
+| .local        | Folder | Local folder, not shared upstream. Contains all the system's folders like `cache`, `etc` and `packages`       |
+| straight      | Folder | Packages are managed by =straight.el= and are installed in this folder                                        |
+| core          | Folder | Core modules. These are the ones that don't include external packages and modify the base Emacs configuration |
+| modules       | Folder | Modules files live here. Loaded after =core=                                                                  |
+| programming   | Folder | Programming modes, a file per programming language. Loaded after =modules=                                    |
+| custom        | Folder | Local folder, not shared upstream. Custom files, local to the system                                          |
+| init.el       | File   | Initialization file                                                                                           |
+| early-init.el | File   | Loaded before the init file. Modifies the initial Emacs configuration                                         |
 
 *** The `NEMACS Lifecycle`
 
