@@ -1,18 +1,11 @@
-;;
-;;; PACKAGES
-
-(use-package company
-  :bind
-  (:map company-active-map
-        ("C-n" . company-select-next)
-        ("C-p" . company-select-previous)
-        ("M-<" . company-select-first)
-        ("M->" . company-select-last))
-  :custom
-  (company-idle-delay 0.5))
-
 (use-package flycheck
   :custom
   (flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
 (use-package lsp-mode)
+
+(use-package log-edit
+  :custom
+  (log-edit-confirm 'changed)
+  (log-edit-keep-buffer nil)
+  (log-edit-require-final-newline t))
