@@ -30,4 +30,5 @@
   (org-startup-folded nil)
   (org-startup-truncated nil)
   (org-support-shift-select 'always)
+  (org-persist-directory (concat nemacs-cache-dir "org-persist/"))
   (org-tags-column -115))
