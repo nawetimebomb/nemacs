@@ -151,7 +151,11 @@ Change this value on a `user-emacs-directory/custom' file.")
       desktop-dirname nemacs-cache-dir)
 (desktop-save-mode 1)
 
+;; Disable ido-mode
 (ido-mode -1)
+
+;; Enable recentf-mode (Recent File)
+(recentf-mode 1)
 
 ;; Ask before quitting Emacs
 (defun nemacs-prompt-before-exiting-emacs ()
