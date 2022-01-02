@@ -10,7 +10,7 @@
     (exwm-systemtray-enable))
 
   ;; Map CapsLock to CTRL
-  (start-process-shell-command "xmodmap" nil "xmodmap ~/.emacs.d/exwm/Xmodmap")
+  (start-process-shell-command "xmodmap" nil "xmodmap ~/.emacs.d/os/Xmodmap")
 
   (defun nemacs-exwm-run-application (command)
     "Prompts for an application and runs it inside `EXWM'."
