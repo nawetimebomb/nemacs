@@ -1,3 +1,9 @@
+;;; EXWM
+;; NOTE: This configuration looks different from the others, everything is inside `use-package:config'.
+;;       The reason for that is that EXWM is very sensible on how we initialize and change variables and
+;;       most of then need to be initialized before running `(exwm-enable)'. Hopefully, this is the only
+;;       configuration that is not following "the rule" (although there's no rule imposed, really).
+
 (use-package exwm
   :config
   (use-package exwm-edit
@@ -9,18 +15,12 @@
     :config
     (exwm-systemtray-enable))
 
+  ;; Enable system modes
+  (display-time-mode)
+  (display-battery-mode)
+
   ;; Map CapsLock to CTRL
   (start-process-shell-command "xmodmap" nil "xmodmap ~/.emacs.d/os/Xmodmap")
-
-  (defun nemacs-exwm-run-application (command)
-    "Prompts for an application and runs it inside `EXWM'."
-    (interactive (list (read-shell-command "> ")))
-    (start-process-shell-command command nil command))
-
-  (defun nemacs-exwm-rename-buffer ()
-    "Rename the buffers to the window title."
-    (exwm-workspace-rename-buffer
-     (concat exwm-title " - " (capitalize exwm-class-name))))
 
   (add-hook 'exwm-update-title-hook #'nemacs-exwm-rename-buffer)
   (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
