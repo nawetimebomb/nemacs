@@ -51,19 +51,15 @@ The content of this folder should be cleaned up on `C-x C-c'.")
   (unless (file-directory-p dir)
     (make-directory dir t)))
 
-(defcustom nemacs-exwm-enabled nil
-  "Enables the EXWM functionality, meaning it loads and start the
-Emacs Window Manager system on startup
+(defcustom NEMACS-OS nil
+  "Enables the NEMACS-OS. The Operating System contains
+EXWM as the Window Manager, Org Roam as note taking tool and
+more.
 
 Change this value on a `user-emacs-directory/custom' file.")
 
 (defcustom nemacs-widescreen nil
   "Enables widescreen options for NEMACS but needs to be enabled manually.
-
-Change this value on a `user-emacs-directory/custom' file.")
-
-(defcustom nemacs-org-roam-enabled nil
-  "Enables the Org Roam package configuration.
 
 Change this value on a `user-emacs-directory/custom' file.")
 
