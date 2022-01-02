@@ -11,7 +11,7 @@
   :bind
   (("C-x M" . mu4e)
    ("C-x m" . mu4e-compose-new)
-   (:map message-mode
+   (:map mu4e-compose-mode
          "C-x \" " . boxquote-region))
   :init
   (require 'boxquote)
@@ -23,8 +23,10 @@
   :config
   (add-to-list 'org-agenda-files "~/Notes/Calendar/diary")
   (add-to-list 'org-agenda-files "~/Notes/Calendar/mu4e")
+  (set-variable 'read-mail-command 'mu4e)
   :custom
   (diary-file "~/Notes/Calendar/diary")
+  (mail-user-agent 'mu4e-user-agent)
   (message-cite-reply-position 'above)
   (message-cite-style message-cite-style-outlook)
   (message-kill-buffer-on-exit t)
