@@ -10,8 +10,11 @@
   (mu4e-compose-mode-hook . nemacs-setup-mu4e-compose-mode)
   :bind
   (("C-x M" . mu4e)
-   ("C-x m" . mu4e-compose-new))
+   ("C-x m" . mu4e-compose-new)
+   (:map message-mode
+         "C-x \" " . boxquote-region))
   :init
+  (require 'boxquote)
   (require 'mu4e-context)
   (require 'mu4e-contrib)
   (require 'mu4e-icalendar)
@@ -40,3 +43,5 @@
   (mu4e-view-prefer-html t)
   (mu4e-view-show-images t)
   (org-mu4e-convert-to-html t))
+
+(use-package mu4e-alert)
