@@ -47,24 +47,3 @@
   (org-agenda-skip-deadline-if-done nil)
   (org-agenda-skip-scheduled-if-done nil)
   (org-agenda-start-on-weekday 0))
-
-(use-package org-roam
-  :disabled (not nemacs-org-roam-enabled)
-  :bind
-  ((:map org-mode-map
-         ("C-M-i" . completion-at-point))
-   ("C-c n l" . org-roam-buffer-toggle)
-   ("C-c n f" . org-roam-node-find)
-   ("C-c n i" . org-roam-node-insert)
-   (:map org-roam-dailies-map
-         ("Y" . org-roam-dailies-capture-yesterday)
-         ("T" . org-roam-dailies-capture-today)))
-  :bind-keymap
-  ("C-c n d" . org-roam-dailies-map)
-  :config
-  (require 'org-roam-dailies) ;; Ensure the keymap is available
-  (org-roam-db-autosync-mode)
-  (org-roam-setup)
-  :custom
-  (org-roam-directory "~/Notes/Roam")
-  (org-roam-dailies-directory "Journal/"))
