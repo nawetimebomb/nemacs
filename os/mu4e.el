@@ -1,6 +1,9 @@
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
+
 (use-package boxquote)
 
 (use-package mu4e
+  :straight nil
   :preface
   (defun nemacs-setup-mu4e-compose-mode ()
     (flyspell-mode)
@@ -9,10 +12,7 @@
   :hook
   (mu4e-compose-mode-hook . nemacs-setup-mu4e-compose-mode)
   :bind
-  (("C-x M" . mu4e)
-   ("C-x m" . mu4e-compose-new)
-   (:map mu4e-compose-mode
-         "C-x \" " . boxquote-region))
+  (("C-x m" . mu4e-compose-new))
   :init
   (require 'boxquote)
   (require 'mu4e-context)

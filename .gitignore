@@ -3,3 +3,4 @@ server
 tutorial
 custom/*.el
 straight
+org-roam.db

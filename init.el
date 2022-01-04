@@ -35,6 +35,8 @@
 (when NEMACS-OS
   (load (expand-file-name "os/org-roam.el" user-emacs-directory))
   (load (expand-file-name "os/mu4e.el" user-emacs-directory))
+  (load (expand-file-name "os/vterm.el" user-emacs-directory))
+  (load (expand-file-name "os/lastpass.el" user-emacs-directory))
   (load (expand-file-name "os/exwm.el" user-emacs-directory)))
 
 ;;

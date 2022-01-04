@@ -1,10 +1,10 @@
 (use-package org-roam
   :bind
-  ((:map org-mode-map
-         ("C-M-i" . completion-at-point))
-   ("C-c n l" . org-roam-buffer-toggle)
+  (("C-c n l" . org-roam-buffer-toggle)
    ("C-c n f" . org-roam-node-find)
    ("C-c n i" . org-roam-node-insert)
+   (:map org-mode-map
+         ("C-M-i" . completion-at-point))
    (:map org-roam-dailies-map
          ("Y" . org-roam-dailies-capture-yesterday)
          ("T" . org-roam-dailies-capture-today)))
