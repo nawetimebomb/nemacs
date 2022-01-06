@@ -19,4 +19,5 @@
   (doom-modeline-buffer-state-icon nil)
   (doom-modeline-height 35)
   (doom-modeline-major-mode-color-icon nil)
-  (doom-modeline-minor-modes nil))
+  (doom-modeline-minor-modes nil)
+  (doom-modeline-mu4e t))

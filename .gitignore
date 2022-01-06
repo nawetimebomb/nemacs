@@ -4,3 +4,4 @@ tutorial
 custom/*.el
 straight
 org-roam.db
+.org-id-locations

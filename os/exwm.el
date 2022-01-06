@@ -4,18 +4,18 @@
 ;;       most of then need to be initialized before running `(exwm-enable)'. Hopefully, this is the only
 ;;       configuration that is not following "the rule" (although there's no rule imposed, really).
 
-(use-package desktop-environment
-  :after exwm
-  :config
-  (desktop-environment-mode)
-  :custom
-  (desktop-environment-brightness-get-command "light")
-  (desktop-environment-brightness-set-command "light %s")
-  (desktop-environment-brightness-get-regexp "^\\([0-9]+\\)")
-  (desktop-environment-brightness-normal-increment "-A 10")
-  (desktop-environment-brightness-normal-decrement "-U 10")
-  (desktop-environment-brightness-small-increment "-A 5")
-  (desktop-environment-brightness-small-decrement "-U 5"))
+;; (use-package desktop-environment
+;;   :after exwm
+;;   :config
+;;   (desktop-environment-mode)
+;;   :custom
+;;   (desktop-environment-brightness-get-command "light")
+;;   (desktop-environment-brightness-set-command "light %s")
+;;   (desktop-environment-brightness-get-regexp "^\\([0-9]+\\)")
+;;   (desktop-environment-brightness-normal-increment "-A 10")
+;;   (desktop-environment-brightness-normal-decrement "-U 10")
+;;   (desktop-environment-brightness-small-increment "-A 5")
+;;   (desktop-environment-brightness-small-decrement "-U 5"))
 
 (use-package exwm
   :config
@@ -42,9 +42,10 @@
     ;; Startup Script
     (start-process-shell-command "sh" nil "sh ~/.emacs.d/os/startup.sh")
 
-    (nemacs-run-in-background "nm-applet")
-    (nemacs-run-in-background "pasystray")
-    (nemacs-run-in-background "blueman-applet"))
+    ;; (nemacs-run-in-background "nm-applet")
+    ;; (nemacs-run-in-background "pasystray")
+    ;; (nemacs-run-in-background "blueman-applet")
+    (nemacs-run-in-background "davmail"))
 
   (defun nemacs-exwm-run-application (command)
     "Prompts for an application and runs it inside `EXWM'."
@@ -56,6 +57,13 @@
     (exwm-workspace-rename-buffer
      (concat exwm-title " - " (capitalize exwm-class-name))))
 
+  (defun nemacs-exwm-configure-window-by-class ()
+    (interactive)
+    (pcase exwm-class-name
+      ("Google-chrome" (exwm-workspace-move-window 2))
+      ("Microsoft Teams - Preview" (exwm-workspace-move-window 3))
+      ("davmail-DavGateway" (exwm-floating-toggle-floating))))
+
   (defun nemacs-exwm-lock-computer ()
     (interactive)
     (nemacs-exwm-run-application "slock"))
@@ -64,6 +72,7 @@
   (add-hook 'exwm-init-hook #'nemacs-exwm-init-hook)
   (add-hook 'exwm-update-title-hook #'nemacs-exwm-rename-buffer)
   (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
+  (add-hook 'exwm-manage-finish-hook #'nemacs-exwm-configure-window-by-class)
 
   ;; Configurations
   (setq exwm-workspace-number 3
