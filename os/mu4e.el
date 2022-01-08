@@ -4,7 +4,7 @@
 
 (use-package mu4e
   :straight nil
-  :defer 20
+  :defer 60
   :preface
   (defun nemacs-setup-mu4e-compose-mode ()
     (flyspell-mode)
@@ -29,8 +29,6 @@
         gnus-icalendar-org-capture-headline '("SWA")
         mu4e-icalendar-trash-after-reply t)
   (gnus-icalendar-org-setup)
-
-  (mu4e t)
   :custom
   (diary-file "~/Notes/Calendar/diary")
   (mail-user-agent 'mu4e-user-agent)

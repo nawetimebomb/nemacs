@@ -1,1 +1,3 @@
-(use-package vterm)
+(use-package vterm
+  :bind
+  (("C-x T" . vterm)))

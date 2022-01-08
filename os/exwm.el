@@ -21,6 +21,11 @@
   :config
   (use-package exwm-edit)
 
+  (use-package dashboard
+    :custom
+    (dashboard-banner-logo-title "NEMACS")
+    (dashboard-center-content t))
+
   (require 'exwm-edit)
   (require 'exwm-systemtray)
 
@@ -30,6 +35,8 @@
       (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
 
   (defun nemacs-exwm-init-hook ()
+    (require 'dashboard)
+
     ;; Start in Workspace 1
     (exwm-workspace-switch-create 1)
 
@@ -42,10 +49,10 @@
     ;; Startup Script
     (start-process-shell-command "sh" nil "sh ~/.emacs.d/os/startup.sh")
 
-    ;; (nemacs-run-in-background "nm-applet")
-    ;; (nemacs-run-in-background "pasystray")
-    ;; (nemacs-run-in-background "blueman-applet")
-    (nemacs-run-in-background "davmail"))
+    (nemacs-run-in-background "davmail")
+
+    (dashboard-setup-startup-hook)
+    (dashboard-refresh-buffer))
 
   (defun nemacs-exwm-run-application (command)
     "Prompts for an application and runs it inside `EXWM'."
@@ -62,6 +69,7 @@
     (pcase exwm-class-name
       ("Google-chrome" (exwm-workspace-move-window 2))
       ("Microsoft Teams - Preview" (exwm-workspace-move-window 3))
+      ("Postman" (exwm-workspace-move-window 4))
       ("davmail-DavGateway" (exwm-floating-toggle-floating))))
 
   (defun nemacs-exwm-lock-computer ()
@@ -82,8 +90,6 @@
         `(([?\s-&]                . nemacs-exwm-run-application)
           ([?\s-r]                . exwm-reset)
           ([?\s-w]                . exwm-workspace-switch)
-
-          ([?\s-l]                . nemacs-exwm-lock-computer)
 
           ([s-left]               . windmove-left)
           ([s-down]               . windmove-down)

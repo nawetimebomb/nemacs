@@ -7,13 +7,14 @@
          ("C-M-i" . completion-at-point))
    (:map org-roam-dailies-map
          ("Y" . org-roam-dailies-capture-yesterday)
-         ("T" . org-roam-dailies-capture-today)))
+         ("D" . org-roam-dailies-capture-today)
+         ("T" . org-roam-dailies-capture-tomorrow)))
   :bind-keymap
   ("C-c n d" . org-roam-dailies-map)
   :config
   (require 'org-roam-dailies) ;; Ensure the keymap is available
   (org-roam-db-autosync-mode)
-  (org-roam-setup)
   :custom
+  (org-roam-completion-everywhere t)
   (org-roam-directory "~/Notes/Roam")
   (org-roam-dailies-directory "Journal/"))
