@@ -43,8 +43,8 @@
 ;;; FONT
 
 (IS-LINUX
- (set-fontset-font t 'unicode (font-spec :name "Envy Code R-14") nil)
- (set-face-font 'default "Envy Code R-14"))
+ (set-fontset-font t 'unicode (font-spec :name "Envy Code R-16") nil)
+ (set-face-font 'default "Envy Code R-16"))
 
 (IS-WINDOWS
  (set-fontset-font t 'unicode (font-spec :name "Envy Code R-16") nil)
