@@ -138,14 +138,16 @@ Change this value on a `user-emacs-directory/custom' file.")
       desktop-files-not-to-save "\\(\\`/[^/:]*:\\|(ftp)\\'\\)"
       desktop-modes-not-to-save '(dired-mode
                                   org-mode
+                                  rjsx-mode
                                   special-mode
                                   tags-table-mode
                                   vc-dir-mode)
       desktop-load-locked-desktop nil
       desktop-path (list nemacs-cache-dir)
-      desktop-save t
+      desktop-save nil
       desktop-dirname nemacs-cache-dir)
-(desktop-save-mode 1)
+;; NOTE 1/7/22: I'm disabling the `desktop-save-mode' since using `recentf-mode' is simpler and cleaner.
+(desktop-save-mode -1)
 
 ;; Disable ido-mode
 (ido-mode -1)
@@ -192,10 +194,10 @@ Change this value on a `user-emacs-directory/custom' file.")
 
   ;; Startup configuration
   (setq inhibit-default-init t
-	    inhibit-startup-echo-area-message user-login-name
+        inhibit-startup-echo-area-message user-login-name
+        inhibit-startup-message t
 	    initial-major-mode 'fundamental-mode
-	    initial-scratch-message nil
-	    inhibit-startup-message t)
+	    initial-scratch-message nil)
 
   ;; Add hoook to after-init
   (add-hook 'after-init-hook
