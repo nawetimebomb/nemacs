@@ -42,6 +42,7 @@
   :hook
   (org-agenda-mode . nemacs-org-agenda-hook)
   :custom
+  (org-agenda-archives-mode nil)
   (org-agenda-inhibit-startup nil)
   (org-agenda-show-future-repeats t)
   (org-agenda-skip-deadline-if-done nil)
