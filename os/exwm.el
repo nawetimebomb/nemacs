@@ -4,19 +4,6 @@
 ;;       most of then need to be initialized before running `(exwm-enable)'. Hopefully, this is the only
 ;;       configuration that is not following "the rule" (although there's no rule imposed, really).
 
-;; (use-package desktop-environment
-;;   :after exwm
-;;   :config
-;;   (desktop-environment-mode)
-;;   :custom
-;;   (desktop-environment-brightness-get-command "light")
-;;   (desktop-environment-brightness-set-command "light %s")
-;;   (desktop-environment-brightness-get-regexp "^\\([0-9]+\\)")
-;;   (desktop-environment-brightness-normal-increment "-A 10")
-;;   (desktop-environment-brightness-normal-decrement "-U 10")
-;;   (desktop-environment-brightness-small-increment "-A 5")
-;;   (desktop-environment-brightness-small-decrement "-U 5"))
-
 (use-package exwm
   :config
   (use-package exwm-edit)
@@ -42,13 +29,15 @@
 
     (setq display-time-day-and-date t)
 
-    ;; Enable system modes
-    (display-time-mode)
+    ;; Modeline modes
+    (display-time-mode 1)
     (display-battery-mode)
+    (add-to-list 'global-mode-string exwm-workspace-current-index)
 
     ;; Startup Script
     (start-process-shell-command "sh" nil "sh ~/.emacs.d/os/startup.sh")
 
+    (nemacs-run-in-background "nm-applet")
     (nemacs-run-in-background "davmail")
 
     (dashboard-setup-startup-hook)
@@ -58,6 +47,10 @@
     "Prompts for an application and runs it inside `EXWM'."
     (interactive (list (read-shell-command "> ")))
     (start-process-shell-command command nil command))
+
+  (defun nemacs-exwm-run-rofi ()
+    (interactive)
+    (nemacs-run-in-background "rofi -show drun"))
 
   (defun nemacs-exwm-rename-buffer ()
     "Rename the buffers to the window title."
@@ -83,13 +76,15 @@
   (add-hook 'exwm-manage-finish-hook #'nemacs-exwm-configure-window-by-class)
 
   ;; Configurations
-  (setq exwm-workspace-number 3
+  (setq exwm-workspace-number 4
         exwm-systemtray-height 22)
 
   (setq exwm-input-global-keys
         `(([?\s-&]                . nemacs-exwm-run-application)
           ([?\s-r]                . exwm-reset)
           ([?\s-w]                . exwm-workspace-switch)
+
+          ([?\s-e]                . nemacs-exwm-run-rofi)
 
           ([s-left]               . windmove-left)
           ([s-down]               . windmove-down)
@@ -115,6 +110,7 @@
           ([?\C-v] . [next])))
 
   (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+  (define-key exwm-mode-map [?\C-g] #'nemacs-escape)
 
   (exwm-edit-mode)
   (exwm-systemtray-enable)
