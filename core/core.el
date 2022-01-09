@@ -155,6 +155,14 @@ Change this value on a `user-emacs-directory/custom' file.")
 ;; Enable recentf-mode (Recent File)
 (recentf-mode 1)
 
+;; Session files
+(eval-after-load 'x-win
+  (let ((session-dir (concat nemacs-cache-dir "sessions/")))
+        `(progn
+           (make-directory ,session-dir t)
+           (defun emacs-session-filename (session-id)
+             (expand-file-name session-id ,session-dir)))))
+
 ;; Ask before quitting Emacs
 (defun nemacs-prompt-before-exiting-emacs ()
   "Prompts before closing the frame with `C-x C-c'. Standarizes `emacs' and
