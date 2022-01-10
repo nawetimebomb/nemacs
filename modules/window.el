@@ -14,7 +14,7 @@
                                  windmove-left
                                  windmove-right
                                  windmove-up))
-  (golden-ratio-adjust-factor 0.8)
+  (golden-ratio-adjust-factor 1)
   (golden-ratio-auto-scale nil)
   (golden-ratio-exclude-modes '("ediff-mode"
                                 "magit-mode"
