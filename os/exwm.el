@@ -52,6 +52,10 @@
     (interactive)
     (nemacs-run-in-background "rofi -show drun"))
 
+  (defun nemacs-exwm-take-screenshot ()
+    (interactive)
+    (nemacs-run-in-background "~/.scripts/screenshot.sh"))
+
   (defun nemacs-exwm-rename-buffer ()
     "Rename the buffers to the window title."
     (exwm-workspace-rename-buffer
@@ -85,6 +89,7 @@
           ([?\s-w]                . exwm-workspace-switch)
 
           ([?\s-e]                . nemacs-exwm-run-rofi)
+          ([?\s-S]                . nemacs-exwm-take-screenshot)
 
           ([s-left]               . windmove-left)
           ([s-down]               . windmove-down)
@@ -111,6 +116,7 @@
 
   (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
   (define-key exwm-mode-map [?\C-g] #'nemacs-escape)
+  (define-key exwm-mode-map [?\s-s] #'nemacs-exwm-take-screenshot)
 
   (exwm-edit-mode)
   (exwm-systemtray-enable)

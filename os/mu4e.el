@@ -27,8 +27,9 @@
 
   (setq gnus-icalendar-org-capture-file "~/Notes/Calendar/mu4e.org"
         gnus-icalendar-org-capture-headline '("SWA")
+        mu4e-icalendar-diary-file "~/Notes/Calendar/mu4e.org"
         mu4e-icalendar-trash-after-reply t)
-  (gnus-icalendar-org-setup)
+  (mu4e-icalendar-setup)
   :custom
   (diary-file "~/Notes/Calendar/diary")
   (mail-user-agent 'mu4e-user-agent)
