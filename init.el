@@ -36,19 +36,18 @@
   (load (expand-file-name "os/org-roam.el" user-emacs-directory))
   (load (expand-file-name "os/mu4e.el" user-emacs-directory))
   (load (expand-file-name "os/vterm.el" user-emacs-directory))
-  (load (expand-file-name "os/lastpass.el" user-emacs-directory))
   (load (expand-file-name "os/exwm.el" user-emacs-directory)))
 
 ;;
 ;;; FONT
 
 (IS-LINUX
- (set-fontset-font t 'unicode (font-spec :name "Envy Code R-15") nil)
- (set-face-font 'default "Envy Code R-15"))
+ (set-fontset-font t 'unicode (font-spec :name "Hack-15") nil)
+ (set-face-font 'default "Hack-15"))
 
 (IS-WINDOWS
- (set-fontset-font t 'unicode (font-spec :name "Envy Code R-16") nil)
- (set-face-font 'default "Envy Code R-16"))
+ (set-fontset-font t 'unicode (font-spec :name "Hack-16") nil)
+ (set-face-font 'default "Hack-16"))
 
 ;;
 ;;; INITIALIZE EMACS

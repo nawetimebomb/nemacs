@@ -122,7 +122,7 @@ fundamental-mode) for performance sake."
 
 ;; Default saving configurations
 (setq auto-save-default nil
-	  delete-by-moving-to-trash t)
+      delete-by-moving-to-trash t)
 ;; After saving, remove all trailing whitespace
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
@@ -148,13 +148,13 @@ fundamental-mode) for performance sake."
 ;;; PROGRAMMING
 
 (setq-default fill-column 120
-	          indent-tabs-mode nil
-	          mouse-yank-at-point t
-	          require-final-newline t
-	          tab-always-indent t
-	          tab-width 4
-	          tabify-regexp "^\t* [ \t]+"
-	          truncate-lines nil)
+              indent-tabs-mode nil
+              mouse-yank-at-point t
+              require-final-newline t
+              tab-always-indent t
+              tab-width 4
+              tabify-regexp "^\t* [ \t]+"
+              truncate-lines nil)
 
 ;; Add TODOs, NOTEs and IMPORTANT keywords
 (defvar fixme-modes '(c++-mode

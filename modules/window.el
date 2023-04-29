@@ -3,6 +3,7 @@
   ("M-o" . ace-window))
 
 (use-package golden-ratio
+  :disabled t
   :config
   (golden-ratio-mode 1)
 

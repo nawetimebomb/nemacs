@@ -211,4 +211,5 @@ Change this value on a `user-emacs-directory/custom' file.")
   (add-hook 'after-init-hook
             #'(lambda ()
 		        (setq gc-cons-threshold 16777216
-                      gc-cons-percentage 0.1))))
+                      gc-cons-percentage 0.1
+                      read-process-output-max (* 1024 1024)))))
