@@ -2,8 +2,9 @@
   :preface
   (defun nemacs-setup-cc-mode ()
     (setq flycheck-clang-language-standard "gnu99")
-    (c-set-offset 'case-label 4)
+    (flycheck-mode)
     (lsp-mode)
+    (c-set-offset 'case-label 4)
     (c-toggle-comment-style -1))
 
   (defun nemacs-compile-sources ()

@@ -3,5 +3,8 @@
              :type git
              :host github
              :repo "mattt-b/odin-mode")
+  :preface
+  (defun nemacs-setup-odin-mode ()
+    (flycheck-mode))
   :hook
-  (odin-mode . lsp))
+  (odin-mode . nemacs-setup-odin-mode))

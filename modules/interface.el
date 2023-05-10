@@ -17,6 +17,10 @@
   :custom
   (all-the-icons-color-icons nil))
 
+(use-package all-the-icons-completion
+  :init
+  (all-the-icons-completion-mode))
+
 (use-package doom-modeline
   :disabled t
   :init

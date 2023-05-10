@@ -1,6 +1,4 @@
-(use-package company
-  :init
-  (global-company-mode t))
+(use-package company)
 
 (use-package flycheck
   :custom
@@ -21,5 +19,4 @@
                     :server-id 'ols
                     :multi-root t))
   :custom
-  (lsp-auto-guess-root t)
   (lsp-keymap-prefix "s-f"))

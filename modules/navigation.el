@@ -6,6 +6,9 @@
    ("C-x B" . consult-buffer-other-window)))
 
 (use-package marginalia
+  :bind
+  ((:map minibuffer-local-map
+         ("M-A" . marginalia-cycle)))
   :init
   (marginalia-mode))
 
@@ -24,6 +27,9 @@
   (vertico-mode)
   :custom
   (completion-ignore-case t)
-  (read-file-name-completion-ignore-case t)
   (read-buffer-completion-ignore-case t)
-  (vertico-cycle t))
+  (read-file-name-completion-ignore-case t)
+  (vertico-count 15)
+  (vertico-cycle t)
+  (vertico-resize nil)
+  (vertico-scroll-margin 0))
