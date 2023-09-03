@@ -1,6 +1,6 @@
 ;;; core/core.el --- NEMACS CORE Main File.
 
-;; Copyright (C) 2017 ~ 2022 Nahuel Jesús Sacchetti <me@nsacchetti.com>
+;; Copyright (C) 2017 ~ 2023 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
 
 ;; This program is free software; you can redistribute it and/or modify it under
 ;; the terms of the GNU General Public License as published by the Free Software
@@ -23,7 +23,7 @@
 ;;
 ;;; NEMACS
 
-(defconst nemacs-version "0.10b"
+(defconst nemacs-version "0.20"
   "Version of `NEMACS'.")
 
 (defconst nemacs-local-dir (concat user-emacs-directory ".local/")
@@ -75,9 +75,12 @@ Change this value on a `user-emacs-directory/custom' file.")
 ;;;###autoload
 (defmacro IS-LAPTOP (&rest body)
   `(when (and battery-status-function
-              (not (string-match-p "N/A"
-                                   (battery-format "%B"
-                                                   (funcall battery-status-function)))))
+              (not
+               (string-match-p
+                "N/A"
+                (battery-format
+                 "%B"
+                 (funcall battery-status-function)))))
      ,@body))
 
 ;;;###autoload
@@ -116,7 +119,7 @@ Change this value on a `user-emacs-directory/custom' file.")
 ;; Load all the core libraries.
 (load (concat user-emacs-directory "core/editor.el"))
 (load (concat user-emacs-directory "core/interface.el"))
-(load (concat user-emacs-directory "core/packages.el"))
+(load (concat user-emacs-directory "core/straight.el"))
 
 ;; Save bookmarks on change
 (setq bookmark-save-flag 1)

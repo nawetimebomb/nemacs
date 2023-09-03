@@ -1,4 +1,4 @@
-;;; programming/javascript.el --- NEMACS JavaScript Configuration File.
+;;; custom/theme.el --- NEMACS CUSTOM Theme Configuration File.
 
 ;; Copyright (C) 2017 ~ 2023 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
 
@@ -18,15 +18,11 @@
 ;;; Code:
 
 ;;
-;;; NEMACS JAVASCRIPT
+;;; NEMACS THEME
 
-(use-package rjsx-mode
-  :preface
-  (defun nemacs-setup-rjsx-mode ()
-    (flycheck-mode))
-  :hook
-  (rjsx-mode . nemacs-setup-rjsx-mode)
-  :mode "\\.js\\'"
-  :custom
-  (js-indent-level 4)
-  (sgml-basic-offset 4))
+(use-package naysayer-theme
+  :straight (naysayer-theme :type git :host github :repo "nickav/naysayer-theme.el"
+                            :fork (:host github
+                                   :repo "elnawe/naysayer-fork"))
+  :init
+  (load-theme 'naysayer t))

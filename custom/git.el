@@ -1,4 +1,4 @@
-;;; programming/javascript.el --- NEMACS JavaScript Configuration File.
+;;; custom/git.el --- NEMACS CUSTOM Git Configuration File.
 
 ;; Copyright (C) 2017 ~ 2023 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
 
@@ -18,15 +18,6 @@
 ;;; Code:
 
 ;;
-;;; NEMACS JAVASCRIPT
+;;; NEMACS GIT
 
-(use-package rjsx-mode
-  :preface
-  (defun nemacs-setup-rjsx-mode ()
-    (flycheck-mode))
-  :hook
-  (rjsx-mode . nemacs-setup-rjsx-mode)
-  :mode "\\.js\\'"
-  :custom
-  (js-indent-level 4)
-  (sgml-basic-offset 4))
+(use-package magit)

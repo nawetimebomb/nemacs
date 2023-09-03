@@ -1,6 +1,6 @@
-;;; core/packages.el --- NEMACS CORE Packages File.
+;;; core/straight.el --- NEMACS CORE Straight Configuration File.
 
-;; Copyright (C) 2017 ~ 2022 Nahuel Jesús Sacchetti <me@nsacchetti.com>
+;; Copyright (C) 2017 ~ 2023 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
 
 ;; This program is free software; you can redistribute it and/or modify it under
 ;; the terms of the GNU General Public License as published by the Free Software
@@ -18,7 +18,7 @@
 ;;; Code:
 
 ;;
-;;; NEMACS PACKAGES
+;;; NEMACS STRAIGHT
 
 (defvar bootstrap-version)
 

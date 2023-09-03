@@ -1,4 +1,4 @@
-;;; programming/javascript.el --- NEMACS JavaScript Configuration File.
+;;; custom/key.el --- NEMACS CUSTOM Key Configuration File.
 
 ;; Copyright (C) 2017 ~ 2023 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
 
@@ -18,15 +18,13 @@
 ;;; Code:
 
 ;;
-;;; NEMACS JAVASCRIPT
+;;; NEMACS KEY
 
-(use-package rjsx-mode
-  :preface
-  (defun nemacs-setup-rjsx-mode ()
-    (flycheck-mode))
-  :hook
-  (rjsx-mode . nemacs-setup-rjsx-mode)
-  :mode "\\.js\\'"
+(use-package which-key
+  :config
+  (which-key-mode)
   :custom
-  (js-indent-level 4)
-  (sgml-basic-offset 4))
+  (which-key-popup-type 'minibuffer)
+  (which-key-show-early-on-C-h t)
+  (which-key-idle-delay 0.2)
+  (which-key-idle-secondary-delay nil))

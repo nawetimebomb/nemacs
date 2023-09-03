@@ -1,4 +1,4 @@
-;;; programming/javascript.el --- NEMACS JavaScript Configuration File.
+;;; programming/go.el --- NEMACS Go Configuration File.
 
 ;; Copyright (C) 2017 ~ 2023 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
 
@@ -18,15 +18,10 @@
 ;;; Code:
 
 ;;
-;;; NEMACS JAVASCRIPT
+;;; NEMACS GO
 
-(use-package rjsx-mode
-  :preface
-  (defun nemacs-setup-rjsx-mode ()
-    (flycheck-mode))
-  :hook
-  (rjsx-mode . nemacs-setup-rjsx-mode)
-  :mode "\\.js\\'"
-  :custom
-  (js-indent-level 4)
-  (sgml-basic-offset 4))
+(use-package go-mode
+  :init
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (c-set-offset 'case-label '+))))

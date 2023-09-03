@@ -1,6 +1,6 @@
 ;;; core/interface.el --- NEMACS CORE Interface File.
 
-;; Copyright (C) 2017 ~ 2022 Nahuel Jesús Sacchetti <me@nsacchetti.com>
+;; Copyright (C) 2017 ~ 2023 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
 
 ;; This program is free software; you can redistribute it and/or modify it under
 ;; the terms of the GNU General Public License as published by the Free Software

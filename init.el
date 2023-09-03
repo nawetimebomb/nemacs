@@ -1,6 +1,6 @@
 ;;; init.el --- NEMACS Initialization File.
 
-;; Copyright (C) 2017 ~ 2022 Nahuel Jesús Sacchetti <me@nsacchetti.com>
+;; Copyright (C) 2017 ~ 2023 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
 
 ;; This program is free software; you can redistribute it and/or modify it under
 ;; the terms of the GNU General Public License as published by the Free Software
@@ -18,25 +18,19 @@
 ;;; Code:
 
 ;;
-;;; PACKAGES
+;;; SETUP
 
 ;; Load `core' configuration
-(load (concat user-emacs-directory "core/core.el"))
-
-;; Load all files from `modules/'
-(mapc 'load (file-expand-wildcards (concat user-emacs-directory "modules/*.el")))
-
-;; Load all files from `programming/'
-(mapc 'load (file-expand-wildcards (concat user-emacs-directory "programming/*.el")))
+(load (concat user-emacs-directory "core/main.el"))
 
 ;; Load all files from `custom/'
 (mapc 'load (file-expand-wildcards (concat user-emacs-directory "custom/*.el")))
 
-(when NEMACS-OS
-  (load (expand-file-name "os/org-roam.el" user-emacs-directory))
-  (load (expand-file-name "os/mu4e.el" user-emacs-directory))
-  (load (expand-file-name "os/vterm.el" user-emacs-directory))
-  (load (expand-file-name "os/exwm.el" user-emacs-directory)))
+;; Load all files from `programming/'
+(mapc 'load (file-expand-wildcards (concat user-emacs-directory "programming/*.el")))
+
+;; Load all files from `machine-specific/'
+(mapc 'load (file-expand-wildcards (concat user-emacs-directory "machine-specific/*.el")))
 
 ;;
 ;;; FONT

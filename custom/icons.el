@@ -1,4 +1,4 @@
-;;; programming/javascript.el --- NEMACS JavaScript Configuration File.
+;;; custom/icons.el --- NEMACS CUSTOM Icons Configuration File.
 
 ;; Copyright (C) 2017 ~ 2023 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
 
@@ -18,15 +18,14 @@
 ;;; Code:
 
 ;;
-;;; NEMACS JAVASCRIPT
+;;; NEMACS ICONS
 
-(use-package rjsx-mode
-  :preface
-  (defun nemacs-setup-rjsx-mode ()
-    (flycheck-mode))
+(use-package all-the-icons-dired
   :hook
-  (rjsx-mode . nemacs-setup-rjsx-mode)
-  :mode "\\.js\\'"
+  (dired-mode . all-the-icons-dired-mode)
   :custom
-  (js-indent-level 4)
-  (sgml-basic-offset 4))
+  (all-the-icons-color-icons nil))
+
+(use-package all-the-icons-completion
+  :init
+  (all-the-icons-completion-mode))

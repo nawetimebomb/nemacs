@@ -1,8 +1,10 @@
+.cache
 .local
-server
-tutorial
-custom/*.el
-straight
-org-roam.db
-.org-id-locations
 .lsp-session*
+.org-id-locations
+eshell
+machine-specific/*.el
+server
+straight
+tutorial
+url

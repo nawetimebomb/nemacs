@@ -28,7 +28,7 @@
   (org-return-follows-link t)
   (org-startup-folded nil)
   (org-startup-truncated nil)
-  (org-tags-column -115)
+  (org-tags-column -70)
   (org-todo-keywords '((sequence "TODO(t!)" "NEXT(n!)" "WAITING(w!)" "DONE(d!)"))))
 
 (use-package org-agenda
