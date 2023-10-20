@@ -7,7 +7,8 @@
   (org-mode                . nemacs-setup-org-mode)
   (org-after-refile-insert . org-save-all-org-buffers)
   :bind
-  (("C-c l" . org-store-link))
+  (("C-c l" . org-store-link)
+   ("C-c t" . org-todo))
   :custom
   (org-adapt-indentation nil)
   (org-blank-before-new-entry '((heading . t) (plain-list-item . nil)))
@@ -29,7 +30,20 @@
   (org-startup-folded nil)
   (org-startup-truncated nil)
   (org-tags-column -70)
-  (org-todo-keywords '((sequence "TODO(t!)" "NEXT(n!)" "WAITING(w!)" "DONE(d!)"))))
+  (org-todo-keywords '((sequence "TODO(t!)" "PROJECT(p)" "NEXT(n!)" "WAITING(w!)" "DONE(d!)"))))
+
+(use-package org-capture
+  :straight nil
+  :bind
+  (("s-o" . org-capture))
+  :custom
+  (org-capture-templates
+   '(("i" "Entrada de Inbox"
+      entry (file "~/Notes/inbox.org") "* TODO %?\n%T")
+     ("c" "Entrada para Cuento de la Buena Pipa"
+      entry (file "~/Notes/cdlbp.org") "* TODO %?\n%T")
+     ("p" "Entrada para Privacidad"
+      entry (file "~/Notes/privacy.org") "* TODO %?\n%T"))))
 
 (use-package org-agenda
   :straight nil
@@ -43,6 +57,9 @@
   (org-agenda-mode . nemacs-org-agenda-hook)
   :custom
   (org-agenda-archives-mode nil)
+  (org-agenda-files '("~/Notes/inbox.org"
+                      "~/Notes/cdlbp.org"
+                      "~/Notes/privacy.org"))
   (org-agenda-inhibit-startup nil)
   (org-agenda-show-future-repeats t)
   (org-agenda-skip-deadline-if-done nil)

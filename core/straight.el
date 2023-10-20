@@ -35,5 +35,6 @@
   (load bootstrap-file nil 'nomessage))
 
 (straight-use-package 'use-package)
+(straight-use-package 'org)
 
 (setq straight-use-package-by-default t)
