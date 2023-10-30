@@ -1,8 +1,34 @@
+;;; custom/org.el --- NEMACS CUSTOM Org Configuration File.
+
+;; Copyright (C) 2017 ~ 2023 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
+
+;; This program is free software; you can redistribute it and/or modify it under
+;; the terms of the GNU General Public License as published by the Free Software
+;; Foundation, either version 3 of the License, or (at your option) any later
+;; version.
+
+;; This program is distributed in the hope that it will be useful, but WITHOUT
+;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+;; FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+;; details.
+
+;; You should have received a copy of the GNU General Public License along with
+;; this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Code:
+
+;;
+;;; NEMACS ORG
+
 (use-package org
   :straight org-contrib
   :preface
   (defun nemacs-setup-org-mode ()
     (setq-local line-spacing 0.1))
+
+  (defun nemacs-find-org-files ()
+    (interactive)
+    (find-file))
   :hook
   (org-mode                . nemacs-setup-org-mode)
   (org-after-refile-insert . org-save-all-org-buffers)
@@ -35,7 +61,7 @@
 (use-package org-capture
   :straight nil
   :bind
-  (("s-o" . org-capture))
+  (("C-c c" . org-capture))
   :custom
   (org-capture-templates
    '(("i" "Entrada de Inbox"

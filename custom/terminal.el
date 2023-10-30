@@ -1,4 +1,4 @@
-;;; custom/theme.el --- NEMACS CUSTOM Theme Configuration File.
+;;; custom/terminal.el --- NEMACS CUSTOM Terminal Configuration File.
 
 ;; Copyright (C) 2017 ~ 2023 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
 
@@ -18,11 +18,8 @@
 ;;; Code:
 
 ;;
-;;; NEMACS THEME
+;;; NEMACS TERMINAL
 
-(use-package naysayer-theme
-  :straight (naysayer-theme :type git :host github :repo "nickav/naysayer-theme.el"
-                            :fork (:host github
-                                   :repo "elnawe/naysayer-fork"))
-  :init
-  (load-theme 'naysayer t))
+(use-package vterm
+  :bind
+  (("C-x T" . vterm)))
