@@ -1,6 +1,6 @@
-;;; custom/git.el --- NEMACS CUSTOM Git Configuration File.
+;;; core/theme.el --- NEMACS CORE Theme Configuration File.
 
-;; Copyright (C) 2017 ~ 2023 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
+;; Copyright (C) 2017 ~ 2024 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
 
 ;; This program is free software; you can redistribute it and/or modify it under
 ;; the terms of the GNU General Public License as published by the Free Software
@@ -18,6 +18,11 @@
 ;;; Code:
 
 ;;
-;;; NEMACS GIT
+;;; NEMACS THEME
 
-(use-package magit)
+(use-package doom-themes
+  :config
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-sourcerer t)
+  (doom-themes-org-config))
