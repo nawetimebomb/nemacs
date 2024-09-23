@@ -1,6 +1,6 @@
 ;;; programming/stanczyk.el --- NEMACS Stanczyk Configuration File.
 
-;; Copyright (C) 2017 ~ 2023 Nahuel Jesús Sacchetti <nemacs@nsacchetti.com>
+;; Copyright (C) 2017 ~ 2024 Nahuel Jesús Sacchetti <me@nsacchetti.com>
 
 ;; This program is free software; you can redistribute it and/or modify it under
 ;; the terms of the GNU General Public License as published by the Free Software
@@ -32,7 +32,7 @@
     (modify-syntax-entry ?\n ">" st) st))
 
 (eval-and-compile
-  (defconst stanczyk-tab-width 2 "Tab width for Stańczyk mode")
+  (defconst stanczyk-tab-width 2 "Tab width for Stanczyk mode")
 
   (defun stanczyk-indent-two-spaces ()
     (insert "  "))
@@ -44,14 +44,14 @@
     (stanczyk-wrap-reserved-rx (regexp-opt keywords t)))
 
   (defconst stanczyk-keywords
-    '("bind" "const" "do" "else" "function" "if"
-      "loop" "macro" "reserve" "ret" "syscall" "yield"))
+    '("extern" "bind" "const" "else" "fn" "if"
+      "loop" "reserve" "ret"))
 
   (defconst stanczyk-special
     '("using"))
 
   (defconst stanczyk-typenames
-    '("bool" "char" "int" "ptr"))
+    '("bool" "int" "ptr" "str"))
 
   (defconst stanczyk-constants
     '("true" "false"))
@@ -62,28 +62,31 @@
 
   (defconst stanczyk-font-lock-defaults
     `((;; Strings and chars
-       ("\"\\.\\*\\?\\|'[\\]*.'"                        0 'font-lock-string-face)
+       ("\"\\.\\*\\?\\|'[\\]*.'"                   0 'font-lock-string-face)
 
        ;; Types
        (,(stanczyk-keywords-rx stanczyk-typenames) 0 'font-lock-type-face)
 
        ;; Keywords
-       (,(stanczyk-keywords-rx stanczyk-keywords)  0 'font-lock-builtin-face)
-       ("->\\B\\|\\.\\B"                           0 'font-lock-builtin-face)
+       (,(stanczyk-keywords-rx stanczyk-keywords)  0 'font-lock-keyword-face)
 
        ;; Other
        (,(stanczyk-keywords-rx stanczyk-special)   0 'stanczyk-submit-face)
        (,(stanczyk-keywords-rx stanczyk-constants) 0 'font-lock-constant-face)))))
 
-(define-derived-mode stanczyk-mode prog-mode "Stańczyk"
+(define-derived-mode stanczyk-mode prog-mode "Stanczyk"
   :syntax-table stanczyk-mode-syntax-table
 
-  (setq mode-name "Stańczyk")
+  (setq mode-name "Stanczyk")
   (setq font-lock-defaults stanczyk-font-lock-defaults)
   (setq-local tab-width stanczyk-tab-width)
-  (setq-local indent-tabs-mode nil)
+  (setq-local indent-tabs-mode t)
   (setq-local comment-start ";")
   (setq-local comment-end "")
+  (setq-local electric-indent-inhibit t)
+  (setq-local backward-delete-char-untabify-method 'hungry)
+
+  (local-set-key (kbd "TAB") 'tab-to-tab-stop)
 
   ;; TODO: add hooks
   )
