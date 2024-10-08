@@ -40,8 +40,8 @@
  (set-face-font 'default "Hack-15"))
 
 (IS-WINDOWS
- (set-fontset-font t 'unicode (font-spec :name "Hack-16") nil)
- (set-face-font 'default "Hack-16"))
+ (set-fontset-font t 'unicode (font-spec :name "Hack-18") nil)
+ (set-face-font 'default "Hack-18"))
 
 ;;
 ;;; INITIALIZE EMACS

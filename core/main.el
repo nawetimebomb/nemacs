@@ -120,6 +120,7 @@ Change this value on a `user-emacs-directory/custom' file.")
 (load (concat user-emacs-directory "core/editor.el"))
 (load (concat user-emacs-directory "core/interface.el"))
 (load (concat user-emacs-directory "core/straight.el"))
+(load (concat user-emacs-directory "core/theme.el"))
 
 ;; Save bookmarks on change
 (setq bookmark-save-flag 1)

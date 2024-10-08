@@ -44,17 +44,23 @@
     (stanczyk-wrap-reserved-rx (regexp-opt keywords t)))
 
   (defconst stanczyk-keywords
-    '("extern" "bind" "const" "else" "fn" "if"
-      "loop" "reserve" "ret"))
+    '("asm" "bind" "const" "else" "fn" "leave" "in" "done"
+      "loop"
+      "peek" "if" "fi" "until" "while" "ret" "var" "when"))
 
   (defconst stanczyk-special
-    '("using"))
+    '("inline" "private" "using"))
 
   (defconst stanczyk-typenames
-    '("bool" "int" "ptr" "str"))
+    '("any" "bool" "char" "int" "ptr" "str"))
 
   (defconst stanczyk-constants
-    '("true" "false"))
+    '("true"
+      "false"
+      "SK_DEBUG"
+      "OS_LINUX"
+      "OS_WINDOWS"
+      "OS_MAC"))
 
   (defface stanczyk-submit-face
     '((t :inherit font-lock-warning-face :bold nil))
@@ -62,13 +68,19 @@
 
   (defconst stanczyk-font-lock-defaults
     `((;; Strings and chars
-       ("\"\\.\\*\\?\\|'[\\]*.'"                   0 'font-lock-string-face)
+       ("\"\\.\\*\\?\\|'[\\]*.'" 0 'font-lock-string-face)
+       ;; Constants between []
+       ("\\[.*\\]" 0 'font-lock-variable-name-face)
 
        ;; Types
-       (,(stanczyk-keywords-rx stanczyk-typenames) 0 'font-lock-type-face)
+       (,(stanczyk-keywords-rx stanczyk-typenames) 0 'font-lock-builtin-face)
+       ("\\<\$[a-zA-Z]*"                           0 'font-lock-builtin-face)
 
        ;; Keywords
        (,(stanczyk-keywords-rx stanczyk-keywords)  0 'font-lock-keyword-face)
+       ("\\<let\\*?"   0 'font-lock-keyword-face)
+       ("[c]?\\!$"   0 'font-lock-keyword-face)
+       ("[c]?\\@"   0 'font-lock-keyword-face)
 
        ;; Other
        (,(stanczyk-keywords-rx stanczyk-special)   0 'stanczyk-submit-face)
@@ -80,11 +92,15 @@
   (setq mode-name "Stanczyk")
   (setq font-lock-defaults stanczyk-font-lock-defaults)
   (setq-local tab-width stanczyk-tab-width)
-  (setq-local indent-tabs-mode t)
+  (setq-local indent-tabs-mode nil)
   (setq-local comment-start ";")
   (setq-local comment-end "")
   (setq-local electric-indent-inhibit t)
   (setq-local backward-delete-char-untabify-method 'hungry)
+  (setq-default buffer-file-coding-system 'utf-8-unix)
+  (setq-default default-buffer-file-coding-system 'utf-8-unix)
+  (set-default-coding-systems 'utf-8-unix)
+  (prefer-coding-system 'utf-8-unix)
 
   (local-set-key (kbd "TAB") 'tab-to-tab-stop)
 

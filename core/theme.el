@@ -20,9 +20,6 @@
 ;;
 ;;; NEMACS THEME
 
-(use-package doom-themes
+(use-package hc-zenburn-theme
   :config
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
-  (load-theme 'doom-sourcerer t)
-  (doom-themes-org-config))
+  (load-theme 'hc-zenburn t))
