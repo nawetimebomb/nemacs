@@ -58,6 +58,10 @@
 (ido-mode -1)
 (recentf-mode 1)
 
+(eval-after-load "dired-aux"
+  '(add-to-list 'dired-compress-file-suffixes
+                '("\\.zip\\'" ".zip" "unzip")))
+
 (eval-after-load 'x-win
   (let ((session-dir (concat nemacs-cache-dir "sessions/")))
     `(progn
@@ -343,9 +347,9 @@ fundamental-mode) for performance sake."
    ("C-x b" . consult-buffer)
    ("C-x B" . consult-buffer-other-window)))
 
-(use-package hc-zenburn-theme
+(use-package base16-theme
   :config
-  (load-theme 'hc-zenburn t))
+  (load-theme 'base16-apathy t))
 
 (use-package magit)
 
@@ -382,8 +386,8 @@ fundamental-mode) for performance sake."
   :bind
   (("C-x T" . vterm)))
 
-(set-fontset-font t 'unicode (font-spec :name "Iosevka-14") nil)
-(set-face-font 'default "Iosevka-14")
+(set-fontset-font t 'unicode (font-spec :name "Iosevka-16") nil)
+(set-face-font 'default "Iosevka-16")
 
 (load (concat user-emacs-directory "programming.el"))
 
