@@ -27,6 +27,8 @@
 (setq locale-coding-system 'utf-8)
 (IS-WINDOWS (setq selection-coding-system 'utf-8))
 
+(setq warning-minimum-level :emergency)
+
 (setq create-lockfiles nil
       make-backup-files nil)
 
@@ -347,9 +349,9 @@ fundamental-mode) for performance sake."
    ("C-x b" . consult-buffer)
    ("C-x B" . consult-buffer-other-window)))
 
-(use-package base16-theme
+(use-package gruber-darker-theme
   :config
-  (load-theme 'base16-apathy t))
+  (load-theme 'gruber-darker t))
 
 (use-package magit)
 
@@ -390,6 +392,9 @@ fundamental-mode) for performance sake."
 (set-face-font 'default "Iosevka-16")
 
 (load (concat user-emacs-directory "programming.el"))
+
+(if (file-exists-p (concat user-emacs-directory "custom.el"))
+    (load (concat user-emacs-directory "custom.el")))
 
 ;; Add hoook to after-init
 (add-hook 'after-init-hook

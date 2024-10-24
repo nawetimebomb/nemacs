@@ -1,3 +1,9 @@
+(use-package company-mode
+  :config
+  (use-package company-irony)
+  (use-package irony-mode)
+  (add-to-list 'company-backends 'company-irony))
+
 (use-package flycheck
   :custom
   (flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
@@ -50,5 +56,5 @@
 
 (add-hook
  'prog-mode-hook #'(lambda ()
-                    (company-mode)
-                    (display-line-numbers-mode)))
+                     (company-mode)
+                     (display-line-numbers-mode)))

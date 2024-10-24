@@ -3,10 +3,11 @@
 .lsp-session*
 .org-id-locations
 eshell
-machine-specific/*.el
 server
 straight
 tutorial
 url
-eln-cache/*
+eln-cache/
 elpa
+game/
+custom.el
