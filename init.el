@@ -349,10 +349,6 @@ fundamental-mode) for performance sake."
    ("C-x b" . consult-buffer)
    ("C-x B" . consult-buffer-other-window)))
 
-(use-package gruber-darker-theme
-  :config
-  (load-theme 'gruber-darker t))
-
 (use-package magit)
 
 (use-package marginalia
@@ -388,13 +384,17 @@ fundamental-mode) for performance sake."
   :bind
   (("C-x T" . vterm)))
 
-(set-fontset-font t 'unicode (font-spec :name "Iosevka-16") nil)
-(set-face-font 'default "Iosevka-16")
-
 (load (concat user-emacs-directory "programming.el"))
 
 (if (file-exists-p (concat user-emacs-directory "custom.el"))
     (load (concat user-emacs-directory "custom.el")))
+
+(use-package standard-themes
+  :config
+  (load-theme 'standard-dark t))
+
+(set-fontset-font t 'unicode (font-spec :name "Envy Code R-16") nil)
+(set-face-font 'default "Envy Code R-16")
 
 ;; Add hoook to after-init
 (add-hook 'after-init-hook

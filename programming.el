@@ -1,8 +1,4 @@
-(use-package company-mode
-  :config
-  (use-package company-irony)
-  (use-package irony-mode)
-  (add-to-list 'company-backends 'company-irony))
+(use-package company-mode)
 
 (use-package flycheck
   :custom
