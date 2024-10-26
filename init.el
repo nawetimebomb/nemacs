@@ -391,10 +391,9 @@ fundamental-mode) for performance sake."
 
 (use-package standard-themes
   :config
-  (load-theme 'standard-dark t))
-
-(set-fontset-font t 'unicode (font-spec :name "Envy Code R-16") nil)
-(set-face-font 'default "Envy Code R-16")
+  (load-theme 'standard-dark t)
+  (set-fontset-font t 'unicode (font-spec :name "Envy Code R-16") nil)
+  (set-face-font 'default "Envy Code R-16"))
 
 ;; Add hoook to after-init
 (add-hook 'after-init-hook
