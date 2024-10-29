@@ -1,4 +1,7 @@
-(use-package company-mode)
+(use-package company-mode
+  :custom
+  (company-icon-margin 4)
+  (company-icons-root (concat user-emacs-directory "straight/repos/company-mode/icons/")))
 
 (use-package flycheck
   :custom
