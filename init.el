@@ -386,6 +386,10 @@ fundamental-mode) for performance sake."
 ;; Add hoook to after-init
 (add-hook 'after-init-hook
           #'(lambda ()
+              (if (find-font (font-spec :name "Envy Code R"))
+                  (progn
+                    (set-fontset-font t 'unicode (font-spec :name "Envy Code R-18") nil)
+                    (set-face-font 'default "Envy Code R-18")))
               (if (file-exists-p (concat user-emacs-directory "custom.el"))
                   (load (concat user-emacs-directory "custom.el")))
               (setq gc-cons-threshold 16777216
