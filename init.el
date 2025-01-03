@@ -1,7 +1,7 @@
 (require 'battery)
 (require 'desktop)
 
-(defconst nemacs-version "21")
+(defconst nemacs-version "22")
 (defconst nemacs-local-dir (concat user-emacs-directory ".local/"))
 (defconst nemacs-cache-dir (concat nemacs-local-dir "cache/"))
 (defconst nemacs-tmp-dir (concat nemacs-local-dir "tmp/"))
@@ -301,13 +301,6 @@ fundamental-mode) for performance sake."
 	          visible-bell nil
 	          word-wrap t)
 
-;; Remove all frame distractions if it's not in terminal mode.
-(when window-system
-  (tooltip-mode -1)
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1))
-
 ;; Fix horizontal and vertical scrolling, specially in larger files. Scrolling in Emacs
 ;; is sometimes slow in larger files as it tries to center the view in
 (setq auto-window-vscroll nil
@@ -386,18 +379,15 @@ fundamental-mode) for performance sake."
 
 (load (concat user-emacs-directory "programming.el"))
 
-(if (file-exists-p (concat user-emacs-directory "custom.el"))
-    (load (concat user-emacs-directory "custom.el")))
-
-(use-package standard-themes
+(use-package immaterial-theme
   :config
-  (load-theme 'standard-dark t)
-  (set-fontset-font t 'unicode (font-spec :name "Envy Code R-16") nil)
-  (set-face-font 'default "Envy Code R-16"))
+  (load-theme 'immaterial-dark t))
 
 ;; Add hoook to after-init
 (add-hook 'after-init-hook
           #'(lambda ()
+              (if (file-exists-p (concat user-emacs-directory "custom.el"))
+                  (load (concat user-emacs-directory "custom.el")))
               (setq gc-cons-threshold 16777216
                     gc-cons-percentage 0.1
                     read-process-output-max (* 1024 1024))))
