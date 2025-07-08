@@ -1,27 +1,13 @@
-(use-package company-mode
-  :custom
-  (company-icon-margin 4)
-  (company-icons-root (concat user-emacs-directory "straight/repos/company-mode/icons/")))
-
-(use-package flycheck
-  :custom
-  (flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
-
 (use-package cc-mode
   :preface
   (defun nemacs-setup-cc-mode ()
-    (setq flycheck-clang-language-standard "gnu99")
-    (flycheck-mode)
     (c-set-offset 'case-label 4)
-    (c-toggle-comment-style -1))
-
-  (defun nemacs-compile-sources ()
-    (interactive)
-    (async-shell-command (concat (project-root (project-current)) "build.sh -norun") nil nil))
+    (c-toggle-comment-style -1)
+    (setq-local compile-command "cd .. && make -k "))
   :hook
   (c-mode . nemacs-setup-cc-mode)
   :bind
-  ("<f10>"  . nemacs-compile-sources)
+  ("<f10>"  . recompile)
   :custom
   (c-basic-offset 4))
 
@@ -33,8 +19,7 @@
 
 (use-package rjsx-mode
   :preface
-  (defun nemacs-setup-rjsx-mode ()
-    (flycheck-mode))
+  (defun nemacs-setup-rjsx-mode ())
   :hook
   (rjsx-mode . nemacs-setup-rjsx-mode)
   :mode "\\.js\\'"
@@ -49,13 +34,14 @@
              :repo "mattt-b/odin-mode")
   :preface
   (defun nemacs-setup-odin-mode ()
-    (flycheck-mode))
+    (setq-local compile-command "cd .. && make -k "))
+  :bind
+  ("<f10>"  . recompile)
   :hook
   (odin-mode . nemacs-setup-odin-mode))
 
 (add-hook
  'prog-mode-hook #'(lambda ()
-                     (company-mode)
                      (display-line-numbers-mode)))
 
 (use-package v-mode
@@ -70,3 +56,9 @@
   ("<f6>" . v-menu)
   ("C-c C-f" . v-format-buffer)
   :mode ("\\(\\.v?v\\|\\.vsh\\)$" . 'v-mode))
+
+
+(add-to-list 'load-path "~/repos/stanczyk/")
+(require 'stanczyk-mode)
+
+(global-set-key (kbd "C-M-<down>") #'duplicate-line)

@@ -381,7 +381,71 @@ fundamental-mode) for performance sake."
 
 (use-package immaterial-theme
   :config
-  (load-theme 'immaterial-dark t))
+  (load-theme 'immaterial-dark t)
+  (custom-set-faces
+   '(region ((t (:background "#000099"))))))
+
+(use-package visual-fill-column
+  :custom
+  (visual-fill-column-width 110)
+  (visual-fill-column-center-text t))
+
+(use-package org-contrib
+  :config
+  (dolist (face '((org-level-1 . 1.2)
+                  (org-level-2 . 1.1)
+                  (org-level-3 . 1.05)
+                  (org-level-4 . 1.0)
+                  (org-level-5 . 1.1)
+                  (org-level-6 . 1.1)
+                  (org-level-7 . 1.1)
+                  (org-level-8 . 1.1)))
+    (set-face-attribute (car face) nil :weight 'medium :height (cdr face)))
+  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-formula nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+  :custom
+  (org-hide-emphasis-markers t))
+
+(use-package org-present
+  :init
+  (defun nemacs-org-present-prepare-slide (buffer-name heading)
+    (org-overview)
+    (org-show-entry)
+    (org-show-children))
+
+  (defun nemacs-org-present-start ()
+    (setq-local face-remapping-alist '((default (:height 1.5) fixed-pitch)
+                                       (org-level-1 (:height 1.5) org-level-2)
+                                       (header-line (:height 4.0) fixed-pitch)
+                                       (org-document-title (:height 4.0) org-document-title)
+                                       (org-code (:height 1.55) org-code)
+                                       (org-verbatim (:height 1.55) org-verbatim)
+                                       (org-block (:height 1.25) default)
+                                       (org-block-begin-line (:height 0.7) org-block)))
+    (setq header-line-format " ")
+    (org-present-hide-cursor)
+    (org-display-inline-images)
+    (visual-fill-column-mode 1)
+    (visual-line-mode 1))
+
+  (defun nemacs-org-present-end ()
+    (setq-local face-remapping-alist '((default fixed-pitch default)))
+    (setq header-line-format nil)
+    (org-present-show-cursor)
+    (org-remove-inline-images)
+    (visual-fill-column-mode 0)
+    (visual-line-mode 0))
+  :hook
+  (org-present-mode . nemacs-org-present-start)
+  (org-present-mode-quit . nemacs-org-present-end)
+  (org-present-after-navigate-functions . nemacs-org-present-prepare-slide))
+
 
 ;; Add hoook to after-init
 (add-hook 'after-init-hook
