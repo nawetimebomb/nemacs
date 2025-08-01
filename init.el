@@ -238,6 +238,8 @@ fundamental-mode) for performance sake."
 (show-paren-mode t)
 ;; Revert file to newest version if saved from another system (I.e. changes from VCS).
 (global-auto-revert-mode t)
+;; Wrap the lines
+(global-visual-line-mode t)
 ;; Jump subwords.
 (global-subword-mode t)
 ;; Delete selection when overriden by new code.
@@ -337,10 +339,19 @@ fundamental-mode) for performance sake."
 
 (use-package consult
   :bind
-  (("M-g g" . consult-goto-line)
-   ("M-y"   . consult-yank-from-kill-ring)
-   ("C-x b" . consult-buffer)
-   ("C-x B" . consult-buffer-other-window)))
+  (("M-g i"   . consult-imenu)
+   ("M-g g"   . consult-goto-line)
+   ("M-g M-g" . consult-goto-line)
+   ("s-l"     . consult-goto-line)
+   ("M-y"     . consult-yank-from-kill-ring)
+   ("C-x b"   . consult-buffer)
+   ("C-x B"   . consult-buffer-other-window)
+   ("C-x p b" . consult-project-buffer))
+  :config
+  (add-to-list 'consult-imenu-config
+               '(rjsx-mode :toplevel "Functions" :types
+                           ((102 "Functions" font-lock-function-name-face)
+                            (112 "Variables" font-lock-variable-name-face)))))
 
 (use-package magit)
 
@@ -433,16 +444,14 @@ fundamental-mode) for performance sake."
     (setq header-line-format " ")
     (org-present-hide-cursor)
     (org-display-inline-images)
-    (visual-fill-column-mode 1)
-    (visual-line-mode 1))
+    (visual-fill-column-mode 1))
 
   (defun nemacs-org-present-end ()
     (setq-local face-remapping-alist '((default fixed-pitch default)))
     (setq header-line-format nil)
     (org-present-show-cursor)
     (org-remove-inline-images)
-    (visual-fill-column-mode 0)
-    (visual-line-mode 0))
+    (visual-fill-column-mode 0))
   :hook
   (org-present-mode . nemacs-org-present-start)
   (org-present-mode-quit . nemacs-org-present-end)
