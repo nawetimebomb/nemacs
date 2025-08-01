@@ -379,11 +379,13 @@ fundamental-mode) for performance sake."
 
 (load (concat user-emacs-directory "programming.el"))
 
-(use-package immaterial-theme
+(use-package mate-16-theme
+  :straight (mate-16
+             :type git
+             :host github
+             :repo "nawetimebomb/mate-16-theme")
   :config
-  (load-theme 'immaterial-dark t)
-  (custom-set-faces
-   '(region ((t (:background "#000099"))))))
+  (load-theme 'mate-16 t))
 
 (use-package visual-fill-column
   :custom
