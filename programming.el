@@ -58,7 +58,8 @@
   :mode ("\\(\\.v?v\\|\\.vsh\\)$" . 'v-mode))
 
 
-(add-to-list 'load-path "~/repos/stanczyk/")
-(require 'stanczyk-mode)
+(when (file-exists-p "~/repos/stanczyk")
+  (add-to-list 'load-path "~/repos/stanczyk/")
+  (require 'stanczyk-mode))
 
 (global-set-key (kbd "C-M-<down>") #'duplicate-line)
