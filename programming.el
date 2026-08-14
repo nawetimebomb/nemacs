@@ -3,7 +3,7 @@
   (defun nemacs-setup-cc-mode ()
     (c-set-offset 'case-label 4)
     (c-toggle-comment-style -1)
-    (setq-local compile-command "cd .. && make -k "))
+    (setq-local compile-command (concat "cd " (project-root (project-current)) " && ./build.sh ")))
   :hook
   (c-mode . nemacs-setup-cc-mode)
   :bind
@@ -31,14 +31,7 @@
   :straight (odin-mode
              :type git
              :host github
-             :repo "mattt-b/odin-mode")
-  :preface
-  (defun nemacs-setup-odin-mode ()
-    (setq-local compile-command "cd .. && make -k "))
-  :bind
-  ("<f10>"  . recompile)
-  :hook
-  (odin-mode . nemacs-setup-odin-mode))
+             :repo "mattt-b/odin-mode"))
 
 (add-hook
  'prog-mode-hook #'(lambda ()
@@ -63,9 +56,15 @@
   ("C-c C-f" . v-format-buffer)
   :mode ("\\(\\.v?v\\|\\.vsh\\)$" . 'v-mode))
 
+(use-package jai-mode
+  :straight (jai-mode
+             :type git
+             :host github
+             :repo "valignatev/jai-mode")
+  :mode "\\.jai\\'")
 
 (when (file-exists-p "~/repos/stanczyk")
   (add-to-list 'load-path "~/repos/stanczyk/")
   (require 'stanczyk-mode))
 
-(global-set-key (kbd "C-M-<down>") #'duplicate-line)
+(global-set-key (kbd "C-S-<down>") #'duplicate-line)

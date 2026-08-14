@@ -164,13 +164,9 @@
 of line."
   (interactive "^")
   (let ((origin (point)))
-    (beginning-of-line)
+    (beginning-of-visual-line)
     (and (= origin (point))
          (back-to-indentation))))
-(global-set-key [remap move-beginning-of-line] ;; C-a
-                #'nemacs-move-beginning-of-line)
-(global-set-key [remap org-beginning-of-line] ;; C-a
-                #'nemacs-move-beginning-of-line)
 (global-set-key (kbd "C-a") #'nemacs-move-beginning-of-line)
 
 ;; Kill current buffer without the prompt
@@ -248,7 +244,7 @@ fundamental-mode) for performance sake."
 ;; Save search and navigation history
 (savehist-mode t)
 
-(setq-default fill-column 120
+(setq-default fill-column 70
               indent-tabs-mode nil
               mouse-yank-at-point t
               require-final-newline t
@@ -258,12 +254,8 @@ fundamental-mode) for performance sake."
               truncate-lines nil)
 
 ;; Add TODOs, NOTEs and IMPORTANT keywords
-(defvar fixme-modes '(c++-mode
-                      c-mode
-                      emacs-lisp-mode
-                      js2-mode
-                      typescript-mode
-                      rjsx-mode))
+(defvar fixme-modes '(c++-mode c-mode emacs-lisp-mode js2-mode odin-mode
+                               stanczyk-mode typescript-mode rjsx-mode))
 (make-face 'font-lock-fixme-face)
 (make-face 'font-lock-important-face)
 (make-face 'font-lock-note-face)
@@ -352,6 +344,10 @@ fundamental-mode) for performance sake."
   (add-to-list 'consult-imenu-config
                '(rjsx-mode :toplevel "Functions" :types
                            ((102 "Functions" font-lock-function-name-face)
+                            (112 "Variables" font-lock-variable-name-face))))
+  (add-to-list 'consult-imenu-config
+               '(odin-mode :toplevel "Procedures" :types
+                           ((102 "Procedures" font-lock-function-name-face)
                             (112 "Variables" font-lock-variable-name-face)))))
 
 (use-package magit)
@@ -466,10 +462,10 @@ fundamental-mode) for performance sake."
 ;; Add hoook to after-init
 (add-hook 'after-init-hook
           #'(lambda ()
-              (if (find-font (font-spec :name "Envy Code R"))
+              (if (find-font (font-spec :name "Chivo Mono"))
                   (progn
-                    (set-fontset-font t 'unicode (font-spec :name "Envy Code R-18") nil)
-                    (set-face-font 'default "Envy Code R-18")))
+                    (set-fontset-font t 'unicode (font-spec :name "Chivo Mono-18") nil)
+                    (set-face-font 'default "Chivo Mono-18")))
               (if (file-exists-p (concat user-emacs-directory "custom.el"))
                   (load (concat user-emacs-directory "custom.el")))
               (setq gc-cons-threshold 16777216
