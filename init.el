@@ -171,6 +171,7 @@ of line."
                 #'nemacs-move-beginning-of-line)
 (global-set-key [remap org-beginning-of-line] ;; C-a
                 #'nemacs-move-beginning-of-line)
+(global-set-key (kbd "C-a") #'nemacs-move-beginning-of-line)
 
 ;; Kill current buffer without the prompt
 (defun nemacs-kill-current-buffer ()
@@ -390,13 +391,17 @@ fundamental-mode) for performance sake."
 
 (load (concat user-emacs-directory "programming.el"))
 
-(use-package mate-16-theme
-  :straight (mate-16
-             :type git
-             :host github
-             :repo "nawetimebomb/mate-16-theme")
+;; (use-package mate-16-theme
+;;   :straight (mate-16
+;;              :type git
+;;              :host github
+;;              :repo "nawetimebomb/mate-16-theme")
+;;   :config
+;;   (load-theme 'mate-16 t))
+
+(use-package base16-theme
   :config
-  (load-theme 'mate-16 t))
+  (load-theme 'base16-valua t))
 
 (use-package visual-fill-column
   :custom

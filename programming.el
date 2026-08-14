@@ -44,6 +44,12 @@
  'prog-mode-hook #'(lambda ()
                      (display-line-numbers-mode)))
 
+(use-package jai-mode
+  :straight (jai-mode
+             :type git
+             :host github
+             :repo "elp-revive/jai-mode"))
+
 (use-package v-mode
   :straight (v-mode
              :type git
