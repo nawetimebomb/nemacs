@@ -41,7 +41,8 @@
   :straight (jai-mode
              :type git
              :host github
-             :repo "elp-revive/jai-mode"))
+             :repo "elp-revive/jai-mode")
+  :mode "\\.jai\\'")
 
 (use-package v-mode
   :straight (v-mode
@@ -55,13 +56,6 @@
   ("<f6>" . v-menu)
   ("C-c C-f" . v-format-buffer)
   :mode ("\\(\\.v?v\\|\\.vsh\\)$" . 'v-mode))
-
-(use-package jai-mode
-  :straight (jai-mode
-             :type git
-             :host github
-             :repo "valignatev/jai-mode")
-  :mode "\\.jai\\'")
 
 (when (file-exists-p "~/repos/stanczyk")
   (add-to-list 'load-path "~/repos/stanczyk/")

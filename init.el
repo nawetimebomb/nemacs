@@ -387,14 +387,6 @@ fundamental-mode) for performance sake."
 
 (load (concat user-emacs-directory "programming.el"))
 
-;; (use-package mate-16-theme
-;;   :straight (mate-16
-;;              :type git
-;;              :host github
-;;              :repo "nawetimebomb/mate-16-theme")
-;;   :config
-;;   (load-theme 'mate-16 t))
-
 (use-package base16-theme
   :config
   (load-theme 'base16-valua t))
